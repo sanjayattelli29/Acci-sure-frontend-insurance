@@ -1,8 +1,8 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/frontend-insurance",
-  "routes": [ 
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
-  ]
+    "rewrites": [
+        {
+            "source": "/((?!assets/).*)",
+            "destination": "/"
+        }
+    ]
 }
