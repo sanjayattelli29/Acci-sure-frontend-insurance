@@ -146,3 +146,79 @@
     background: #94a3b8;
     cursor: not-allowed;
 }
+
+/* Jitsi Video Call Styles */
+.video-call-btn {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    transition: all 0.2s;
+}
+
+.video-call-btn:hover {
+    background: #15803d;
+    transform: translateY(-1px);
+}
+
+.video-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-modal-container {
+    width: 90%;
+    height: 90%;
+    background: #1e293b;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.video-modal-header {
+    padding: 1rem 1.5rem;
+    background: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.end-call-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.end-call-btn:hover {
+    background: #dc2626;
+}
+
+.jitsi-wrapper {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    background: black;
+}

@@ -57,8 +57,25 @@
                     <p *ngIf="user.role === 'Agent'" class="font-bold">Chatting with Customer: {{
                         chatInfo().customerEmail }}</p>
                 </div>
+                <button class="video-call-btn" (click)="startVideoCall()">
+                    <span>🎥</span> Start Video Call
+                </button>
             </div>
         </header>
+
+        <!-- Video Call Modal -->
+        <div class="video-modal-overlay" *ngIf="isVideoOpen">
+            <div class="video-modal-container">
+                <div class="video-modal-header">
+                    <div class="flex items-center gap-2 text-white font-bold">
+                        <span>🎥</span>
+                        <span>Video Call - Policy {{ policyId }}</span>
+                    </div>
+                    <button class="end-call-btn" (click)="endVideoCall()">End Call</button>
+                </div>
+                <div #jitsiContainer class="jitsi-wrapper"></div>
+            </div>
+        </div>
 
         <!-- Messages List -->
         <div class="messages-list" #scrollContainer>
