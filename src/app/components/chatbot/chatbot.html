@@ -1,0 +1,72 @@
+<div class="chatbot-container" [class.open]="isOpen()">
+
+    <!-- Floating Toggle Button -->
+    @if (!isOpen()) {
+    <button class="chat-toggle" (click)="toggleChat()" aria-label="Open Chat">
+        <div class="toggle-content">
+            <div class="logo-diamonds">
+                <div class="diamond"></div>
+                <div class="diamond"></div>
+            </div>
+            <span class="pulse"></span>
+        </div>
+    </button>
+    }
+
+    <!-- Chat Window -->
+    @if (isOpen()) {
+    <div class="chat-window">
+
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="bot-info">
+                <div class="status-dot"></div>
+                <h3>Insurance Assistant</h3>
+            </div>
+            <button class="close-btn" (click)="toggleChat()">&times;</button>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages-container" #scrollContainer>
+            @for (msg of messages(); track $index) {
+            <div [class]="msg.isUser ? 'message user' : 'message bot'" [class.error]="msg.isError">
+                <div class="bubble">{{ msg.text }}</div>
+            </div>
+            }
+
+            <!-- Loading / Typing Indicator -->
+            @if (isLoading()) {
+            <div class="message bot loading">
+                <div class="bubble">
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input
+                type="text"
+                [value]="question()"
+                (input)="question.set($any($event.target).value)"
+                (keydown)="onKeyDown($event)"
+                placeholder="Type your message..."
+                [disabled]="isLoading()"
+            />
+            <button
+                (click)="sendQuestion()"
+                [disabled]="!question().trim() || isLoading()"
+            >
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"></path>
+                </svg>
+            </button>
+        </div>
+
+    </div>
+    }
+
+</div>
