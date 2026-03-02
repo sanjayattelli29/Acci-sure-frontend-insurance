@@ -1,0 +1,42 @@
+<div class="min-h-screen flex flex-col items-center justify-center p-6 bg-brand-navy">
+    <div class="mb-8 flex items-center gap-2">
+        <div class="w-8 h-8 bg-brand-orange rounded-full flex items-center justify-center font-bold text-lg text-white">
+            I</div>
+        <span
+            class="text-xl font-black tracking-tight text-white underline decoration-brand-orange decoration-4">AcciSure</span>
+    </div>
+
+    <div class="card w-full max-w-md shadow-2xl border-none">
+        <div class="mb-6 p-4 bg-slate-100 rounded-lg border-l-4 border-brand-navy">
+            <h2 class="text-xl font-bold text-brand-navy">Administrative Portal</h2>
+            <p class="text-slate-500 text-xs">Secure access for system administrators only.</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <div>
+                <label class="block text-sm font-bold text-brand-navy mb-2 uppercase tracking-wide">Admin Email</label>
+                <input type="email" formControlName="emailId" placeholder="admin@insurance.com" class="input-field"
+                    [class.border-red-500]="loginForm.get('emailId')?.invalid && loginForm.get('emailId')?.touched">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-brand-navy mb-2 uppercase tracking-wide">Secure
+                    Password</label>
+                <input type="password" formControlName="password" placeholder="••••••••" class="input-field"
+                    [class.border-red-500]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            </div>
+
+            <div *ngIf="errorMessage()" class="p-3 bg-red-50 text-red-700 text-sm rounded-lg border border-red-100">
+                {{ errorMessage() }}
+            </div>
+
+            <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="btn-primary w-full shadow-lg">
+                {{ isLoading() ? 'Authenticating...' : 'Enter Admin Dashboard' }}
+            </button>
+        </form>
+
+        <div class="mt-8 text-center text-xs text-slate-400">
+            <a routerLink="/" class="hover:text-brand-orange hover:underline transition-colors">Return to Landing
+                Page</a>
+        </div>
+    </div>
+</div>

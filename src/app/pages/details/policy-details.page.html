@@ -1,0 +1,182 @@
+<div class="details-container">
+    <button class="back-btn" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+        </svg>
+        Back to Dashboard
+    </button>
+
+    <div class="header-section">
+        <div class="title-group">
+            <h1>Policy #{{ policy()?.id.substring(0, 8) }}</h1>
+            <p>{{ policy()?.policyCategory }} • {{ policy()?.tierId }}</p>
+        </div>
+        <button class="action-btn" (click)="openClaimModal()">
+            Raise New Claim
+        </button>
+    </div>
+
+    <div class="details-grid">
+        <!-- Left: Main Details -->
+        <div class="space-y-6">
+            <div class="card">
+                <span class="card-title">Policy Information</span>
+                <div class="info-row">
+                    <div class="info-item">
+                        <label>Status</label>
+                        <span class="badge" [class.badge-success]="policy()?.status === 'Active'">
+                            {{ policy()?.status }}
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <label>Premium Paid</label>
+                        <span>₹{{ policy()?.calculatedPremium | number }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Start Date</label>
+                        <span>{{ policy()?.startDate | date:'mediumDate' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Expiry Date</label>
+                        <span>{{ policy()?.expiryDate | date:'mediumDate' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="card-title">Claim History</span>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Claim ID</th>
+                            <th>Incident</th>
+                            <th>Requested</th>
+                            <th>Approved</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (claim of claims(); track claim.id) {
+                        <tr class="cursor-pointer" [routerLink]="['/customer/claim', claim.id]">
+                            <td>{{ claim.id.substring(0, 8) }}...</td>
+                            <td>{{ claim.incidentType }}</td>
+                            <td>₹{{ claim.requestedAmount | number }}</td>
+                            <td>₹{{ claim.approvedAmount ? (claim.approvedAmount | number) : '-' }}</td>
+                            <td>
+                                <span class="badge" [class.badge-success]="claim.status === 'Approved'"
+                                    [class.badge-warning]="claim.status === 'Pending'"
+                                    [class.badge-danger]="claim.status === 'Rejected'">
+                                    {{ claim.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #94a3b8;">No claims raised yet.</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right: Financial Summary -->
+        <div class="space-y-6">
+            <div class="card">
+                <span class="card-title">Financial Summary</span>
+                <div class="space-y-4">
+                    <div class="balance-card">
+                        <div class="balance-label">Total Coverage</div>
+                        <div class="balance-value">₹{{ policy()?.totalCoverageAmount | number }}</div>
+                    </div>
+                    <div class="balance-card highlight">
+                        <div class="balance-label">Remaining Balance</div>
+                        <div class="balance-value" style="color: #ff6b35;">₹{{ policy()?.remainingCoverageAmount |
+                            number }}</div>
+                    </div>
+                    <div class="balance-card">
+                        <div class="balance-label">Approved Claims</div>
+                        <div class="balance-value">₹{{ policy()?.totalApprovedClaimsAmount | number }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="card-title">Customer Details</span>
+                <div class="space-y-4">
+                    <div class="info-item">
+                        <label>Full Name</label>
+                        <span>{{ policy()?.fullDetails?.applicant?.fullName || policy()?.user?.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Profession</label>
+                        <span class="capitalize">{{ policy()?.fullDetails?.applicant?.profession }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Raise Claim Modal -->
+@if (showClaimModal()) {
+<div class="modal-backdrop">
+    <div class="modal-content">
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 24px;">Raise an Insurance Claim</h2>
+
+        <form (submit)="submitClaim()">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label>Incident Type</label>
+                    <select class="form-control" name="incidentType" [(ngModel)]="claimForm.incidentType">
+                        <option>Accidental Injury</option>
+                        <option>Total Disability</option>
+                        <option>Partial Disability</option>
+                        <option>Accidental Death</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Incident Date</label>
+                    <input type="date" class="form-control" name="incidentDate" [(ngModel)]="claimForm.incidentDate">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Incident Location / Hospital Name</label>
+                <div class="flex gap-4">
+                    <input type="text" class="form-control" placeholder="Location" name="incidentLocation"
+                        [(ngModel)]="claimForm.incidentLocation">
+                    <input type="text" class="form-control" placeholder="Hospital" name="hospitalName"
+                        [(ngModel)]="claimForm.hospitalName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description of Incident</label>
+                <textarea class="form-control" rows="3" name="description"
+                    [(ngModel)]="claimForm.description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Requested Claim Amount (Max: ₹{{ policy()?.remainingCoverageAmount | number }})</label>
+                <input type="number" class="form-control" name="requestedAmount"
+                    [(ngModel)]="claimForm.requestedAmount">
+            </div>
+
+            <div class="form-group">
+                <label>Supporting Documents (Bills, Reports, etc.)</label>
+                <input type="file" class="form-control" (change)="onFileChange($event)" multiple>
+            </div>
+
+            <div class="flex gap-4 mt-8">
+                <button type="button" class="back-btn" style="flex: 1; margin-bottom: 0;"
+                    (click)="showClaimModal.set(false)">Cancel</button>
+                <button type="submit" class="action-btn" style="flex: 2;" [disabled]="isSubmittingClaim()">
+                    {{ isSubmittingClaim() ? 'Submitting...' : 'Confirm Submission' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+}

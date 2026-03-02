@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd frontend-insurance && npm install && npm run build",
+  "outputDirectory": "frontend-insurance/dist/frontend-insurance",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/frontend-insurance/dist/frontend-insurance/index.html" }
+  ]
+}

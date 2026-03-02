@@ -1,0 +1,1851 @@
+<div class="min-h-screen flex flex-col bg-slate-50">
+    <!-- Premium Header -->
+    <header class="h-20 bg-brand-navy shrink-0 border-b border-white/5 flex items-center px-10 relative z-30">
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center shadow-lg shadow-brand-orange/20">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <span class="text-2xl font-black text-white tracking-tighter italic">Acci <span
+                        class="text-brand-orange">Sure</span></span>
+            </div>
+            <div class="h-6 w-px bg-white/10"></div>
+            <span
+                class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-indigo-500/20">Admin
+                Console</span>
+        </div>
+        <div class="ml-auto flex items-center gap-8">
+            <!-- Notifications -->
+            <app-notification-panel portalRole="Admin"></app-notification-panel>
+
+            <div class="flex flex-col items-end">
+                <p class="text-sm font-black text-white italic">{{ user.email }}</p>
+                <p class="text-[10px] text-brand-orange font-black uppercase tracking-widest">Master Administrator</p>
+            </div>
+            <button (click)="logout()"
+                class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all border border-white/5 group">
+                <svg class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="flex grow overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-brand-navy border-r border-white/5 flex flex-col pt-8 shrink-0 sticky top-0 h-screen">
+            <div class="px-6 mb-8">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Main Menu</p>
+                <nav class="space-y-2">
+                    <button (click)="setSection('dashboard')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'dashboard' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        Overview
+                    </button>
+                    <button (click)="setSection('policyRequests')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'policyRequests' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Policy Queue
+                    </button>
+                    <button (click)="setSection('claimRequests')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'claimRequests' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Claim Queue
+                    </button>
+                </nav>
+            </div>
+
+            <div class="px-6 mb-8">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Complete Analysis
+                </p>
+                <nav class="space-y-2">
+                    <button (click)="setSection('analysis-users')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'analysis-users' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        Users Registry
+                    </button>
+                    <button (click)="setSection('analysis-policies')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'analysis-policies' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Active Policies
+                    </button>
+                    <button (click)="setSection('analysis-commands')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'analysis-commands' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Global Command Log
+                    </button>
+                    <button (click)="setSection('analysis-payments')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'analysis-payments' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Payments
+                    </button>
+                </nav>
+            </div>
+
+            <div class="px-6 mb-8">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Administration</p>
+                <nav class="space-y-2">
+                    <button (click)="setSection('agents')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'agents' ? 'bg-brand-navy-light text-white border border-white/10' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Manage Agents
+                    </button>
+                    <button (click)="setSection('officers')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'officers' ? 'bg-brand-navy-light text-white border border-white/10' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        Manage Officers
+                    </button>
+                    <button (click)="setSection('email-automation')"
+                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                        (activeSection() === 'email-automation' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Email Automation
+                    </button>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="grow overflow-y-auto p-12 bg-slate-50/50">
+            <div class="max-w-7xl mx-auto space-y-12">
+
+                @if (message().text) {
+                <div
+                    [class]="'p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-300 ' + (message().type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-lg shadow-emerald-500/5' : 'bg-rose-50 text-rose-700 border border-rose-100 shadow-lg shadow-rose-500/5')">
+                    <div
+                        [class]="'w-10 h-10 rounded-full flex items-center justify-center ' + (message().type === 'success' ? 'bg-emerald-100' : 'bg-rose-100')">
+                        <span class="font-black text-lg">{{ message().type === 'success' ? '✓' : '!' }}</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-black uppercase tracking-widest">{{ message().type === 'success' ?
+                            'Success' :
+                            'Attention' }}</p>
+                        <p class="text-xs opacity-80 font-bold mt-0.5">{{ message().text }}</p>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'dashboard') {
+                <div class="animate-in fade-in duration-700">
+                    <div class="mb-10">
+                        <h1 class="text-4xl font-black text-brand-navy tracking-tight">Executive Dashboard</h1>
+                        <p class="text-slate-400 font-bold mt-2">Real-time enterprise metrics & operational health.
+                        </p>
+                    </div>
+
+                    <!-- Analytics Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                        <!-- Total Customers -->
+                        <div
+                            class="card p-6 border-none shadow-xl shadow-slate-200/50 group hover:scale-[1.02] transition-all cursor-default overflow-hidden relative">
+                            <div
+                                class="absolute -right-4 -bottom-4 w-24 h-24 bg-brand-navy/5 rounded-full group-hover:scale-150 transition-transform">
+                            </div>
+                            <p
+                                class="text-[10px] uppercase font-black text-slate-400 mb-4 tracking-[0.2em] relative z-10">
+                                Total
+                                Customers</p>
+                            <div class="flex items-baseline justify-between relative z-10">
+                                <span class="text-4xl font-black text-brand-navy tracking-tighter">{{
+                                    adminStats()?.totalCustomers || 0 }}</span>
+                                <span
+                                    class="bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-black uppercase">+12%</span>
+                            </div>
+                        </div>
+
+                        <!-- Active Policies -->
+                        <div
+                            class="card p-6 border-none shadow-xl shadow-slate-200/50 group hover:scale-[1.02] transition-all cursor-default overflow-hidden relative">
+                            <div
+                                class="absolute -right-4 -bottom-4 w-24 h-24 bg-indigo-500/5 rounded-full group-hover:scale-150 transition-transform">
+                            </div>
+                            <p
+                                class="text-[10px] uppercase font-black text-slate-400 mb-4 tracking-[0.2em] relative z-10">
+                                Active Policies</p>
+                            <div class="flex items-baseline justify-between relative z-10">
+                                <span class="text-4xl font-black text-brand-navy tracking-tighter">{{
+                                    adminStats()?.totalPolicies || 0 }}</span>
+                                <span
+                                    class="bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded text-[10px] font-black uppercase">Live</span>
+                            </div>
+                        </div>
+
+                        <!-- Total Claims -->
+                        <div
+                            class="card p-6 border-none shadow-xl shadow-slate-200/50 group hover:scale-[1.02] transition-all cursor-default overflow-hidden relative">
+                            <div
+                                class="absolute -right-4 -bottom-4 w-24 h-24 bg-brand-orange/5 rounded-full group-hover:scale-150 transition-transform">
+                            </div>
+                            <p
+                                class="text-[10px] uppercase font-black text-slate-400 mb-4 tracking-[0.2em] relative z-10">
+                                Claims Logged</p>
+                            <div class="flex items-baseline justify-between relative z-10">
+                                <span class="text-4xl font-black text-brand-navy tracking-tighter">{{
+                                    adminStats()?.totalClaims
+                                    || 0 }}</span>
+                                <span
+                                    class="bg-brand-orange/10 text-brand-orange px-2 py-0.5 rounded text-[10px] font-black uppercase">Active</span>
+                            </div>
+                        </div>
+
+                        <!-- Payout Amount -->
+                        <div
+                            class="card p-6 border-none shadow-xl shadow-slate-200/50 group hover:scale-[1.02] transition-all cursor-default overflow-hidden relative">
+                            <div
+                                class="absolute -right-4 -bottom-4 w-24 h-24 bg-emerald-500/5 rounded-full group-hover:scale-150 transition-transform">
+                            </div>
+                            <p
+                                class="text-[10px] uppercase font-black text-slate-400 mb-4 tracking-[0.2em] relative z-10">
+                                Total
+                                Settlements</p>
+                            <div class="flex items-baseline justify-between relative z-10 text-emerald-600">
+                                <span class="text-2xl font-black tracking-tighter italic">₹{{
+                                    adminStats()?.totalClaimedAmount |
+                                    number }}</span>
+                                <span class="text-[10px] font-black uppercase opacity-60">Verified</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Graphs Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                        <!-- Best Policy Categories -->
+                        <div class="card p-8 border-none shadow-2xl shadow-slate-200/40">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="font-black text-brand-navy uppercase tracking-tight italic">Policy
+                                        Distribution</h3>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                                        Best
+                                        performing categories</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="h-[250px] flex items-center justify-center">
+                                <canvas id="bestPolicyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Top Performing Agents -->
+                        <div class="card p-8 border-none shadow-2xl shadow-slate-200/40">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="font-black text-brand-navy uppercase tracking-tight italic">Agent
+                                        Performance</h3>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                                        Top
+                                        assigned workload</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 bg-brand-orange/10 rounded-xl flex items-center justify-center text-brand-orange">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="h-[250px]">
+                                <canvas id="bestAgentChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- User Ecosystem Ratio -->
+                        <div class="card p-8 border-none shadow-2xl shadow-slate-200/40">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="font-black text-brand-navy uppercase tracking-tight italic">Ecosystem
+                                        Ratio</h3>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                                        Customers vs System Staff</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="h-[250px] flex items-center justify-center">
+                                <canvas id="ratioChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Claims Adjudication Status -->
+                        <div class="card p-8 border-none shadow-2xl shadow-slate-200/40">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="font-black text-brand-navy uppercase tracking-tight italic">Claims
+                                        Integrity</h3>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                                        Settlement status audit</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-500">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="h-[250px] flex items-center justify-center">
+                                <canvas id="claimsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Activity Quick View -->
+                    <div
+                        class="card p-8 border-none shadow-2xl shadow-slate-200/40 bg-indigo-600 text-white relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl">
+                        </div>
+                        <div class="relative z-10 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-black text-xl italic tracking-tighter mb-1">System Health Optimized
+                                </h3>
+                                <p class="text-[10px] uppercase font-bold text-indigo-100 tracking-widest">Global
+                                    command log moved to dedicated console</p>
+                            </div>
+                            <button (click)="setSection('analysis-commands')"
+                                class="px-6 py-2 bg-white text-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-colors shadow-lg shadow-indigo-900/20">
+                                Open Console
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'agents') {
+                <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h1 class="text-3xl font-black text-brand-navy">Agent Management</h1>
+                            <p class="text-slate-500 text-sm">Register and manage your field agents.</p>
+                        </div>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="card p-0 overflow-hidden border-t-4 border-brand-orange">
+                        <div class="p-6">
+                            <h3 class="text-sm font-bold uppercase tracking-widest mb-6">Register New Agent</h3>
+                            <form [formGroup]="agentForm" (ngSubmit)="registerAgent()"
+                                class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Full Name</label>
+                                    <input type="text" formControlName="name" placeholder="Agent's full name"
+                                        class="input-field py-3 text-sm">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Email ID</label>
+                                    <input type="email" formControlName="emailId" placeholder="official@agency.com"
+                                        class="input-field py-3 text-sm">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">System
+                                        Password</label>
+                                    <input type="password" formControlName="password" placeholder="••••••••"
+                                        class="input-field py-3 text-sm">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Bank Account (16
+                                        Digits)</label>
+                                    <input type="text" formControlName="bankAccountNumber"
+                                        placeholder="1234567890123456" class="input-field py-3 text-sm">
+                                </div>
+                                <div class="md:col-span-2 flex justify-end">
+                                    <button type="submit" [disabled]="agentForm.invalid || isLoading()"
+                                        class="btn-primary px-10 py-3 text-xs shadow-lg shadow-orange-500/20">
+                                        {{ isLoading() ? 'Registering...' : '+ Create Agent Profile' }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- User List -->
+                    <div class="card p-0 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="font-bold text-sm uppercase tracking-wide">Existing Agents</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                                        <th class="px-6 py-4">Full Name</th>
+                                        <th class="px-6 py-4">Email ID</th>
+                                        <th class="px-6 py-4">Account Number</th>
+                                        <th class="px-6 py-4 text-right">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    @for (agent of agents; track agent.id) {
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
+                                        <td class="px-6 py-4 font-bold text-brand-navy">{{ agent.fullName }}</td>
+                                        <td class="px-6 py-4">{{ agent.email }}</td>
+                                        <td class="px-6 py-4 font-mono text-slate-500">{{ agent.bankAccountNumber }}
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button (click)="deleteUser(agent.id)"
+                                                class="text-rose-500 hover:text-rose-700 font-bold uppercase tracking-tighter">Remove</button>
+                                        </td>
+                                    </tr>
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="4" class="p-12 text-center text-slate-400 font-bold italic">No
+                                            agents registered yet.</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'policyRequests') {
+                <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                        <h1 class="text-3xl font-black text-brand-navy">Policy Requests</h1>
+                        <p class="text-slate-500 text-sm">Monitor and assign agents to new policy applications.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <h3 class="font-bold text-sm uppercase tracking-wide">Incoming Applications</h3>
+                            <button (click)="loadPolicyRequests()"
+                                class="text-[10px] font-bold text-brand-orange hover:underline uppercase tracking-widest">Refresh
+                                Data</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                                        <th class="px-6 py-4">Customer Email</th>
+                                        <th class="px-6 py-4">Category</th>
+                                        <th class="px-6 py-4">Tier/Plan</th>
+                                        <th class="px-6 py-4">Status</th>
+                                        <th class="px-6 py-4 text-center">Action</th>
+                                        <th class="px-6 py-4 text-right">Insight</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    @for (request of policyRequests(); track request.id) {
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
+                                        <td class="px-6 py-4 font-bold text-brand-navy">{{ request.user?.email }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span
+                                                class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded font-bold uppercase text-[9px]">
+                                                {{ request.policyCategory }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 font-bold">{{ request.tierId }}</td>
+                                        <td class="px-6 py-4">
+                                            <span
+                                                [class]="'badge ' + (request.status === 'Pending' ? 'badge-warning' : 'badge-success')">
+                                                ● {{ request.status }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            @if (request.status === 'Pending') {
+                                            <button (click)="openAssignModal(request.id)"
+                                                class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter">Assign
+                                                Agent</button>
+                                            } @else {
+                                            <span class="text-slate-400 font-bold italic">Assigned</span>
+                                            }
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button (click)="viewUnifiedDetails(request, 'policy')"
+                                                class="bg-brand-navy hover:bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
+                                                View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="5" class="p-12 text-center text-slate-400 font-bold italic">No
+                                            policy requests found.</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'officers') {
+                <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                        <h1 class="text-3xl font-black text-brand-navy">Claims Management</h1>
+                        <p class="text-slate-500 text-sm">Register and manage claims assessment officers.</p>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="card p-0 overflow-hidden border-t-4 border-indigo-600">
+                        <div class="p-6">
+                            <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-indigo-600">Assign New
+                                Claims Officer</h3>
+                            <form [formGroup]="officerForm" (ngSubmit)="registerOfficer()"
+                                class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Officer
+                                        Name</label>
+                                    <input type="text" formControlName="name" placeholder="Full legal name"
+                                        class="input-field py-3 text-sm focus:border-indigo-500">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Corporate
+                                        Email</label>
+                                    <input type="email" formControlName="emailId" placeholder="officer@platform.com"
+                                        class="input-field py-3 text-sm focus:border-indigo-500">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Secure
+                                        Password</label>
+                                    <input type="password" formControlName="password" placeholder="••••••••"
+                                        class="input-field py-3 text-sm focus:border-indigo-500">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Salary Account (16
+                                        Digits)</label>
+                                    <input type="text" formControlName="bankAccountNumber"
+                                        placeholder="1234567890123456"
+                                        class="input-field py-3 text-sm focus:border-indigo-500">
+                                </div>
+                                <div class="md:col-span-2 flex justify-end">
+                                    <button type="submit" [disabled]="officerForm.invalid || isLoading()"
+                                        class="bg-indigo-600 text-white rounded-lg font-black px-10 py-3 text-xs shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all uppercase tracking-widest">
+                                        {{ isLoading() ? 'Assigning...' : 'Confirm Assignment' }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- User List -->
+                    <div class="card p-0 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="font-bold text-sm uppercase tracking-wide">Active Assessment Team</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                                        <th class="px-6 py-4">Name</th>
+                                        <th class="px-6 py-4">Work Email</th>
+                                        <th class="px-6 py-4">Account Number</th>
+                                        <th class="px-6 py-4 text-right">Access</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    @for (off of officers; track off.id) {
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
+                                        <td class="px-6 py-4 font-bold text-brand-navy">{{ off.fullName }}</td>
+                                        <td class="px-6 py-4">{{ off.email }}</td>
+                                        <td class="px-6 py-4 font-mono text-slate-500">{{ off.bankAccountNumber }}
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button (click)="deleteUser(off.id)"
+                                                class="text-rose-500 hover:text-rose-700 font-bold uppercase tracking-tighter">Revoke
+                                                Access</button>
+                                        </td>
+                                    </tr>
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="4" class="p-12 text-center text-slate-400 font-bold italic">No
+                                            claims officers assigned yet.</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'claimRequests') {
+                <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                        <h1 class="text-3xl font-black text-brand-navy">Claim Requests</h1>
+                        <p class="text-slate-500 text-sm">Review and assign claim officers to incoming claims.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <h3 class="font-bold text-sm uppercase tracking-wide">Pending Claims</h3>
+                            <button (click)="loadPendingClaims()"
+                                class="text-[10px] font-bold text-brand-orange hover:underline uppercase tracking-widest">Refresh
+                                Data</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                                        <th class="px-6 py-4">Customer</th>
+                                        <th class="px-6 py-4">Incident Type</th>
+                                        <th class="px-6 py-4">Request Amount</th>
+                                        <th class="px-6 py-4">Status</th>
+                                        <th class="px-6 py-4 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    @for (claim of pendingClaims(); track claim.id) {
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <p class="font-bold text-brand-navy">{{ claim.user?.email }}</p>
+                                            <p class="text-[9px] text-slate-400">Policy: {{ claim.policy?.tierId }}
+                                            </p>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span
+                                                class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded font-bold uppercase text-[9px]">
+                                                {{ claim.incidentType }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 font-black">₹{{ claim.requestedAmount |
+                                            number:'1.0-0'
+                                            }}</td>
+                                        <td class="px-6 py-4">
+                                            <span class="badge badge-warning">● {{ claim.status }}</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button (click)="openAssignOfficerModal(claim.id)"
+                                                class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter">Assign
+                                                Officer</button>
+                                        </td>
+                                    </tr>
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="5" class="p-12 text-center text-slate-400 font-bold italic">No
+                                            pending claims found.</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'analysis-users') {
+                <div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <div>
+                        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Registry: Identity
+                            Master
+                        </h1>
+                        <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">Total system
+                            users including Agents, Officers and Customers.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+                        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+                            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">Master User
+                                List
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                        <th class="px-8 py-5">Global ID</th>
+                                        <th class="px-8 py-5">User Profile</th>
+                                        <th class="px-8 py-5">Role/Access</th>
+                                        <th class="px-8 py-5">Contact Details</th>
+                                        <th class="px-8 py-5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (u of allUsers(); track u.id) {
+                                    <tr class="hover:bg-slate-50/30 transition-colors group">
+                                        <td class="px-8 py-6 font-mono text-[11px] text-slate-400">#{{
+                                            u.id.substring(0,8) }}</td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy">{{ u.fullName }}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold italic">{{ u.email }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            @for (role of u.roles; track role) {
+                                            <span
+                                                class="px-3 py-1 bg-brand-navy/5 text-brand-navy rounded-full text-[9px] font-black uppercase tracking-widest mr-2">
+                                                {{ role }}
+                                            </span>
+                                            }
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-bold text-slate-600">{{ u.phoneNumber || 'N/A' }}
+                                            </p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                                Verified Phone</p>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="deleteUser(u.id)"
+                                                class="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-700 transition-colors">Termiate</button>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'analysis-policies') {
+                <div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <div>
+                        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Active Policies</h1>
+                        <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">Complete
+                            history
+                            of all policy applications and active underwritings.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+                        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+                            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">Consolidated
+                                Assets
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                        <th class="px-8 py-5">Policyholder</th>
+                                        <th class="px-8 py-5">Plan Detail</th>
+                                        <th class="px-8 py-5">Financial Status</th>
+                                        <th class="px-8 py-5">Assigned Agent</th>
+                                        <th class="px-8 py-5">State</th>
+                                        <th class="px-8 py-5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (p of policyRequests(); track p.id) {
+                                    <tr class="hover:bg-slate-50/30 transition-colors">
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy">{{ p.user?.email }}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">
+                                                UID: {{ p.userId.substring(0,8) }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-indigo-600 italic tracking-tight">{{
+                                                p.tierId }}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">{{
+                                                p.policyCategory }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy italic">₹{{
+                                                p.calculatedPremium
+                                                | number }} /yr</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                                Premium</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-bold text-slate-600">{{ p.assignedAgent?.email ||
+                                                'UNASSIGNED' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <span
+                                                [class]="'px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ' + 
+                                                (p.status === 'Approved' ? 'bg-emerald-50 text-emerald-600' : 'bg-brand-orange/10 text-brand-orange')">
+                                                ● {{ p.status }}
+                                            </span>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="viewUnifiedDetails(p, 'policy')"
+                                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all hover:shadow-lg hover:shadow-indigo-200">
+                                                View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'analysis-commands') {
+                <div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <div>
+                        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Global Command Log
+                        </h1>
+                        <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">End-to-end
+                            audit
+                            trail of every claim requested, processed and settled across the enterprise.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+                        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+                            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">Claims Forensic
+                                Audit Registry</h3>
+                            <button (click)="loadAllClaims()"
+                                class="text-brand-orange hover:underline font-black text-[10px] uppercase tracking-widest">Refresh
+                                Audit Data</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                        <th class="px-8 py-5">Reference Identity</th>
+                                        <th class="px-8 py-5">Entity Origin</th>
+                                        <th class="px-8 py-5">Incident Forensic</th>
+                                        <th class="px-8 py-5">Audit Valuation</th>
+                                        <th class="px-8 py-5">Protocol Status</th>
+                                        <th class="px-8 py-5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (c of allClaims(); track c.id) {
+                                    <tr class="hover:bg-slate-50/30 transition-colors group">
+                                        <td class="px-8 py-6">
+                                            <p class="font-mono text-[11px] text-brand-navy font-black">#{{
+                                                c.id.substring(0,8) }}</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">{{
+                                                c.submissionDate | date:'medium' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy">{{ c.user?.fullName ||
+                                                'Registry ID: ' + c.userId.substring(0,8) }}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold italic">{{ c.user?.email
+                                                ||
+                                                'Authenticated User' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-indigo-600 uppercase tracking-tight">
+                                                {{
+                                                c.incidentType }}</p>
+                                            <p
+                                                class="text-[9px] text-slate-400 font-bold mt-1 inline-flex items-center gap-1">
+                                                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path
+                                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                {{ c.incidentLocation }} • {{ c.hospitalName }}
+                                            </p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex flex-col">
+                                                <span class="text-xs font-black text-emerald-600">₹{{
+                                                    (c.approvedAmount
+                                                    || 0) | number }} Approved</span>
+                                                <span
+                                                    class="text-[9px] text-slate-400 font-bold italic line-through">Requested:
+                                                    ₹{{ (c.requestedAmount || c.estimatedClaimAmount) | number
+                                                    }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex flex-col gap-1.5">
+                                                <span
+                                                    [class]="'w-fit px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ' + 
+                                                    (c.status === 'Approved' ? 'bg-emerald-50 text-emerald-600' : 'bg-brand-orange/10 text-brand-orange')">
+                                                    ● {{ c.status }}
+                                                </span>
+                                                <p
+                                                    class="text-[9px] text-slate-400 font-black uppercase tracking-tighter italic">
+                                                    Officer: {{ c.assignedOfficer?.email?.split('@')[0] ||
+                                                    'Unassigned'
+                                                    }}</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="viewUnifiedDetails(c, 'claim')"
+                                                class="bg-brand-navy hover:bg-black text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all hover:shadow-xl hover:shadow-navy-100 flex items-center gap-2 ml-auto group-hover:scale-105">
+                                                Audit Data
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="6" class="p-20 text-center">
+                                            <div
+                                                class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                                                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            </div>
+                                            <p
+                                                class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] italic">
+                                                No Forensic Claim Logs Detected</p>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'analysis-payments') {
+                <div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <div>
+                        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Enterprise Payments
+                        </h1>
+                        <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">Consolidated
+                            premium collection and financial settlement audit.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+                        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+                            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">Premium Ledger
+                            </h3>
+                            <button (click)="loadUnifiedPayments()"
+                                class="text-brand-orange hover:underline font-black text-[10px] uppercase tracking-widest">Refresh
+                                Payments</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                        <th class="px-8 py-5">Policyholder</th>
+                                        <th class="px-8 py-5">Personnel</th>
+                                        <th class="px-8 py-5">Plan/Category</th>
+                                        <th class="px-8 py-5">Financial Coverage</th>
+                                        <th class="px-8 py-5">Premium Status</th>
+                                        <th class="px-8 py-5 text-right">Invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (pay of unifiedPayments(); track pay.transactionId) {
+                                    <tr class="hover:bg-slate-50/30 transition-colors">
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy">{{ pay.customerEmail }}
+                                            </p>
+                                            <p
+                                                class="text-[9px] text-slate-400 font-bold uppercase tracking-tight italic">
+                                                {{ pay.transactionId || 'Awaiting Payment' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-[10px] font-bold text-slate-600">A: {{ pay.agentEmail ||
+                                                'Direct' }}</p>
+                                            <p class="text-[10px] font-bold text-slate-400">O: {{
+                                                pay.claimsOfficerEmail
+                                                || 'Unassigned' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-indigo-600 italic tracking-tight">{{
+                                                pay.tierId }}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">{{
+                                                pay.policyCategory }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy">₹{{ pay.totalCoverage |
+                                                number
+                                                }}</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                                Curr: ₹{{ pay.currentCoverage | number }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-emerald-600">₹{{ pay.paidAmount |
+                                                number
+                                                }}</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                                Premium: ₹{{ pay.premiumAmount | number }}</p>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="openInvoiceModal(pay)"
+                                                class="bg-brand-navy hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">
+                                                Invoice
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="6"
+                                            class="p-20 text-center text-slate-300 font-black uppercase italic tracking-widest">
+                                            No payment records consolidated</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'email-automation') {
+                <div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Email Automation
+                            </h1>
+                            <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">Direct
+                                communication channel to all platform stakeholders.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button (click)="loadAllUsers()"
+                                class="bg-indigo-50 text-indigo-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-100 transition-all">
+                                Refresh User Registry
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                        <th class="px-8 py-5">Global ID</th>
+                                        <th class="px-8 py-5">User Profile</th>
+                                        <th class="px-8 py-5">Role/Access</th>
+                                        <th class="px-8 py-5">Date Created</th>
+                                        <th class="px-8 py-5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (u of allUsers(); track u.id) {
+                                    <tr class="hover:bg-slate-50/30 transition-colors group">
+                                        <td class="px-8 py-6">
+                                            <span class="font-mono text-[11px] text-brand-navy font-black">#{{
+                                                u.id.substring(0,8) }}</span>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex items-center gap-3">
+                                                <div
+                                                    class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-500 uppercase">
+                                                    {{ (u.fullName || u.userName || 'U')[0] }}
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs font-black text-brand-navy">{{ u.fullName ||
+                                                        u.userName }}</p>
+                                                    <p class="text-[10px] text-slate-400 font-bold italic lowercase">
+                                                        {{
+                                                        u.email }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <span
+                                                [class]="'px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ' + 
+                                                (u.role === 'Admin' ? 'bg-rose-50 text-rose-600' : u.role === 'Agent' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600')">
+                                                {{ u.role || 'Partner' }}
+                                            </span>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-[10px] text-slate-500 font-bold">{{ u.createdDate |
+                                                date:'mediumDate' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="openEmailForm(u)"
+                                                class="bg-brand-navy hover:bg-black text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all hover:shadow-xl hover:shadow-navy-100 flex items-center gap-2 ml-auto group-hover:scale-105">
+                                                Send Email
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="3" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    @if (showAssignModal()) {
+    <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="font-black text-brand-navy uppercase tracking-tight">Select Agent for Assignment</h3>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Application ID:
+                        {{
+                        selectedApplicationId() }}</p>
+                </div>
+                <button (click)="showAssignModal.set(false)"
+                    class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-0 max-h-[400px] overflow-y-auto">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr
+                            class="sticky top-0 bg-white text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                            <th class="px-6 py-4">Agent Email</th>
+                            <th class="px-6 py-4">Current Load</th>
+                            <th class="px-6 py-4 text-right">Assign</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @for (agent of agentsWithLoad(); track agent.agentId) {
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4 font-bold text-brand-navy">{{ agent.agentEmail }}</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded font-black">{{
+                                    agent.assignedPolicyCount }} Policies</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button (click)="assignAgent(agent.agentId)" [disabled]="isAssigning()"
+                                    class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter disabled:opacity-50">Confirm</button>
+                            </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                            <td colspan="3" class="p-10 text-center text-slate-400 italic font-bold">No active
+                                agents
+                                found in system.</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button (click)="showAssignModal.set(false)" class="btn-secondary py-2 text-[10px]">Cancel</button>
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (showAssignOfficerModal()) {
+    <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="font-black text-brand-navy uppercase tracking-tight">Select Claims Officer</h3>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Claim ID: {{
+                        selectedClaimId()?.substring(0,8) }}...</p>
+                </div>
+                <button (click)="showAssignOfficerModal.set(false)"
+                    class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-0 max-h-[400px] overflow-y-auto">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr
+                            class="sticky top-0 bg-white text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                            <th class="px-6 py-4">Officer Email</th>
+                            <th class="px-6 py-4">Active Claims</th>
+                            <th class="px-6 py-4 text-right">Assign</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @for (officer of claimOfficersWithWorkload(); track officer.claimOfficerId) {
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4 font-bold text-brand-navy">{{ officer.email }}</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded font-black">{{
+                                    officer.assignedClaimsCount }} Claims</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button (click)="assignOfficer(officer.claimOfficerId)" [disabled]="isAssigning()"
+                                    class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter disabled:opacity-50">Confirm</button>
+                            </td>
+                        </tr>
+                        } @empty {
+                        <tr>
+                            <td colspan="3" class="p-10 text-center text-slate-400 italic font-bold">No claims
+                                officers
+                                found in system.</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button (click)="showAssignOfficerModal.set(false)"
+                    class="btn-secondary py-2 text-[10px]">Cancel</button>
+            </div>
+        </div>
+    </div>
+    }
+    <!-- UNIFIED DETAIL SIDE PANEL (ENHANCED END-TO-END) -->
+    @if (showUnifiedDetail() && selectedUnifiedDetail()) {
+    <div class="fixed inset-0 z-[100] flex justify-end overflow-hidden">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
+            (click)="showUnifiedDetail.set(false)"></div>
+
+        <!-- Sidebar Panel -->
+        <div
+            class="relative w-full max-w-xl bg-slate-50 shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-500">
+            <!-- Header -->
+            <div class="p-8 bg-brand-navy text-white shrink-0 relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-orange/10 rounded-full blur-3xl"></div>
+                <div class="relative z-10 flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span
+                                class="bg-brand-orange text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">Master
+                                Audit</span>
+                            <span class="text-slate-400 text-[10px] font-mono">REC_{{
+                                (selectedUnifiedDetail().policy?.id
+                                || selectedUnifiedDetail().claim?.id || '000').substring(0,8).toUpperCase()
+                                }}</span>
+                        </div>
+                        <h2 class="text-4xl text-white tracking-tighter italic">Unified <span
+                                class="text-brand-orange">Enterprise</span> Ledger</h2>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">End-to-end
+                            data
+                            reconciliation protocol</p>
+                    </div>
+                    <button (click)="showUnifiedDetail.set(false)"
+                        class="p-3 hover:bg-white/10 rounded-2xl transition-all text-slate-400 hover:text-white group">
+                        <svg class="w-7 h-7 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="grow overflow-y-auto p-10 space-y-12 custom-scrollbar">
+
+                <!-- 1. Customer Context -->
+                <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-brand-orange text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-orange-200">
+                            {{ selectedUnifiedDetail().customer?.email?.[0]?.toUpperCase() || 'C' }}
+                        </div>
+                        <div>
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Customer
+                                Integrity
+                            </h3>
+                            <p
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                                Verified policyholder records</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm col-span-2">
+                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-3">
+                                Electronic
+                                Identity</p>
+                            <p class="text-sm font-black text-brand-navy">{{ selectedUnifiedDetail().customer?.email
+                                }}
+                            </p>
+                            <div class="mt-4 pt-4 border-t border-slate-50 grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-[8px] text-slate-400 font-bold uppercase">Account Name</p>
+                                    <p class="text-[10px] font-black text-slate-600 uppercase">{{
+                                        selectedUnifiedDetail().customer?.name || 'Verified User' }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[8px] text-slate-400 font-bold uppercase">Phone Trace</p>
+                                    <p class="text-[10px] font-black text-slate-600">{{
+                                        selectedUnifiedDetail().customer?.phoneNumber || '--' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 2. Medical & Risk Profile (MATCHING CLAIMS OFFICER DEPTH) -->
+                <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Medical & Risk
+                                Audit</h3>
+                            <p
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                                Health metrics and lifestyle underwriting</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm space-y-8">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                            <div class="text-center md:text-left">
+                                <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Applicant Age</p>
+                                <p class="text-xl font-black text-brand-navy italic">{{
+                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.age }} <span
+                                        class="text-[10px] font-bold text-slate-400 not-italic">Yrs</span></p>
+                            </div>
+                            <div class="text-center border-x border-slate-100">
+                                <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Tobacco Logic</p>
+                                <p class="text-sm font-black text-brand-navy capitalize">{{
+                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.smokingHabit }}
+                                </p>
+                            </div>
+                            <div class="text-center border-r border-slate-100">
+                                <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Alcohol Habit</p>
+                                <p class="text-sm font-black text-brand-navy capitalize">{{
+                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.alcoholHabit }}
+                                </p>
+                            </div>
+
+                        </div>
+                        <hr class="border-slate-50">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="p-4 bg-slate-50 rounded-2xl">
+                                <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Professional Vertical
+                                </p>
+                                <p class="text-xs font-black text-slate-700">{{
+                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.profession || 'Standard
+                                    Employment' }}</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-2xl">
+                                <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Risk Exposure
+                                    (KM/Month)
+                                </p>
+                                <p class="text-xs font-black text-slate-700">{{
+                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.travelKmPerMonth || '0'
+                                    }}
+                                    Kilometers</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Nominee & Financial Beneficiary -->
+                <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 shadow-sm">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Nominee
+                                Information
+                            </h3>
+                            <p
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                                Financial settlement beneficiaries</p>
+                        </div>
+                    </div>
+
+                    @if (selectedUnifiedDetail().policy?.fullDetails?.nominee) {
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                        <div class="flex justify-between items-center mb-6">
+
+
+                            <div>
+                                <p class="text-lg font-black text-brand-navy">{{
+                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeName }}</p>
+                                <p class="text-[10px] text-slate-400 font-bold">{{
+                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeEmail }}</p>
+                            </div>
+
+
+
+                            <span
+                                class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-100">Primary
+                                Beneficiary</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 pt-6 border-t border-slate-50">
+                            <div class="p-4 bg-emerald-50/30 rounded-2xl border border-emerald-50">
+                                <p class="text-[8px] text-slate-400 font-bold uppercase mb-1">Settlement A/C</p>
+                                <p class="text-xs font-mono font-black text-brand-navy uppercase">{{
+                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeBankAccountNumber }}
+                                </p>
+                            </div>
+                            <div class="p-4 bg-emerald-50/30 rounded-2xl border border-emerald-50">
+                                <p class="text-[8px] text-slate-400 font-bold uppercase mb-1">Contact Anchor</p>
+                                <p class="text-xs font-black text-brand-navy">{{
+                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineePhone }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    } @else {
+                    <div class="p-10 text-center bg-white rounded-[2rem] border border-slate-100 border-dashed">
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest italic">No nominee
+                            records
+                            detected in application</p>
+                    </div>
+                    }
+                </section>
+
+                <!-- 4. Personnel & Logistics -->
+                <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M12 4.354l1.1 3.383h3.558l-2.877 2.091 1.1 3.383-2.881-2.091-2.881 2.091 1.1-3.383-2.877-2.091h3.558l1.1-3.383z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Servicing
+                                Personnel
+                            </h3>
+                            <p
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                                Personnel assigned to this asset lifecycle</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div
+                            class="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center gap-4 shadow-sm group hover:border-indigo-200 transition-all">
+                            <div>
+                                <p class="text-[8px] text-slate-400 font-black uppercase tracking-widest">
+                                    Verification
+                                    Agent</p>
+                                <p class="text-xs font-black text-brand-navy">{{
+                                    selectedUnifiedDetail().agent?.email ||
+                                    'UNASSIGNED' }}</p>
+                                <p class="text-[10px] font-bold text-indigo-500 mt-1 uppercase">{{
+                                    selectedUnifiedDetail().agent?.email ? 'Certified Partner' : 'Awaiting
+                                    Allocation'
+                                    }}</p>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center gap-4 shadow-sm group hover:border-brand-orange/20 transition-all">
+
+                            <div>
+                                <p class="text-[8px] text-slate-400 font-black uppercase tracking-widest">Claims
+                                    Adjudicator</p>
+                                <p class="text-xs font-black text-brand-navy">{{
+                                    selectedUnifiedDetail().claimOfficer?.userName || 'UNASSIGNED' }}</p>
+                                <p class="text-[10px] font-bold text-brand-orange mt-1 uppercase">{{
+                                    selectedUnifiedDetail().claimOfficer?.userName ? 'Senior Assessor' : 'Audit
+                                    Pending'
+                                    }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Claims Forensics & Incident Evidence -->
+                <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Claims Forensic
+                                Ledger</h3>
+                            <p
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                                Incident history and evidence repository</p>
+                        </div>
+                    </div>
+
+                    @if (selectedUnifiedDetail().claim) {
+                    <div class="space-y-6">
+                        <div
+                            class="bg-brand-navy p-10 rounded-[3rem] text-white relative overflow-hidden group shadow-2xl shadow-navy-100">
+                            <div
+                                class="absolute -right-10 -bottom-10 w-48 h-48 bg-brand-orange/10 rounded-full group-hover:scale-125 transition-all duration-700">
+                            </div>
+                            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+                                <div>
+                                    <span
+                                        class="bg-brand-orange text-white text-[8px] font-black px-3 py-1 rounded uppercase tracking-[0.2em] italic mb-4 inline-block">●
+                                        Incident Verified</span>
+                                    <h4 class="text-4xl text-white italic tracking-tighter">₹{{
+                                        (selectedUnifiedDetail().claim.approvedAmount ||
+                                        selectedUnifiedDetail().claim.requestedAmount) | number }}</h4>
+                                    <p
+                                        class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-2 underline decoration-brand-orange decoration-2">
+                                        Settlement Amount</p>
+                                    <div class="mt-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                                        <p class="text-[9px] text-brand-orange font-black uppercase tracking-widest">
+                                            Policy Coverage Ratio</p>
+                                        <p class="text-sm font-black text-white mt-1">₹{{
+                                            selectedUnifiedDetail().claim.remainingCoverage | number }} <span
+                                                class="text-slate-500 font-bold">/ ₹{{
+                                                selectedUnifiedDetail().claim.totalCoverage | number }}</span></p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-10 md:text-right">
+                                    <div
+                                        class="border-l-2 md:border-l-0 md:border-r-2 border-brand-orange/30 pl-4 md:pl-0 md:pr-4">
+                                        <p class="text-[9px] text-slate-400 font-black uppercase mb-1">Type</p>
+                                        <p class="text-xs font-black italic">{{
+                                            selectedUnifiedDetail().claim.incidentType }}</p>
+                                    </div>
+                                    <div
+                                        class="border-l-2 md:border-l-0 md:border-r-2 border-brand-orange/30 pl-4 md:pl-0 md:pr-4">
+                                        <p class="text-[9px] text-slate-400 font-black uppercase mb-1">Date</p>
+                                        <p class="text-xs font-black italic">{{
+                                            selectedUnifiedDetail().claim.incidentDate | date:'longDate' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                                <p
+                                    class="text-[9px] font-black text-brand-navy uppercase tracking-widest mb-6 border-b border-slate-50 pb-2">
+                                    Logistics Forensics</p>
+                                <div class="space-y-4">
+                                    <div>
+                                        <p class="text-[8px] text-slate-400 font-black uppercase">Incident
+                                            Geo-Location
+                                        </p>
+                                        <p class="text-sm font-black text-brand-navy italic">{{
+                                            selectedUnifiedDetail().claim.incidentLocation }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[8px] text-slate-400 font-black uppercase">Facility Admitted
+                                        </p>
+                                        <p class="text-xs font-bold text-slate-600">{{
+                                            selectedUnifiedDetail().claim.hospitalName }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                                <p
+                                    class="text-[9px] font-black text-brand-navy uppercase tracking-widest mb-6 border-b border-slate-50 pb-2">
+                                    Incident Narrative</p>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium italic">"{{
+                                    selectedUnifiedDetail().claim.description }}"</p>
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- Documents Section -->
+                        <div class="space-y-4">
+                            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-2">
+                                Digital Evidence Vault
+                            </h4>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                                @for (doc of selectedUnifiedDetail().claim.documents; track doc.id) {
+                                <a [href]="doc.fileUrl" target="_blank" class="bg-white p-6 rounded-2xl border border-slate-100 
+                   flex items-center justify-between gap-4 
+                   hover:shadow-xl hover:border-indigo-100 
+                   transition-all group overflow-hidden min-w-[240px]">
+
+                                    <!-- Left Section -->
+                                    <div class="flex items-center gap-4 overflow-hidden">
+                                        <div class="w-11 h-11 bg-brand-navy text-white rounded-xl flex items-center justify-center 
+                           group-hover:bg-brand-orange transition-colors duration-500">
+                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+
+                                        <div class="overflow-hidden">
+                                            <p class="text-[10px] font-black text-brand-navy uppercase truncate">
+                                                {{ doc.fileName }}
+                                            </p>
+                                            <p class="text-[8px] text-slate-400 font-bold uppercase tracking-tight">
+                                                Audit Ready
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right Section - Open Button -->
+                                    <div class="text-[9px] font-bold text-brand-orange uppercase tracking-wide 
+                        opacity-80 group-hover:opacity-100 transition">
+                                        Click to Open →
+                                    </div>
+
+                                </a>
+                                }
+                            </div>
+                        </div>
+
+
+                    </div>
+                    } @else {
+                    <div class="bg-slate-100 p-12 rounded-[2.5rem] text-center border-4 border-dashed border-slate-200">
+                        <div
+                            class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest italic">Asset
+                            Lifecycle
+                            Clear • No Active Claims Documented</p>
+                    </div>
+                    }
+                </section>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-10 bg-white border-t border-slate-100 shadow-2xl shrink-0 flex gap-4">
+                <button (click)="showUnifiedDetail.set(false)"
+                    class="grow bg-brand-navy text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-slate-900 transition-all shadow-xl shadow-navy-200 active:scale-95">
+                    Acknowledge Review
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (showInvoiceModal() && selectedPayment()) {
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[110] p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <!-- Simplified Header -->
+            <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        Premium Invoice
+                        <span
+                            class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-black">Verified</span>
+                    </h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Transaction
+                        Ledger
+                        Record</p>
+                </div>
+                <button (click)="showInvoiceModal.set(false)"
+                    class="p-2 hover:bg-slate-100 rounded-xl transition-all text-slate-400">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <!-- Compact Settlement Box -->
+                <div class="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Settlement
+                            Amount
+                        </p>
+                        <h4 class="text-2xl font-black text-indigo-600 mt-1">₹{{ selectedPayment().paidAmount |
+                            number
+                            }}</h4>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Payment Date</p>
+                        <p class="text-xs font-bold text-slate-600 mt-1">{{ selectedPayment().nextPaymentDate |
+                            date:'mediumDate' }}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Policyholder</p>
+                        <p class="text-xs font-bold text-slate-700 truncate">{{ selectedPayment().customerEmail }}
+                        </p>
+                    </div>
+                    <div class="space-y-1 text-right">
+                        <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Transaction ID</p>
+                        <p class="text-xs font-mono font-bold text-slate-700">{{ selectedPayment().transactionId ||
+                            'Awaiting Sync' }}</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-50 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Plan
+                            Category</span>
+                        <span class="text-[10px] font-black text-slate-700 uppercase">{{
+                            selectedPayment().policyCategory }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Plan
+                            Tier</span>
+                        <span class="text-[10px] font-black text-slate-700 uppercase italic">{{
+                            selectedPayment().tierId
+                            }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Active
+                            Coverage</span>
+                        <span class="text-[10px] font-black text-emerald-600">₹{{ selectedPayment().currentCoverage
+                            |
+                            number }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
+                <button (click)="generateInvoicePDF(selectedPayment())"
+                    class="grow bg-brand-orange text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] shadow-lg shadow-orange-100 hover:brightness-110 active:scale-95 transition-all">
+                    Download Invoice
+                </button>
+                <button (click)="showInvoiceModal.set(false)"
+                    class="px-8 bg-white text-slate-500 py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] border border-slate-200 hover:bg-slate-50 transition-all active:scale-95">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+    @if (showEmailModal()) {
+    <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm flex items-center justify-center z-[200] p-4">
+        <div
+            class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="font-black text-brand-navy uppercase tracking-tight text-xl italic">Email Automation
+                        <span class="text-brand-orange">Protocol</span>
+                    </h3>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Secure
+                        transmission
+                        to: {{ selectedUserForEmail()?.email }}</p>
+                </div>
+                <button (click)="showEmailModal.set(false)"
+                    class="p-3 hover:bg-slate-200 rounded-2xl transition-colors text-slate-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <form [formGroup]="emailForm" (ngSubmit)="sendEmail()" class="p-10 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Recipient
+                            Identity</label>
+                        <input type="email" formControlName="toEmail" readonly
+                            class="w-full bg-slate-100 border-none rounded-2xl px-6 py-4 text-xs font-bold text-slate-500 cursor-not-allowed">
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Communication
+                            Subject</label>
+                        <input type="text" formControlName="subject" placeholder="Enter formal subject line"
+                            class="w-full bg-white border-2 border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-brand-navy focus:border-brand-orange focus:ring-0 transition-all">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Message
+                        Payload
+                        (HTML Content Support)</label>
+                    <textarea formControlName="message" rows="8"
+                        placeholder="Compose your secure communication message..."
+                        class="w-full bg-white border-2 border-slate-100 rounded-[2rem] px-8 py-6 text-xs font-medium text-slate-600 focus:border-brand-orange focus:ring-0 transition-all leading-relaxed"></textarea>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="button" (click)="showEmailModal.set(false)"
+                        class="grow px-8 py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:bg-slate-50 transition-all">
+                        Cancel
+                    </button>
+                    <button type="submit" [disabled]="emailForm.invalid || isSendingEmail()"
+                        class="grow-[2] bg-brand-navy text-white px-8 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-navy-100 disabled:opacity-50 flex items-center justify-center gap-3">
+                        @if (isSendingEmail()) {
+                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Sending...
+                        } @else {
+                        Send Email
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+</div>

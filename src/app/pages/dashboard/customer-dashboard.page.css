@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@import "../../../theme.css";
+
+
+.sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all;
+    @apply text-slate-400 hover:bg-slate-50 hover:text-brand-navy;
+}
+
+.sidebar-link.active {
+    @apply bg-brand-orange/10 text-brand-orange;
+}
+
+.card {
+    @apply bg-white border border-border-light rounded-3xl p-6 shadow-sm;
+}
+
+.btn-primary {
+    @apply bg-brand-orange text-white rounded-full font-black uppercase text-xs tracking-widest px-6 py-3 shadow-md hover:bg-orange-600 transition-all;
+}
+
+.btn-secondary {
+    @apply border border-slate-200 text-brand-navy rounded-full font-bold uppercase text-xs tracking-widest px-6 py-3 hover:bg-slate-50 transition-all;
+}
+
+.input-field {
+    @apply w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange/50 transition-all;
+}
+
+.badge {
+    @apply px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter;
+}
+
+.badge-success {
+    @apply bg-emerald-50 text-emerald-600;
+}
+
+.badge-warning {
+    @apply bg-amber-50 text-amber-600;
+}
+
+.brand-bg {
+    @apply bg-brand-gray;
+}
+
+/* Chat Helper Custom Styles */
+.animate-in {
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.slide-in-from-right {
+    animation-name: slideInFromRight;
+}

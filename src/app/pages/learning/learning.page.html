@@ -1,0 +1,317 @@
+<div class="learning-container">
+    <!-- Header -->
+    <header class="learning-header">
+        <a (click)="goBack()" class="back-btn">
+            <span>←</span> Back to Home
+        </a>
+        <div style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.2rem; color:#0f1f14;">AcciSure</div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <span class="hero-label">Interactive Learning Hub</span>
+        <h1 class="hero-title">Insurance Simplified.<br><span>Knowledge Empowers.</span></h1>
+        <p class="hero-subtitle">
+            Welcome to the AcciSure Learning Hub. We believe insurance shouldn't be a mystery. Explore our end-to-end
+            guide to understand how policies protect your future.
+        </p>
+    </section>
+
+    <!-- Video Masterclass Section -->
+    <div class="learning-grid" style="margin-bottom: 3rem;">
+        <div class="section-group" style="margin-top: 0;">
+            <h2 class="section-title">Video Masterclass</h2>
+        </div>
+        <div class="video-section">
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="https://res.cloudinary.com/dws3beqwu/video/upload/v1772442082/Science_of_Your_Safety_Net_hlilxz.mp4"
+                        type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-placeholder">
+                <div
+                    style="padding: 1.5rem; border: 2px dashed rgba(0,0,0,0.05); border-radius: 20px; text-align: center; color: rgba(0,0,0,0.2);">
+                    <span style="font-size: 1.5rem; display: block; margin-bottom: 0.75rem;">✨</span>
+                    <p style="font-size: 0.85rem; font-weight: 600;">Coming Soon</p>
+                    <p style="font-size: 0.7rem;">Interactive Quizzes & Modules</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Grid -->
+    <div class="learning-grid">
+
+        <!-- 1. Basics -->
+        <div class="section-group">
+            <h2 class="section-title">01. The Fundamentals</h2>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">🎯</div>
+            <h3 class="card-title">What is Insurance?</h3>
+            <p class="card-content">At its core, insurance is a financial safety net. It's a contract (the policy) where
+                you pay a small amount (premium) to an insurance company, which in return agrees to pay for your losses
+                if something unexpected happens.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">📜</div>
+            <h3 class="card-title">The Policy Document</h3>
+            <p class="card-content">This is your legal contract. It outlines what is covered (inclusions), what isn't
+                (exclusions), and the terms you must follow to remain protected. Always read the fine print!</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">💰</div>
+            <h3 class="card-title">Premium vs. Deductible</h3>
+            <p class="card-content">The <b>Premium</b> is the price you pay to keep the policy active. The
+                <b>Deductible</b>
+                is the amount you pay out of pocket before the insurance company pays the rest of a claim.
+            </p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">🛡️</div>
+            <h3 class="card-title">Inclusions & Exclusions</h3>
+            <p class="card-content">Inclusions are events covered by your policy. Exclusions are specific situations
+                where the insurer won't pay. Knowing both ensures no surprises during a claim.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">⏳</div>
+            <h3 class="card-title">Grace Period</h3>
+            <p class="card-content">A Grace Period is extra time (usually 15-30 days) to pay your premium after the due
+                date. Your coverage stays active during this window, preventing policy lapse.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">👥</div>
+            <h3 class="card-title">Nominees & Beneficiaries</h3>
+            <p class="card-content">A Nominee is the person you choose to receive the insurance benefits in your
+                absence. Keeping nominee details updated ensures quick support to your loved ones.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">📈</div>
+            <h3 class="card-title">Claim Settlement Ratio (CSR)</h3>
+            <p class="card-content">CSR is the percentage of claims a company pays out of total claims received. A high
+                CSR indicates the insurer's reliability and commitment to its promises.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">⚖️</div>
+            <h3 class="card-title">Principle of Indemnity</h3>
+            <p class="card-content">The goal of insurance is to return you to the same financial position you were in
+                before the loss—not to provide a profit. It's about "making you whole" again.</p>
+        </div>
+
+        <!-- 2. Policies & Premium -->
+        <div class="section-group">
+            <h2 class="section-title">02. Understanding Costs & Risk</h2>
+        </div>
+
+        <div class="premium-calc">
+            <div class="calc-info">
+                <h3 class="hero-title" style="font-size: 2rem; color: white;">How is your <span
+                        style="color: #4ade80;">Premium Calculated?</span></h3>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 2rem;">Insurers use complex algorithms and
+                    "Actuaries" to determine the fair price for your protection. It's all about balanced risk.</p>
+                <div style="display: flex; gap: 1rem;">
+                    <div
+                        style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); flex: 1;">
+                        <div style="font-weight: 800; color: #4ade80;">Statistical Data</div>
+                        <div style="font-size: 0.8rem;">Historical loss ratios</div>
+                    </div>
+                    <div
+                        style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); flex: 1;">
+                        <div style="font-weight: 800; color: #4ade80;">Risk Factors</div>
+                        <div style="font-size: 0.8rem;">Age, health, lifestyle</div>
+                    </div>
+                </div>
+            </div>
+            <div class="calc-steps">
+                <div class="calc-step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <div style="font-weight: 700;">Base Rate Determination</div>
+                        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Assessing the average cost for a
+                            specific category of people.</p>
+                    </div>
+                </div>
+                <div class="calc-step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <div style="font-weight: 700;">Underwriting Adjustments</div>
+                        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Customizing the rate based on your
+                            individual risk profile.</p>
+                    </div>
+                </div>
+                <div class="calc-step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <div style="font-weight: 700;">Final Calculation</div>
+                        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Adding operational costs and profit
+                            margins to set the final premium.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW: Premium Dual Layout for Costs & Risk -->
+        <div class="premium-dual-layout">
+            <!-- Risk Assessment Factors -->
+            <div class="risk-factors-container">
+                <h3 class="hero-title" style="font-size: 1.6rem; margin-bottom: 0.25rem;">The <span
+                        style="color: var(--primary-green);">Risk Spectrum</span></h3>
+                <p style="font-size: 0.85rem; color: rgba(0,0,0,0.5);">Impact on your cost.</p>
+
+                <div class="risk-grid">
+                    <div class="risk-item">
+                        <div class="risk-badge badge-high">High</div>
+                        <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 0.25rem;">Occupation</div>
+                        <p style="font-size: 0.75rem; color: rgba(0,0,0,0.5);">Hazardous roles increase profiles.</p>
+                    </div>
+                    <div class="risk-item">
+                        <div class="risk-badge badge-high">High</div>
+                        <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 0.25rem;">Age & Health</div>
+                        <p style="font-size: 0.75rem; color: rgba(0,0,0,0.5);">Demographics affect rates.</p>
+                    </div>
+                    <div class="risk-item">
+                        <div class="risk-badge badge-low">Low</div>
+                        <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 0.25rem;">Lifestyle</div>
+                        <p style="font-size: 0.75rem; color: rgba(0,0,0,0.5);">Healthy habits lower scores.</p>
+                    </div>
+                    <div class="risk-item">
+                        <div class="risk-badge badge-low">Low</div>
+                        <div style="font-weight: 800; font-size: 0.9rem; margin-bottom: 0.25rem;">Geography</div>
+                        <p style="font-size: 0.75rem; color: rgba(0,0,0,0.5);">Safer zones result in better rates.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Claims Bonus -->
+            <div class="ncb-container">
+                <div class="ncb-content">
+                    <div class="ncb-tag">Loyalty Reward</div>
+                    <div class="ncb-percentage">Up to 50% <span style="font-size: 1.5rem; font-weight: 600;">Off</span>
+                    </div>
+                    <h3
+                        style="font-family:'Sora',sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.75rem;">
+                        No
+                        Claims Bonus (NCB)</h3>
+                    <p style="font-size: 0.85rem; line-height: 1.5; opacity: 0.9; margin-bottom: 1.25rem;">
+                        Stay safe and save big! Cumulative discounts for every claim-free year.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.75rem; font-weight: 700;">
+                        <div style="border-left: 2px solid white; padding-left: 0.75rem;">1 Year: 10%</div>
+                        <div style="border-left: 2px solid white; padding-left: 0.75rem;">3 Years: 25%</div>
+                        <div style="border-left: 2px solid white; padding-left: 0.75rem;">5 Years: 50%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. The Claims Process -->
+        <div class="section-group">
+            <h2 class="section-title">03. The Claims Journey</h2>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">📢</div>
+            <h3 class="card-title">1. Intimation</h3>
+            <p class="card-content">Notify the insurer as soon as an incident occurs. Modern apps like AcciSure allow
+                for instant digital intimation.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">🔍</div>
+            <h3 class="card-title">2. Investigation</h3>
+            <p class="card-content">A Claims Officer reviews the details and may send a surveyor to assess the
+                damage or verify the incident details.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">✅</div>
+            <h3 class="card-title">3. Adjudication</h3>
+            <p class="card-content">The Adjudicator decides if the claim falls within policy terms and determines
+                the final payout amount.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">📁</div>
+            <h3 class="card-title">4. Verification</h3>
+            <p class="card-content">Checking the validity of documents like medical bills, police reports (FIR), and
+                proof of incident to prevent fraud.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">📏</div>
+            <h3 class="card-title">5. Survey</h3>
+            <p class="card-content">A professional surveyor evaluates the extent of loss or damage on-site to provide an
+                unbiased assessment report.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">⚖️</div>
+            <h3 class="card-title">6. Admissibility</h3>
+            <p class="card-content">The insurer confirms if the loss is covered under the specific terms and conditions
+                of your active policy.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">🏦</div>
+            <h3 class="card-title">7. Approval</h3>
+            <p class="card-content">Final internal review and sign-off on the settlement amount calculated during the
+                adjudication process.</p>
+        </div>
+
+        <div class="edu-card">
+            <div class="card-icon">💸</div>
+            <h3 class="card-title">8. Disbursement</h3>
+            <p class="card-content">The approved funds are transferred directly to your bank account or to the hospital
+                if it's a cashless claim.</p>
+        </div>
+
+        <!-- 4. Key Players -->
+        <div class="section-group">
+            <h2 class="section-title">04. The Ecosystem</h2>
+        </div>
+
+        <div class="roles-grid" style="grid-column: 1 / -1;">
+            <div class="role-tag">
+                <div class="role-name">Insurance Agent</div>
+                <div class="role-desc">The primary contact who helps you select the right policy for your needs.</div>
+            </div>
+            <div class="role-tag">
+                <div class="role-name">Underwriter</div>
+                <div class="role-desc">Evaluates the risk of insuring you and decides the premium terms.</div>
+            </div>
+            <div class="role-tag">
+                <div class="role-name">Claims Officer</div>
+                <div class="role-desc">Manages the claim process from start to finish once an incident is reported.
+                </div>
+            </div>
+            <div class="role-tag">
+                <div class="role-name">Adjudicator</div>
+                <div class="role-desc">Professional who makes the final decision on claim approval and settlement.</div>
+            </div>
+            <div class="role-tag">
+                <div class="role-name">Actuary</div>
+                <div class="role-desc">Mathematical expert who calculates risks and premiums for the entire company.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer
+        style="margin-top: 5rem; padding: 3rem; text-align: center; background: rgba(0,0,0,0.02); border-radius: 20px;">
+        <h3 style="font-family:'Sora',sans-serif; font-weight: 800; margin-bottom: 1rem;">Ready to get started?</h3>
+        <button routerLink="/register" class="back-btn"
+            style="background: var(--primary-green); color: white; border: none; margin: 0 auto;">Get Your Quote Now
+            →</button>
+    </footer>
+</div>

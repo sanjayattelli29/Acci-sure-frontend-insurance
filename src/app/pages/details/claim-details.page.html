@@ -1,0 +1,129 @@
+<div class="details-container">
+    <button class="back-btn" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+        </svg>
+        Back to Dashboard
+    </button>
+
+    <div class="header-section">
+        <div class="title-group">
+            <h1>Claim #{{ claim()?.id.substring(0, 8) }}</h1>
+            <p>Incident: {{ claim()?.incidentType }} • Raised on {{ claim()?.submissionDate | date:'medium' }}</p>
+        </div>
+        <div class="status-indicator">
+            <span class="badge" [class.badge-success]="claim()?.status === 'Approved'"
+                [class.badge-warning]="claim()?.status === 'Pending'"
+                [class.badge-danger]="claim()?.status === 'Rejected'">
+                {{ claim()?.status }}
+            </span>
+        </div>
+    </div>
+
+    <div class="details-grid">
+        <!-- Left: Incident & Documents -->
+        <div class="space-y-6">
+            <div class="card">
+                <span class="card-title">Incident Details</span>
+                <div class="space-y-6">
+                    <div class="info-row">
+                        <div class="info-item">
+                            <label>Incident Date</label>
+                            <span>{{ claim()?.incidentDate | date:'longDate' }}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Location</label>
+                            <span>{{ claim()?.incidentLocation }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <label>Hospital Name</label>
+                        <span>{{ claim()?.hospitalName || 'N/A' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Description</label>
+                        <p style="font-size: 0.9rem; line-height: 1.6; color: #475569; margin-top: 8px;">
+                            {{ claim()?.description }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="card-title">Evidence & Documents</span>
+                <div class="grid grid-cols-1 gap-3">
+                    @for (doc of claim()?.documents; track doc.id) {
+                    <a [href]="doc.fileUrl" target="_blank"
+                        class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl hover:bg-slate-100 transition-all">
+                        <div
+                            class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-brand-orange border border-slate-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+                            </svg>
+                        </div>
+                        <div class="grow">
+                            <p class="text-[0.7rem] font-bold text-slate-400 uppercase">{{ doc.fileName }}</p>
+                            <p class="text-[0.8rem] font-bold text-brand-navy">View Document</p>
+                        </div>
+                    </a>
+                    } @empty {
+                    <p style="text-align: center; color: #94a3b8; font-size: 0.85rem;">No documents attached.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Financial Decision -->
+        <div class="space-y-6">
+            <div class="card">
+                <span class="card-title">Financial Breakdown</span>
+                <div class="space-y-4">
+                    <div class="balance-card">
+                        <div class="balance-label">Requested Amount</div>
+                        <div class="balance-value">₹{{ claim()?.requestedAmount | number }}</div>
+                    </div>
+
+                    @if (claim()?.status === 'Approved') {
+                    <div class="balance-card highlight">
+                        <div class="balance-label">Approved Amount</div>
+                        <div class="balance-value" style="color: #166534;">₹{{ claim()?.approvedAmount | number }}</div>
+                    </div>
+                    }
+
+                    <hr style="border: none; border-top: 1px dashed #e2e8f0; margin: 20px 0;">
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-[0.75rem]">
+                            <span class="text-slate-500">Total Policy Coverage</span>
+                            <span class="font-bold text-slate-800">₹{{ claim()?.policy?.totalCoverageAmount | number
+                                }}</span>
+                        </div>
+                        <div class="flex justify-between text-[0.75rem]">
+                            <span class="text-slate-500">Balance After Approval</span>
+                            <span class="font-bold text-brand-orange">₹{{ claim()?.policy?.remainingCoverageAmount |
+                                number }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (claim()?.status !== 'Pending') {
+            <div class="card" [class.highlight]="claim()?.status === 'Approved'">
+                <span class="card-title">Officer Remarks</span>
+                <div class="space-y-3">
+                    <p style="font-size: 0.85rem; color: #475569; font-style: italic;">
+                        "{{ claim()?.remarks || 'No remarks provided.' }}"
+                    </p>
+                    <div class="pt-3 border-t border-slate-100">
+                        <p class="text-[0.65rem] font-bold text-slate-400 uppercase">Processed On</p>
+                        <p class="text-[0.8rem] font-bold text-slate-700">{{ claim()?.processedAt | date:'medium' }}</p>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>

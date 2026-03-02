@@ -1,0 +1,71 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+@import "./theme.css";
+
+
+@layer base {
+  body {
+    @apply bg-brand-gray text-slate-900 font-sans;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-brand-navy font-bold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-700 transition-colors shadow-sm inline-block text-center;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-brand-navy border border-brand-navy font-bold py-3 px-6 rounded-lg hover:bg-slate-50 transition-colors inline-block text-center;
+  }
+
+  .card {
+    @apply bg-white border border-border-light rounded-card p-6 shadow-sm;
+  }
+
+  .nav-header {
+    @apply bg-brand-navy text-white py-4 shadow-md;
+  }
+
+  .input-field {
+    @apply w-full p-3 border border-border-light rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-brand-orange outline-none transition-all;
+  }
+
+  .badge {
+    @apply px-2 py-1 rounded text-xs font-semibold uppercase tracking-wider;
+  }
+
+  .badge-success {
+    @apply bg-emerald-100 text-emerald-700;
+  }
+
+  .badge-pending {
+    @apply bg-amber-100 text-amber-700;
+  }
+
+  /* Premium Shadow-Free UI Utilities */
+  .hero-gradient {
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  }
+
+  .package-card {
+    @apply bg-white border border-slate-100 rounded-2xl p-8 transition-all hover:border-brand-orange hover:bg-slate-50;
+  }
+
+  .stat-card {
+    @apply border-l-2 border-brand-orange pl-6 py-2;
+  }
+
+  .faq-item {
+    @apply border-b border-slate-100 py-4 cursor-pointer hover:bg-slate-50 transition-colors px-4 rounded-lg;
+  }
+}

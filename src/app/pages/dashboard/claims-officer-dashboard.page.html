@@ -1,0 +1,975 @@
+<div class="min-h-screen flex flex-col bg-brand-gray">
+    <!-- Claims Header -->
+    <header class="nav-header shrink-0">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span class="text-xl font-black tracking-tight text-white">Insurance<span
+                        class="text-brand-orange">Platform</span></span>
+                <span
+                    class="bg-brand-orange/10 text-brand-orange px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest border border-brand-orange/20">Assessment
+                    Engine</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <!-- Notifications -->
+                <app-notification-panel portalRole="ClaimOfficer"></app-notification-panel>
+
+                <button (click)="logout()" class="p-2 hover:bg-white/10 rounded-full transition-colors text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex grow overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-brand-navy border-r border-white/5 flex flex-col pt-6 shrink-0">
+            <nav class="space-y-1 px-3">
+                <button (click)="setSection('dashboard')"
+                    [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
+                    (activeSection() === 'dashboard' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Overview
+                </button>
+                <button (click)="setSection('pending')"
+                    [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
+                    (activeSection() === 'pending' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Assessment Queue
+                </button>
+                <button (click)="setSection('history')"
+                    [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
+                    (activeSection() === 'history' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Decision History
+                </button>
+                <button (click)="setSection('payments')"
+                    [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
+                    (activeSection() === 'payments' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17c-1.12 0-2.1-.425-2.69-1.03M12 7V5m0 14v-2" />
+                    </svg>
+                    Payments
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="grow overflow-y-auto p-8 bg-brand-gray">
+            <div class="max-w-6xl mx-auto space-y-8">
+
+                <!-- Overview Section -->
+                @if (activeSection() === 'dashboard') {
+                <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                        <h1 class="text-3xl font-black text-brand-navy">Assessor Intelligence</h1>
+                        <p class="text-slate-500 text-sm italic font-medium">Monitoring claim integrity and settlement
+                            velocity.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div (click)="setSection('pending')"
+                            class="card p-6 border-l-4 border-brand-orange cursor-pointer hover:shadow-2xl transition-all group">
+                            <p
+                                class="text-[10px] uppercase font-black text-slate-400 tracking-widest mb-2 group-hover:text-brand-orange transition-colors">
+                                Pending Assessment</p>
+                            <span class="text-3xl font-black text-brand-navy">{{ stats().pending }}</span>
+                        </div>
+                        <div (click)="setSection('history')"
+                            class="card p-6 border-l-4 border-emerald-500 cursor-pointer hover:shadow-2xl transition-all group">
+                            <p
+                                class="text-[10px] uppercase font-black text-slate-400 tracking-widest mb-2 group-hover:text-emerald-500 transition-colors">
+                                Approved Payouts</p>
+                            <span class="text-3xl font-black text-emerald-600">{{ stats().approved }}</span>
+                        </div>
+                        <div (click)="setSection('history')"
+                            class="card p-6 border-l-4 border-rose-500 cursor-pointer hover:shadow-2xl transition-all group">
+                            <p
+                                class="text-[10px] uppercase font-black text-slate-400 tracking-widest mb-2 group-hover:text-rose-500 transition-colors">
+                                Rejected Entries</p>
+                            <span class="text-3xl font-black text-rose-600">{{ stats().rejected }}</span>
+                        </div>
+                        <div class="card p-6 border-l-4 border-brand-navy bg-brand-navy text-white">
+                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-2">Total
+                                Assigned</p>
+                            <span class="text-3xl font-black">{{ stats().total }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Analytics & Priority Peek -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                        <!-- Settlement Trends -->
+                        <div class="lg:col-span-2 card p-8 border-none shadow-2xl shadow-slate-200/40">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="font-black text-brand-navy uppercase tracking-tight italic">Settlement
+                                        Velocity</h3>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total
+                                        approved payout trends</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="h-[250px]">
+                                <canvas id="settlementChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Status Distribution -->
+                        <div class="card p-8 border-none shadow-2xl shadow-slate-200/40">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="font-black text-brand-navy uppercase tracking-tight italic">Workload Mix
+                                    </h3>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Claim
+                                        outcome distribution</p>
+                                </div>
+                                <div
+                                    class="w-10 h-10 bg-brand-orange/10 rounded-xl flex items-center justify-center text-brand-orange">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="h-[250px] flex items-center justify-center">
+                                <canvas id="claimStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rapid Queue Peek -->
+                    <div class="bg-white rounded-3xl p-8 border border-whiteShadow shadow-xl">
+                        <h3 class="font-black text-brand-navy uppercase tracking-tight mb-6">Priority Claims</h3>
+                        <div class="space-y-4">
+                            @for (claim of myRequests().slice(0,3); track claim.id) {
+                            <div
+                                class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-10 h-10 bg-brand-orange/10 rounded-xl flex items-center justify-center text-brand-orange font-black text-xs">
+                                        #{{ claim.id.substring(0,2) }}
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-black text-brand-navy">{{ claim.user?.email }}</p>
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase">{{ claim.incidentType
+                                            }}</p>
+                                    </div>
+                                </div>
+                                <button (click)="openReviewModal(claim)"
+                                    class="text-[10px] font-black uppercase text-brand-orange hover:bg-brand-orange/5 px-4 py-2 rounded-lg transition-all">Audit
+                                    Now</button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Assessment Queue Section -->
+                @if (activeSection() === 'pending') {
+                <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                        <h1 class="text-3xl font-black text-brand-navy">Active Queue</h1>
+                        <p class="text-slate-500 text-sm">Review applications and verify incident evidence.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden shadow-2xl border-none">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead
+                                    class="bg-slate-50 text-slate-400 font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-8 py-5">Reference</th>
+                                        <th class="px-8 py-5">Policyholder</th>
+                                        <th class="px-8 py-5">Incident</th>
+                                        <th class="px-8 py-5">Estimate</th>
+                                        <th class="px-8 py-5 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (claim of myRequests(); track claim.id) {
+                                    @if (claim.status === 'PendingAssessment' || claim.status === 'Assigned') {
+                                    <tr class="hover:bg-brand-orange/[0.02] transition-colors group">
+                                        <td
+                                            class="px-8 py-6 font-mono font-bold text-slate-400 group-hover:text-brand-orange">
+                                            {{ claim.id.substring(0,8) }}</td>
+                                        <td class="px-8 py-6">
+                                            <p class="font-black text-brand-navy">{{ claim.user?.email }}</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase">{{
+                                                claim.policy?.tierId }} Plan</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <span
+                                                class="bg-brand-navy/5 text-brand-navy px-2 py-1 rounded font-black text-[9px] uppercase tracking-wider italic">
+                                                ● {{ claim.incidentType }}
+                                            </span>
+                                        </td>
+                                        <td class="px-8 py-6 font-black text-brand-orange text-sm italic">₹{{
+                                            claim.requestedAmount | number }}</td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="openReviewModal(claim)"
+                                                class="bg-brand-navy text-white px-6 py-2.5 rounded-xl text-[9px] font-black uppercase shadow-lg shadow-navy-100 hover:bg-slate-800 transition-all active:scale-95">Verify
+                                                Claim</button>
+                                        </td>
+                                    </tr>
+                                    }
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="5"
+                                            class="p-20 text-center text-slate-400 font-black uppercase tracking-widest italic bg-slate-50/30">
+                                            Queue is Clear</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Decision History Section -->
+                @if (activeSection() === 'history') {
+                <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                        <h1 class="text-3xl font-black text-brand-navy">Adjudication Ledger</h1>
+                        <p class="text-slate-500 text-sm">Historical record of all processed claims and settlements.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden shadow-2xl border-none">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead
+                                    class="bg-slate-50 text-slate-400 font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-8 py-5">Ref ID</th>
+                                        <th class="px-8 py-5">Policyholder</th>
+                                        <th class="px-8 py-5">Category</th>
+                                        <th class="px-8 py-5">Outcome</th>
+                                        <th class="px-8 py-5">Settlement</th>
+                                        <th class="px-8 py-5">Processed Date</th>
+                                        <th class="px-8 py-5 text-right">Insight</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (claim of myRequests(); track claim.id) {
+                                    @if (claim.status === 'Approved' || claim.status === 'Rejected') {
+                                    <tr class="hover:bg-slate-50 transition-colors group">
+                                        <td class="px-8 py-6 font-mono font-bold text-slate-400">{{
+                                            claim.id.substring(0,8) }}</td>
+                                        <td class="px-8 py-6">
+                                            <p class="font-black text-brand-navy lowercase">{{ claim.user?.email }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <span
+                                                class="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{{
+                                                claim.policy?.policyCategory }} • {{ claim.policy?.tierId }}</span>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <span
+                                                [class]="'px-3 py-1 rounded-full font-black text-[9px] uppercase tracking-widest ' + 
+                                                (claim.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100')">
+                                                {{ claim.status }}
+                                            </span>
+                                        </td>
+                                        <td class="px-8 py-6 font-black text-brand-navy">₹{{ (claim.approvedAmount || 0)
+                                            |
+                                            number }}</td>
+                                        <td class="px-8 py-6 text-slate-400 font-bold italic">{{ claim.processedAt |
+                                            date:'mediumDate' }}</td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="viewHistoryDetail(claim)"
+                                                class="text-brand-orange hover:bg-brand-orange/5 px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all tracking-widest">View
+                                                Details</button>
+                                        </td>
+                                    </tr>
+                                    }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (activeSection() === 'payments') {
+                <div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <div>
+                        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Enterprise Payments</h1>
+                        <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">Consolidated
+                            premium collection and financial settlement audit.</p>
+                    </div>
+
+                    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+                        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+                            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">Premium Ledger</h3>
+                            <button (click)="loadUnifiedPayments()"
+                                class="text-brand-orange hover:underline font-black text-[10px] uppercase tracking-widest">Refresh
+                                Payments</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                                        <th class="px-8 py-5">Policyholder</th>
+                                        <th class="px-8 py-5">Personnel</th>
+                                        <th class="px-8 py-5">Plan/Category</th>
+                                        <th class="px-8 py-5">Financial Coverage</th>
+                                        <th class="px-8 py-5">Premium Status</th>
+                                        <th class="px-8 py-5 text-right">Invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @for (pay of unifiedPayments(); track pay.transactionId) {
+                                    <tr class="hover:bg-slate-50/30 transition-colors">
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy">{{ pay.customerEmail }}</p>
+                                            <p
+                                                class="text-[9px] text-slate-400 font-bold uppercase tracking-tight italic">
+                                                {{ pay.transactionId || 'Awaiting Payment' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-[10px] font-bold text-slate-600">A: {{ pay.agentEmail ||
+                                                'Direct' }}</p>
+                                            <p class="text-[10px] font-bold text-slate-400">O: {{ pay.claimsOfficerEmail
+                                                || 'Unassigned' }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-indigo-600 italic tracking-tight">{{
+                                                pay.tierId }}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">{{
+                                                pay.policyCategory }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-brand-navy">₹{{ pay.totalCoverage | number
+                                                }}</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                                Curr: ₹{{ pay.currentCoverage | number }}</p>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <p class="text-xs font-black text-emerald-600">₹{{ pay.paidAmount | number
+                                                }}</p>
+                                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                                Premium: ₹{{ pay.premiumAmount | number }}</p>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            <button (click)="openInvoiceModal(pay)"
+                                                class="bg-brand-navy hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">
+                                                Invoice
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    } @empty {
+                                    <tr>
+                                        <td colspan="6"
+                                            class="p-20 text-center text-slate-300 font-black uppercase italic tracking-widest">
+                                            No payment records consolidated</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+            </div>
+        </main>
+    </div>
+
+    <!-- REVIEW MODAL -->
+    @if (showReviewModal() && selectedClaim()) {
+    <div class="fixed inset-0 bg-brand-navy/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="text-xl font-black text-brand-navy">Claim Assessment</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Reference ID: {{
+                        selectedClaim()?.id }}</p>
+                </div>
+                <button (click)="showReviewModal.set(false)"
+                    class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div class="grow overflow-y-auto p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Left: Details -->
+                    <div class="space-y-10">
+                        <!-- 1. Customer & Policy Identity -->
+                        <section class="space-y-4">
+                            <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-widest">Customer &
+                                Policy Overview</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-brand-gray rounded-2xl p-5 border border-slate-100">
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Customer Contact</p>
+                                    <p class="text-xs font-black text-brand-navy">{{ selectedClaim()?.user?.email }}</p>
+                                    <p class="text-[10px] text-slate-500 mt-1">
+                                        {{ selectedClaim()?.user?.phoneNumber || 'No phone provided' }}
+                                    </p>
+                                </div>
+                                <div class="bg-brand-gray rounded-2xl p-5 border border-slate-100">
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Policy Financials</p>
+                                    <p class="text-xs font-black text-brand-navy">Total Coverage: ₹{{
+                                        selectedClaim()?.totalCoverage | number:'1.0-0' }}</p>
+                                    <p class="text-[10px] text-emerald-600 font-bold mt-1">Remaining: ₹{{
+                                        selectedClaim()?.remainingCoverage | number:'1.0-0' }}</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2. Medical & Profession Profile -->
+                        <section class="space-y-4">
+                            <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-widest">Medical &
+                                Risk Profile</h4>
+                            <div class="bg-brand-gray rounded-2xl p-6 border border-slate-100 space-y-4">
+                                <div class="grid grid-cols-4 gap-4 text-center">
+                                    <div>
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase">Age</p>
+                                        <p class="text-xs font-black text-brand-navy">{{
+                                            selectedClaim()?.fullDetails?.applicant?.age }} Yrs</p>
+                                    </div>
+                                    <div class="border-x border-slate-200">
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase">Alcohol</p>
+                                        <p class="text-xs font-black text-brand-navy capitalize">{{
+                                            selectedClaim()?.fullDetails?.medicalProfile?.alcoholHabit ||
+                                            selectedClaim()?.fullDetails?.applicant?.alcoholHabit }}</p>
+                                    </div>
+                                    <div class="border-r border-slate-200">
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase">Tobacco</p>
+                                        <p class="text-xs font-black text-brand-navy capitalize">{{
+                                            selectedClaim()?.fullDetails?.medicalProfile?.smokingHabit ||
+                                            selectedClaim()?.fullDetails?.applicant?.smokingHabit }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase">Diabetes</p>
+                                        <p class="text-xs font-black text-brand-navy capitalize">{{
+                                            selectedClaim()?.fullDetails?.medicalProfile?.hasDiabetes || 'No' }}</p>
+                                    </div>
+                                </div>
+                                <hr class="border-slate-100">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Profession</p>
+                                        <p class="text-xs font-bold text-brand-navy">{{
+                                            selectedClaim()?.fullDetails?.applicant?.profession }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Risk (KM/M)</p>
+                                        <p class="text-xs font-bold text-brand-navy">{{
+                                            selectedClaim()?.fullDetails?.applicant?.travelKmPerMonth }} Kilometers</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 3. Nominee Details -->
+                        <section class="space-y-4">
+                            <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-widest">Nominee
+                                Information</h4>
+                            <div class="bg-brand-gray rounded-2xl p-6 border border-slate-100">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <p class="text-sm font-black text-brand-navy">{{
+                                            selectedClaim()?.fullDetails?.nominee?.nomineeName }}</p>
+                                        <p class="text-[10px] text-slate-400">{{
+                                            selectedClaim()?.fullDetails?.nominee?.nomineeEmail }}</p>
+                                    </div>
+                                    <span
+                                        class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[8px] font-black uppercase">Primary
+                                        Nominee</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200/50">
+                                    <div>
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase">Phone</p>
+                                        <p class="text-[10px] font-bold text-brand-navy">{{
+                                            selectedClaim()?.fullDetails?.nominee?.nomineePhone }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase">Bank A/C</p>
+                                        <p class="text-[10px] font-bold text-brand-navy">{{
+                                            selectedClaim()?.fullDetails?.nominee?.nomineeBankAccountNumber }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 4. Incident Verification -->
+                        <section class="space-y-4">
+                            <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-widest">Incident
+                                Verification</h4>
+                            <div class="bg-brand-gray rounded-2xl p-6 space-y-4 border border-slate-100">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Incident Data</p>
+                                    <p class="text-sm font-bold text-brand-navy">{{ selectedClaim()?.incidentType }}</p>
+                                    <p class="text-[10px] text-slate-500 font-medium">{{ selectedClaim()?.incidentDate |
+                                        date:'longDate' }}</p>
+                                    <div>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase">Hospitalization</p>
+                                        <p class="text-sm font-bold text-brand-navy">{{
+                                            selectedClaim()?.hospitalizationRequired ? 'Required' : 'Not Required' }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr class="border-slate-100">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Requested Amount</p>
+                                    <p class="text-xl font-black text-brand-orange italic">₹{{
+                                        selectedClaim()?.requestedAmount | number:'1.0-0' }}</p>
+                                </div>
+                                <hr class="border-slate-100">
+                                <div class="p-4 bg-orange-50 rounded-xl border border-orange-100">
+                                    <p class="text-[9px] font-black text-brand-orange uppercase mb-2">Decision: Approved
+                                        Amount</p>
+                                    <div class="relative mt-2">
+                                        <span
+                                            class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-brand-navy text-lg">₹</span>
+                                        <input type="number" [(ngModel)]="reviewForm.approvedAmount"
+                                            class="w-full pl-16 pr-4 py-4 bg-white border-2 border-orange-200 rounded-2xl font-black text-2xl text-brand-navy focus:outline-none focus:ring-4 focus:ring-brand-orange/10 transition-all">
+                                    </div>
+                                    <p class="text-[8px] text-slate-400 mt-2 font-medium">Policy Balance: ₹{{
+                                        selectedClaim()?.policy?.remainingCoverageAmount | number }}</p>
+                                </div>
+                                <hr class="border-slate-100">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Location & Hospital</p>
+                                    <p class="text-sm font-bold text-brand-navy">{{ selectedClaim()?.incidentLocation }}
+                                    </p>
+                                    <p class="text-xs text-slate-500 italic">{{ selectedClaim()?.hospitalName }}</p>
+                                </div>
+                                <hr class="border-slate-100">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Statement of Incident</p>
+                                    <p class="text-xs text-slate-600 leading-relaxed mt-1">{{
+                                        selectedClaim()?.description }}</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 5. Verification Documents -->
+                        <section class="space-y-4">
+                            <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-widest">Evidence &
+                                Documents</h4>
+                            <div class="grid grid-cols-1 gap-3">
+                                @for (doc of selectedClaim()?.documents; track doc.id) {
+                                <a [href]="doc.fileUrl" target="_blank"
+                                    class="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-xl hover:bg-slate-50 transition-all group shadow-sm">
+                                    <div
+                                        class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600 font-bold group-hover:scale-110 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="grow">
+                                        <p class="text-xs font-bold text-brand-navy uppercase italic">{{ doc.fileName }}
+                                        </p>
+                                        <p class="text-[10px] text-slate-400">{{ (doc.fileSize / 1024 / 1024) |
+                                            number:'1.1-1' }} MB • View Evidence</p>
+                                    </div>
+                                    <div
+                                        class="bg-brand-navy text-white px-3 py-1 rounded text-[8px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+                                        Open</div>
+                                </a>
+                                } @empty {
+                                <div
+                                    class="p-8 border-2 border-dashed border-slate-100 rounded-2xl text-center bg-slate-50/50">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">No documents uploaded</p>
+                                </div>
+                                }
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Right: Review Action -->
+                    <div class="bg-slate-50/80 rounded-3xl p-8 space-y-8 border border-slate-100 h-fit sticky top-0">
+                        <div>
+                            <h4 class="text-[10px] font-black text-brand-navy uppercase tracking-widest mb-6">Final
+                                Recommendation</h4>
+                            <div class="space-y-6">
+                                <div class="space-y-2">
+                                    <label
+                                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Assessment
+                                        Outcome</label>
+                                    <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50">
+                                        <p
+                                            class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1 italic">
+                                            Current Status</p>
+                                        <p class="text-sm font-black text-brand-navy">{{ selectedClaim()?.status }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label
+                                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Assessor
+                                        Remarks</label>
+                                    <textarea [(ngModel)]="reviewForm.remarks" rows="6"
+                                        placeholder="Document the rationale for your decision..."
+                                        class="input-field bg-white focus:ring-2 focus:ring-brand-orange/20"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t border-slate-200 space-y-4">
+                            @if (selectedClaim()?.status === 'PendingAssessment' || selectedClaim()?.status ===
+                            'Assigned' || selectedClaim()?.status === 'Pending') {
+                            <button (click)="submitReview('Approved')" [disabled]="isLoading()"
+                                class="btn-primary w-full py-5 text-sm shadow-xl shadow-orange-200">
+                                Submit Final Payout Approval
+                            </button>
+                            <button (click)="submitReview('Rejected')" [disabled]="isLoading()"
+                                class="w-full py-4 bg-rose-50 text-rose-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-rose-100 transition-all border border-rose-100">
+                                Reject & Terminate Claim
+                            </button>
+                            } @else {
+                            <div
+                                [class]="'p-6 rounded-2xl text-center border ' + (selectedClaim()?.status === 'Approved' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-rose-50 border-rose-100 text-rose-600')">
+                                <p class="text-xs font-black uppercase tracking-widest">Assessment Finalized</p>
+                                <p class="text-sm font-bold mt-1">Claim {{ selectedClaim()?.status }} on {{
+                                    selectedClaim()?.processedAt | date }}</p>
+                            </div>
+                            }
+                            <p class="text-[9px] text-center text-slate-400 mt-4 leading-relaxed italic">
+                                Final adjudication triggers immediate financial impact on sum insured and policy status.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    <!-- HISTORY DETAIL MODAL -->
+    @if (showHistoryDetailModal() && selectedHistoryClaim()) {
+    <div class="fixed inset-0 bg-brand-navy/95 backdrop-blur-xl flex items-center justify-center z-[60] p-4">
+        <div
+            class="bg-white w-full max-w-3xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-500">
+            <!-- Header -->
+            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <h3 class="text-2xl font-black text-brand-navy uppercase tracking-tighter italic">Archive Review
+                        </h3>
+                        <span
+                            [class]="'px-3 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest border ' + 
+                            (selectedHistoryClaim()?.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200')">
+                            {{ selectedHistoryClaim()?.status }}
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Transaction ID: {{
+                        selectedHistoryClaim()?.id }}</p>
+                </div>
+                <button (click)="showHistoryDetailModal.set(false)"
+                    class="w-12 h-12 flex items-center justify-center hover:bg-slate-200 rounded-full transition-all text-slate-400 group">
+                    <svg class="w-6 h-6 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="grow overflow-y-auto p-10 custom-scrollbar">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <!-- Left Column: Primary Entities -->
+                    <div class="space-y-8">
+                        <!-- Entity Branch: Customer -->
+                        <div class="relative pl-6 border-l-2 border-brand-orange/20 space-y-4">
+                            <div
+                                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brand-orange shadow-lg shadow-orange-200">
+                            </div>
+                            <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-[0.2em] mb-4">
+                                Customer Integrity</h4>
+                            <div class="card p-6 border-none shadow-xl shadow-slate-200/40 bg-brand-gray/50">
+                                <p class="text-[9px] font-black text-slate-400 uppercase mb-3">Email Identity</p>
+                                <p class="text-sm font-black text-brand-navy break-all">{{
+                                    selectedHistoryClaim()?.user?.email }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Entity Branch: Agent -->
+                        <div class="relative pl-6 border-l-2 border-indigo-200 space-y-4">
+                            <div
+                                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-indigo-500 shadow-lg shadow-indigo-200">
+                            </div>
+                            <h4 class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4">Servicing
+                                Agent</h4>
+                            <div class="card p-6 border-none shadow-xl shadow-slate-200/40 bg-brand-gray/50">
+                                <p class="text-[9px] font-black text-slate-400 uppercase mb-3">Managed By</p>
+                                <p class="text-sm font-black text-brand-navy">{{
+                                    selectedHistoryClaim()?.policy?.assignedAgent?.email || 'System Default' }}</p>
+                                <div class="mt-4 pt-4 border-t border-slate-200/50">
+                                    <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Performance Category
+                                    </p>
+                                    <p class="text-xs font-bold text-indigo-600 uppercase">Certified Partner</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nominee -->
+                        <div class="relative pl-6 border-l-2 border-emerald-200 space-y-4">
+                            <div
+                                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-200">
+                            </div>
+                            <h4 class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-4">
+                                Beneficiary</h4>
+                            <div class="card p-6 border-none shadow-xl shadow-slate-200/40 bg-brand-gray/50">
+                                <p class="text-sm font-black text-brand-navy">{{
+                                    selectedHistoryClaim()?.fullDetails?.nominee?.nomineeName }}</p>
+                                <p class="text-sm font-black text-brand-navy">{{
+                                    selectedHistoryClaim()?.fullDetails?.nominee?.nomineeEmail }}</p>
+                                <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-tighter italic">
+                                    Relationship Verified</p>
+                                <p class="text-[10px] text-slate-600 mt-3 font-mono font-bold">{{
+                                    selectedHistoryClaim()?.fullDetails?.nominee?.nomineeBankAccountNumber }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center Column: Risk & Incident -->
+                    <div class="lg:col-span-2 space-y-10">
+                        <!-- Policy Overview -->
+                        <div class="bg-brand-navy rounded-[2rem] p-8 text-white relative overflow-hidden group">
+                            <div
+                                class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full group-hover:scale-110 transition-transform">
+                            </div>
+                            <div class="relative z-10 flex justify-between items-start">
+                                <div>
+                                    <h4
+                                        class="text-[10px] font-black text-brand-orange uppercase tracking-[0.3em] mb-4">
+                                        Policy Blueprint</h4>
+                                    <p class="text-3xl font-black italic tracking-tighter">{{
+                                        selectedHistoryClaim()?.policy?.policyCategory }}</p>
+                                    <p class="text-xs font-bold text-slate-400 uppercase mt-1 tracking-widest">{{
+                                        selectedHistoryClaim()?.policy?.tierId }} Configuration</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                        Coverage Ratio</p>
+                                    <p class="text-xl font-black text-emerald-400 italic">₹{{
+                                        selectedHistoryClaim()?.remainingCoverage | number }} / ₹{{
+                                        selectedHistoryClaim()?.totalCoverage | number }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Medical Profile -->
+                            <div class="card p-8 border-none shadow-2xl shadow-slate-200/40 bg-slate-50/50">
+                                <h4 class="text-[10px] font-black text-brand-navy uppercase tracking-[0.2em] mb-6">
+                                    Medical Audit</h4>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="font-bold text-slate-400 uppercase">Tobacco Logic</span>
+                                        <span class="font-black text-brand-navy capitalize">{{
+                                            selectedHistoryClaim()?.fullDetails?.medicalProfile?.smokingHabit ||
+                                            selectedHistoryClaim()?.fullDetails?.applicant?.smokingHabit }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="font-bold text-slate-400 uppercase">Alcohol Metric</span>
+                                        <span class="font-black text-brand-navy capitalize">{{
+                                            selectedHistoryClaim()?.fullDetails?.medicalProfile?.alcoholHabit ||
+                                            selectedHistoryClaim()?.fullDetails?.applicant?.alcoholHabit }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="font-bold text-slate-400 uppercase">Age verified</span>
+                                        <span class="font-black text-brand-navy">{{
+                                            selectedHistoryClaim()?.fullDetails?.applicant?.age }} Years</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Incident Verification -->
+                            <div class="card p-8 border-none shadow-2xl shadow-slate-200/40 bg-slate-50/50">
+                                <h4 class="text-[10px] font-black text-brand-navy uppercase tracking-[0.2em] mb-6">Event
+                                    Forensics</h4>
+                                <div class="space-y-4 text-xs">
+                                    <div>
+                                        <p class="font-bold text-slate-400 uppercase mb-1">Incident Logistics</p>
+                                        <p class="font-black text-indigo-600 uppercase tracking-tight">{{
+                                            selectedHistoryClaim()?.incidentType }}</p>
+                                        <p class="text-[10px] text-slate-500 italic">{{
+                                            selectedHistoryClaim()?.incidentDate | date:'longDate' }}</p>
+                                        <p class="text-[10px] text-slate-500 font-bold mt-2">{{
+                                            selectedHistoryClaim()?.hospitalName }}</p>
+                                    </div>
+                                    <div class="pt-4 border-t border-slate-200/50">
+                                        <p class="font-bold text-slate-400 uppercase mb-1">Reported Rationale</p>
+                                        <p class="italic text-slate-600 line-clamp-2 leading-relaxed">{{
+                                            selectedHistoryClaim()?.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents Section -->
+                        <div class="space-y-4">
+                            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-2">Evidence
+                                Repository</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                @for (doc of selectedHistoryClaim()?.documents; track doc.id) {
+                                <a [href]="doc.fileUrl" target="_blank"
+                                    class="card p-4 border-none shadow-xl shadow-slate-200/30 bg-white hover:scale-105 transition-all group overflow-hidden">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 bg-brand-navy text-white rounded-lg flex items-center justify-center group-hover:bg-brand-orange transition-colors">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <p class="text-[9px] font-black text-brand-navy uppercase truncate">{{
+                                                doc.fileName }}</p>
+                                            <p class="text-[8px] text-slate-400 font-bold">READY TO VIEW</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Financial Verdict -->
+                        <div
+                            class="bg-slate-900 rounded-[2rem] p-8 text-white flex items-center justify-between border-b-4 border-brand-orange shadow-2xl">
+                            <div>
+                                <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2">Final
+                                    Settlement Verdict</h4>
+                                <p class="text-xs text-slate-400 font-medium max-w-sm">{{
+                                    selectedHistoryClaim()?.remarks || 'No remarks provided for this settlement.' }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-black text-brand-orange uppercase tracking-widest mb-1">
+                                    Approved Payout</p>
+                                <p class="text-4xl font-black italic tracking-tighter">₹{{
+                                    (selectedHistoryClaim()?.approvedAmount || 0) | number }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+                <button (click)="showHistoryDetailModal.set(false)"
+                    class="bg-brand-navy text-white px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-navy-200 hover:bg-slate-800 transition-all active:scale-95">Dismiss
+                    Archive</button>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- Invoice Modal -->
+    @if (showInvoiceModal() && selectedPayment()) {
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[110] p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <!-- Simplified Header -->
+            <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        Premium Invoice
+                        <span
+                            class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-black">Verified</span>
+                    </h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Transaction Ledger
+                        Record</p>
+                </div>
+                <button (click)="showInvoiceModal.set(false)"
+                    class="p-2 hover:bg-slate-100 rounded-xl transition-all text-slate-400">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <!-- Compact Settlement Box -->
+                <div class="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Settlement Amount
+                        </p>
+                        <h4 class="text-2xl font-black text-indigo-600 mt-1">₹{{ selectedPayment().paidAmount | number
+                            }}</h4>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Payment Date</p>
+                        <p class="text-xs font-bold text-slate-600 mt-1">{{ selectedPayment().nextPaymentDate |
+                            date:'mediumDate' }}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Policyholder</p>
+                        <p class="text-xs font-bold text-slate-700 truncate">{{ selectedPayment().customerEmail }}</p>
+                    </div>
+                    <div class="space-y-1 text-right">
+                        <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Transaction ID</p>
+                        <p class="text-xs font-mono font-bold text-slate-700">{{ selectedPayment().transactionId ||
+                            'Awaiting Sync' }}</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-50 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Plan
+                            Category</span>
+                        <span class="text-[10px] font-black text-slate-700 uppercase">{{
+                            selectedPayment().policyCategory }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Plan Tier</span>
+                        <span class="text-[10px] font-black text-slate-700 uppercase italic">{{ selectedPayment().tierId
+                            }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Active
+                            Coverage</span>
+                        <span class="text-[10px] font-black text-emerald-600">₹{{ selectedPayment().currentCoverage |
+                            number }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
+                <button (click)="generateInvoicePDF(selectedPayment())"
+                    class="grow bg-brand-orange text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] shadow-lg shadow-orange-100 hover:brightness-110 active:scale-95 transition-all">
+                    Download Invoice
+                </button>
+                <button (click)="showInvoiceModal.set(false)"
+                    class="px-8 bg-white text-slate-500 py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] border border-slate-200 hover:bg-slate-50 transition-all active:scale-95">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+</div>

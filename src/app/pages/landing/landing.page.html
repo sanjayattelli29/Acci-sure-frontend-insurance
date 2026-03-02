@@ -1,0 +1,875 @@
+<div class="noise-overlay"></div>
+
+<!-- ════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════ -->
+<nav class="navbar">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+        style="display:flex; justify-content:space-between; align-items:center;">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2.5"
+            style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+            <div class="logo-diamonds">
+                <div class="diamond"></div>
+                <div class="diamond"></div>
+            </div>
+            <span
+                style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.25rem; color:#0f1f14;">AcciSure</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-8" style="display:flex; align-items:center; gap:2rem;">
+            <a href="#hero" class="nav-link">Home</a>
+            <a routerLink="/learning" class="nav-link">Learning</a>
+            <a href="#categories" class="nav-link">Services</a>
+            <a href="#plans" class="nav-link">Plans</a>
+            <a href="#testimonials" class="nav-link">Testimonials</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+
+        <div class="flex items-center gap-4" style="display:flex; align-items:center; gap:1rem;">
+            <button class="btn-primary-nav" (click)="goRegister()">Get In Touch</button>
+        </div>
+    </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════
+     SECTION 1 — HERO
+════════════════════════════════════════════ -->
+<section id="hero" class="hero-section" style="padding-top:90px; padding-bottom:3rem;">
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+
+    <div
+        style="position:relative; z-index:10; width:100%; max-width:1400px; margin:0 auto; padding:0 2.5rem; display:flex; flex-direction:column;">
+
+        <!-- TOP ROW -->
+        <div
+            style="display:flex; align-items:center; justify-content:flex-start; padding-top:0.5rem; padding-bottom:0.75rem;">
+            <div class="fade-down">
+                <span class="section-label" style="margin-bottom:0;">
+                    <span
+                        style="width:6px; height:6px; border-radius:50%; background:#4ade80; display:inline-block;"></span>
+                    Trusted by 9.6k+ Customers
+                </span>
+            </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="hero-grid-main"
+            style="display:grid; grid-template-columns: 1fr 340px 300px; gap:1.5rem; align-items:center;">
+
+            <!-- LEFT - TEXT CONTENT -->
+            <div class="fade-up"
+                style="padding-right:1.5rem; display:flex; flex-direction:column; justify-content:center;">
+                <h1
+                    style="font-family:'Sora',sans-serif; font-size:clamp(2.64rem, 4.8vw, 4.8rem); font-weight:900; line-height:1.1; letter-spacing:-0.02em; color:#0f1f14; margin-bottom:1rem;">
+                    Protect Today.<br>
+                    <span style="color:#4ade80;">Brighter Tomorrow.</span>
+                </h1>
+                <p
+                    style="font-size:0.875rem; color:rgba(17,17,17,0.55); line-height:1.6; max-width:420px; margin-bottom:1.25rem;">
+                    Tailored accident insurance for you and your family. Full coverage with transparent rates and
+                    instant digital issuance.
+                </p>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+                    <button class="btn-hero-primary" (click)="goRegister()">Get A Free Quote →</button>
+                    <button class="btn-hero-secondary" (click)="scrollTo('plans')">View Plans</button>
+                </div>
+              <a href="/learning" style="text-decoration:none;">
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; cursor:pointer;">
+        <div class="play-btn">
+            <span style="color:white; margin-left:3px;">▶</span>
+        </div>
+        <div>
+            <p style="font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:700; color:#0f1f14; margin-bottom:0;">
+                Coverage Options
+            </p>
+            <p style="font-size:0.72rem; color:rgba(17,17,17,0.45);">
+                Watch 2-min overview
+            </p>
+        </div>
+    </div>
+</a>
+            </div>
+
+            <!-- CENTER - IMAGE -->
+            <div class="hero-center-img"
+                style="position:relative; display:flex; align-items:flex-start; min-height:480px;">
+                <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=500&h=800&fit=crop&crop=faces,top&auto=format&q=88"
+                    alt="Family"
+                    style="width:100%; height:100%; object-fit:cover; border-radius:18px; box-shadow:0 0 60px rgba(0,0,0,0.12);">
+
+                <div
+                    style="position:absolute; bottom:25px; left:12px; background:rgba(240,253,244,0.98); border:1px solid rgba(22,163,74,0.22); border-radius:14px; padding:0.75rem 1rem; min-width:180px; box-shadow:0 16px 50px rgba(0,0,0,0.1);">
+                    <div
+                        style="font-family:'Sora',sans-serif; font-size:0.57rem; font-weight:800; color:rgba(17,17,17,0.4); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.5rem;">
+                        ACTIVE COVERAGE</div>
+                    <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;"><span
+                                style="width:6px; height:6px; border-radius:50%; background:#22c55e;"></span><span
+                                style="font-size:0.75rem;">Accident Death Cover</span></div>
+                        <div style="display:flex; align-items:center; gap:0.5rem;"><span
+                                style="width:6px; height:6px; border-radius:50%; background:#22c55e;"></span><span
+                                style="font-size:0.75rem;">ICU + Hospitalisation</span></div>
+                        <div style="display:flex; align-items:center; gap:0.5rem;"><span
+                                style="width:6px; height:6px; border-radius:50%; background:#22c55e;"></span><span
+                                style="font-size:0.75rem;">Worldwide Emergency</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT - SIDEBAR -->
+            <div class="fade-up"
+                style="display:flex; flex-direction:column; justify-content:flex-start; gap:0.85rem; padding-left:1rem;">
+
+                <!-- Reviews Card -->
+                <div
+                    style="background:rgba(240,253,244,0.96); border:1px solid rgba(22,163,74,0.18); border-radius:14px; padding:0.85rem 1rem; box-shadow:0 8px 30px rgba(0,0,0,0.08);">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+                        <div
+                            style="width:24px; height:24px; background:#fbbf24; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                            <span style="color:white; font-size:11px;">★</span>
+                        </div>
+                        <span
+                            style="font-family:'Sora',sans-serif; font-weight:900; font-size:1.1rem; color:#0f1f14;">5.0</span>
+                        <span style="font-size:0.75rem; color:rgba(17,17,17,0.5);">Review</span>
+                    </div>
+                    <p style="font-size:0.68rem; color:rgba(17,17,17,0.4); margin-bottom:0.5rem;">2000+ Google Reviews
+                    </p>
+                    <div class="avatar-row">
+                        <img src="https://i.pravatar.cc/150?u=1" alt="">
+                        <img src="https://i.pravatar.cc/150?u=2" alt="">
+                        <img src="https://i.pravatar.cc/150?u=3" alt="">
+                        <div class="avatar-plus">2k+</div>
+                    </div>
+                </div>
+
+                <!-- Value Card -->
+                <div
+                    style="background:rgba(240,253,244,0.9); border:1px solid rgba(22,163,74,0.15); border-radius:14px; padding:0.85rem 1rem; backdrop-filter:blur(12px);">
+                    <p
+                        style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.85rem; color:#0f1f14; margin-bottom:0.35rem;">
+                        We Understand The Value</p>
+                    <p style="font-size:0.75rem; color:rgba(17,17,17,0.5); line-height:1.5;">Of Safeguarding Whether
+                        Business or Personal.</p>
+                </div>
+
+                <!-- CTA Button -->
+                <button class="btn-hero-primary" style="width:100%; padding:0.75rem 1rem; font-size:0.85rem;"
+                    (click)="scrollTo('plans')">Get A Free Consultation</button>
+
+                <!-- Features -->
+                <div
+                    style="background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.18); border-radius:11px; padding:0.6rem 0.85rem; display:flex; align-items:center; gap:0.55rem;">
+                    <div
+                        style="width:18px; height:18px; border-radius:50%; background:#22c55e; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <span style="font-size:0.65rem; color:white; font-weight:700;">✓</span>
+                    </div>
+                    <span style="font-size:0.78rem; font-weight:600; color:#0f1f14;">Exceptional Customer Service</span>
+                </div>
+                <div
+                    style="background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.18); border-radius:11px; padding:0.6rem 0.85rem; display:flex; align-items:center; gap:0.55rem;">
+                    <div
+                        style="width:18px; height:18px; border-radius:50%; background:#22c55e; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <span style="font-size:0.65rem; color:white; font-weight:700;">✓</span>
+                    </div>
+                    <span style="font-size:0.78rem; font-weight:600; color:#0f1f14;">Finance Improve</span>
+                </div>
+
+                <!-- Properties Stats -->
+                <div style="display:flex; gap:1.5rem; padding-top:0.5rem; border-top:1px solid rgba(34,197,94,0.12);">
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:900; color:#0f1f14;">
+                            25K+</div>
+                        <div style="font-size:0.68rem; color:rgba(17,17,17,0.45); line-height:1.2;">
+                            Lifes<br>Protected</div>
+                    </div>
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:900; color:#0f1f14;">
+                            25K+</div>
+                        <div style="font-size:0.68rem; color:rgba(17,17,17,0.45); line-height:1.2;">Futures<br>Secured
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     SECTION 2 — CATEGORIES
+════════════════════════════════════════════ -->
+<section id="categories" style="background:var(--bg-dark); padding:6rem 0;">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="fade-in-section text-center" style="margin-bottom: 3.5rem;">
+            <div class="section-label">Insurance Options</div>
+            <h2 class="section-title">Discover Our Insurance Categories</h2>
+            <p class="section-sub">Explore our range of insurance options designed to protect what matters most.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;">
+            <div class="category-card">
+                <div class="category-icon">👤</div>
+                <div class="category-title">Individual Accident</div>
+                <div class="category-desc">Personal accidental protection covering death, disability, ICU & worldwide
+                    emergency assistance.
+                </div>
+                <a href="#plans" class="explore-link">Explore Plans →</a>
+            </div>
+            <div class="category-card" style="border-color:rgba(34,197,94,0.2);">
+                <div class="category-icon" style="background:rgba(34,197,94,0.18);">👨‍👩‍👧‍👦</div>
+                <div class="category-title">Family Group Accident</div>
+                <div class="category-desc">Covers up to 4 members. ICU, ambulance, children education support & surgery
+                    cover included.
+                </div>
+                <a href="#plans" class="explore-link">Explore Plans →</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     SECTION 6 — PLANS
+════════════════════════════════════════════ -->
+<section id="plans" class="plans-section" style="padding:6rem 0;">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="fade-in-section text-center" style="margin-bottom: 2.5rem;">
+            <div class="section-label">Pricing Plans</div>
+            <h2 class="section-title">Manage Your Protection & Peace of Mind</h2>
+            <p class="section-sub">Choose the tier that fits your life. Transparent pricing, instant issuance.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="fade-in-section" style="display:flex; justify-content:center; margin-bottom:2.5rem;">
+            <div
+                style="background:rgba(240,253,244,0.8); border:1px solid rgba(22,163,74,0.15); border-radius:50px; padding:0.3rem; display:flex; gap:0.2rem; backdrop-filter:blur(10px);">
+                <button class="policy-tab" [class.active]="activePolicy === 'individual'"
+                    (click)="activePolicy = 'individual'">
+                    👤 Individual Accident Policy
+                </button>
+                <button class="policy-tab" [class.active]="activePolicy === 'family'" (click)="activePolicy = 'family'">
+                    👨‍👩‍👧‍👦 Family Group Policy
+                </button>
+            </div>
+        </div>
+
+        <!-- Individual Plans -->
+        <div *ngIf="activePolicy === 'individual'">
+            <p style="text-align:center; font-size:0.875rem; color:rgba(17,17,17,0.45); margin-bottom:2rem;">Covers
+                member · Personal accidental protection</p>
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center;">
+                <div class="plan-card">
+                    <div class="plan-tier">🥈 SILVER PLAN</div>
+                    <div class="plan-name">Silver</div>
+                    <div class="plan-sum">₹5 Lakhs</div>
+                    <div style="font-size:0.78rem; color:rgba(17,17,17,0.4); margin-bottom:1.5rem;">Sum Insured</div>
+                    <div style="display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1.75rem;">
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Accidental Death Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Permanent Disability Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Hospitalisation Support
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(17,17,17,0.08); padding-top:1.25rem; margin-bottom:1.25rem;">
+                        <div class="plan-price">STARTS FROM</div>
+                        <div class="plan-amount">₹3,000<span
+                                style="font-size:0.9rem; font-weight:500; color:rgba(17,17,17,0.45);">/yr</span></div>
+                    </div>
+                    <button class="btn-plan btn-plan-outline" (click)="goRegister()">Get Started →</button>
+                </div>
+
+                <div class="plan-card featured">
+                    <div class="plan-badge">⭐ Most Popular</div>
+                    <div class="plan-tier">🥇 GOLD PLAN</div>
+                    <div class="plan-name">Gold</div>
+                    <div class="plan-sum">₹10 Lakhs</div>
+                    <div style="font-size:0.78rem; color:rgba(17,17,17,0.4); margin-bottom:1.5rem;">Sum Insured</div>
+                    <div style="display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1.75rem;">
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Accidental Death Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Permanent Disability Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Partial Disability Cover
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(22,163,74,0.15); padding-top:1.25rem; margin-bottom:1.25rem;">
+                        <div class="plan-price">STARTS FROM</div>
+                        <div class="plan-amount">₹5,000<span
+                                style="font-size:0.9rem; font-weight:500; color:rgba(17,17,17,0.45);">/yr</span></div>
+                    </div>
+                    <button class="btn-plan btn-plan-filled" (click)="goRegister()">Get Started →</button>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-tier">💎 PREMIUM PLAN</div>
+                    <div class="plan-name">Premium</div>
+                    <div class="plan-sum">₹20 Lakhs</div>
+                    <div style="font-size:0.78rem; color:rgba(17,17,17,0.4); margin-bottom:1.5rem;">Sum Insured</div>
+                    <div style="display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1.75rem;">
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Worldwide Emergency Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>ICU Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Full Disability Cover
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(17,17,17,0.08); padding-top:1.25rem; margin-bottom:1.25rem;">
+                        <div class="plan-price">STARTS FROM</div>
+                        <div class="plan-amount">₹8,000<span
+                                style="font-size:0.9rem; font-weight:500; color:rgba(17,17,17,0.45);">/yr</span></div>
+                    </div>
+                    <button class="btn-plan btn-plan-outline" (click)="goRegister()">Get Started →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Family Plans -->
+        <div *ngIf="activePolicy === 'family'">
+            <p style="text-align:center; font-size:0.875rem; color:rgba(17,17,17,0.45); margin-bottom:2rem;">Covers up
+                to 4 members · Premium on primary applicant</p>
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center;">
+                <div class="plan-card">
+                    <div class="plan-tier">🥈 SILVER PLAN</div>
+                    <div class="plan-name">Family Silver</div>
+                    <div class="plan-sum">₹10 Lakhs</div>
+                    <div style="font-size:0.78rem; color:rgba(17,17,17,0.4); margin-bottom:1.5rem;">Sum Insured</div>
+                    <div style="display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1.75rem;">
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Family Accidental Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Hospitalisation Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Children Education Support
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(17,17,17,0.08); padding-top:1.25rem; margin-bottom:1.25rem;">
+                        <div class="plan-price">STARTS FROM</div>
+                        <div class="plan-amount">₹7,000<span
+                                style="font-size:0.9rem; font-weight:500; color:rgba(17,17,17,0.45);">/yr</span></div>
+                    </div>
+                    <button class="btn-plan btn-plan-outline" (click)="goRegister()">Get Started →</button>
+                </div>
+
+                <div class="plan-card featured">
+                    <div class="plan-badge">⭐ Most Popular</div>
+                    <div class="plan-tier">🥇 GOLD PLAN</div>
+                    <div class="plan-name">Family Gold</div>
+                    <div class="plan-sum">₹20 Lakhs</div>
+                    <div style="font-size:0.78rem; color:rgba(17,17,17,0.4); margin-bottom:1.5rem;">Sum Insured</div>
+                    <div style="display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1.75rem;">
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Family Accidental Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>ICU Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Children Education Support
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Ambulance Cover
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(22,163,74,0.15); padding-top:1.25rem; margin-bottom:1.25rem;">
+                        <div class="plan-price">STARTS FROM</div>
+                        <div class="plan-amount">₹12,000<span
+                                style="font-size:0.9rem; font-weight:500; color:rgba(17,17,17,0.45);">/yr</span></div>
+                    </div>
+                    <button class="btn-plan btn-plan-filled" (click)="goRegister()">Get Started →</button>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-tier">💎 PREMIUM PLAN</div>
+                    <div class="plan-name">Family Premium</div>
+                    <div class="plan-sum">₹40 Lakhs</div>
+                    <div style="font-size:0.78rem; color:rgba(17,17,17,0.4); margin-bottom:1.5rem;">Sum Insured</div>
+                    <div style="display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1.75rem;">
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Worldwide Emergency Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>Full Disability Cover
+                        </div>
+                        <div class="plan-feature">
+                            <div class="plan-feature-check">✓</div>ICU + Surgery Cover
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(17,17,17,0.08); padding-top:1.25rem; margin-bottom:1.25rem;">
+                        <div class="plan-price">STARTS FROM</div>
+                        <div class="plan-amount">₹18,000<span
+                                style="font-size:0.9rem; font-weight:500; color:rgba(17,17,17,0.45);">/yr</span></div>
+                    </div>
+                    <button class="btn-plan btn-plan-outline" (click)="goRegister()">Get Started →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- ════════════════════════════════════════════
+     SECTION 3 — WHY CHOOSE AcciSure
+════════════════════════════════════════════ -->
+<section style="background:#ffffff; padding:6rem 0;">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="fade-in-section text-center" style="margin-bottom: 3.5rem;">
+            <div class="section-label">Why Choose AcciSure</div>
+            <h2 class="section-title">Built on Trust,<br>Driven by Excellence</h2>
+            <p class="section-sub">Industry-leading protection with unmatched customer satisfaction</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:2rem;">
+            <!-- Trust Card -->
+            <div class="trust-card fade-in-section">
+                <div class="trust-icon">🛡️</div>
+                <h3 class="trust-title">100% Transparency</h3>
+                <p class="trust-desc">No hidden clauses. No surprise exclusions. What you see is what you get. Clear
+                    terms, fair pricing.</p>
+                <div class="trust-stat">98.4% Claim Settlement Ratio</div>
+            </div>
+
+            <!-- Speed Card -->
+            <div class="trust-card fade-in-section">
+                <div class="trust-icon">⚡</div>
+                <h3 class="trust-title">Lightning Fast Claims</h3>
+                <p class="trust-desc">Average claim processing in 48 hours. Digital documentation. Zero paperwork
+                    hassle.</p>
+                <div class="trust-stat">2.1 Days Avg Settlement</div>
+            </div>
+
+            <!-- Support Card -->
+            <div class="trust-card fade-in-section">
+                <div class="trust-icon">💬</div>
+                <h3 class="trust-title">24/7 Expert Support</h3>
+                <p class="trust-desc">Round-the-clock assistance. Real humans, not bots. Multilingual support in 12+
+                    languages.</p>
+                <div class="trust-stat">4.9/5.0 Customer Rating</div>
+            </div>
+
+            <!-- Innovation Card -->
+            <div class="trust-card fade-in-section">
+                <div class="trust-icon">🚀</div>
+                <h3 class="trust-title">Digital First Approach</h3>
+                <p class="trust-desc">Instant policy issuance. Mobile-first experience. Real-time claim tracking &
+                    updates.</p>
+                <div class="trust-stat">2 Min Policy Issuance</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- ════════════════════════════════════════════
+     SECTION 4 — TRUST & COMPLIANCE
+════════════════════════════════════════════ -->
+<section style="background:var(--bg-dark); padding:6rem 0;">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="fade-in-section text-center" style="margin-bottom: 3.5rem;">
+            <div class="section-label">Trust & Compliance</div>
+            <h2 class="section-title">Regulated, Certified & Trusted</h2>
+            <p class="section-sub">Your security is our highest priority</p>
+        </div>
+
+        <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem; margin-bottom:3rem;">
+            <div class="compliance-badge fade-in-section">
+                <div style="font-size:2.5rem; margin-bottom:0.5rem;">🏛️</div>
+                <div
+                    style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem; color:#0f1f14; margin-bottom:0.25rem;">
+                    IRDAI Registered</div>
+                <div style="font-size:0.78rem; color:rgba(17,17,17,0.5);">License No. 1234567890</div>
+            </div>
+
+            <div class="compliance-badge fade-in-section">
+                <div style="font-size:2.5rem; margin-bottom:0.5rem;">🔒</div>
+                <div
+                    style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem; color:#0f1f14; margin-bottom:0.25rem;">
+                    ISO 27001 Certified</div>
+                <div style="font-size:0.78rem; color:rgba(17,17,17,0.5);">Data Security Compliant</div>
+            </div>
+
+            <div class="compliance-badge fade-in-section">
+                <div style="font-size:2.5rem; margin-bottom:0.5rem;">✓</div>
+                <div
+                    style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem; color:#0f1f14; margin-bottom:0.25rem;">
+                    PCI DSS Compliant</div>
+                <div style="font-size:0.78rem; color:rgba(17,17,17,0.5);">Secure Payment Processing</div>
+            </div>
+
+            <div class="compliance-badge fade-in-section">
+                <div style="font-size:2.5rem; margin-bottom:0.5rem;">🌐</div>
+                <div
+                    style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem; color:#0f1f14; margin-bottom:0.25rem;">
+                    GDPR Ready</div>
+                <div style="font-size:0.78rem; color:rgba(17,17,17,0.5);">Privacy Protected</div>
+            </div>
+        </div>
+
+        <div class="fade-in-section"
+            style="background:rgba(240,253,244,0.6); border:1px solid rgba(22,163,74,0.2); border-radius:16px; padding:2rem; text-align:center;">
+            <p
+                style="font-family:'Sora',sans-serif; font-size:1.1rem; font-weight:600; color:#0f1f14; margin-bottom:0.5rem;">
+                🏆 Awarded "Best Digital Insurance Provider 2025"
+            </p>
+            <p style="font-size:0.875rem; color:rgba(17,17,17,0.5);">
+                By Insurance Industry Excellence Awards • Trusted by 9.6M+ customers across India
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- ════════════════════════════════════════════
+     SECTION 5 — BY THE NUMBERS
+════════════════════════════════════════════ -->
+<section style="background:#ffffff; padding:6rem 0;">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="fade-in-section text-center" style="margin-bottom: 3.5rem;">
+            <div class="section-label">Growth & Analytics</div>
+            <h2 class="section-title">Numbers That Speak<br>Volumes</h2>
+            <p class="section-sub">Real metrics, real impact, real trust</p>
+        </div>
+
+        <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:2rem; margin-bottom:3rem;">
+            <div class="metric-card fade-in-section">
+                <div class="metric-number">9.6M+</div>
+                <div class="metric-label">Active Policyholders</div>
+                <div class="metric-growth">↗ +34% YoY Growth</div>
+            </div>
+
+            <div class="metric-card fade-in-section">
+                <div class="metric-number">₹2Cr</div>
+                <div class="metric-label">Claims Paid Out</div>
+                <div class="metric-growth">↗ +28% from last year</div>
+            </div>
+
+            <div class="metric-card fade-in-section">
+                <div class="metric-number">98.4%</div>
+                <div class="metric-label">Claim Settlement Ratio</div>
+                <div class="metric-growth">Industry Leading</div>
+            </div>
+
+            <div class="metric-card fade-in-section">
+                <div class="metric-number">4.9/5.0</div>
+                <div class="metric-label">Customer Satisfaction</div>
+                <div class="metric-growth">2000+ Reviews</div>
+            </div>
+
+            <div class="metric-card fade-in-section">
+                <div class="metric-number">48hrs</div>
+                <div class="metric-label">Avg Claim Processing</div>
+                <div class="metric-growth">↗ 40% Faster</div>
+            </div>
+
+
+        </div>
+
+        <!-- Growth Chart Visual -->
+        <div class="fade-in-section"
+            style="background:linear-gradient(135deg, rgba(220,252,231,0.4) 0%, rgba(240,253,244,0.6) 100%); border:1px solid rgba(22,163,74,0.15); border-radius:20px; padding:2.5rem; position:relative; overflow:hidden;">
+            <div
+                style="position:absolute; top:0; right:0; width:300px; height:300px; background:radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%); pointer-events:none;">
+            </div>
+
+            <div style="position:relative; z-index:10;">
+                <h3
+                    style="font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; color:#0f1f14; margin-bottom:1rem; text-align:center;">
+                    📈 Year-over-Year Growth Trajectory
+                </h3>
+
+                <div
+                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:1.5rem; margin-top:2rem;">
+                    <div style="text-align:center;">
+                        <div
+                            style="height:120px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:0.75rem;">
+                            <div
+                                style="width:40px; background:linear-gradient(180deg, #86efac, #22c55e); border-radius:8px 8px 0 0; height:45%;">
+                            </div>
+                        </div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.1rem; color:#0f1f14;">
+                            2023</div>
+                        <div style="font-size:0.8rem; color:rgba(17,17,17,0.5);">5.2M Users</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div
+                            style="height:120px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:0.75rem;">
+                            <div
+                                style="width:40px; background:linear-gradient(180deg, #86efac, #22c55e); border-radius:8px 8px 0 0; height:70%;">
+                            </div>
+                        </div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.1rem; color:#0f1f14;">
+                            2024</div>
+                        <div style="font-size:0.8rem; color:rgba(17,17,17,0.5);">7.1M Users</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div
+                            style="height:120px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:0.75rem;">
+                            <div
+                                style="width:40px; background:linear-gradient(180deg, #4ade80, #16a34a); border-radius:8px 8px 0 0; height:95%; box-shadow:0 4px 15px rgba(34,197,94,0.3);">
+                            </div>
+                        </div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.1rem; color:#0f1f14;">
+                            2025</div>
+                        <div style="font-size:0.8rem; color:rgba(17,17,17,0.5);">9.6M Users</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div
+                            style="height:120px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:0.75rem;">
+                            <div
+                                style="width:40px; background:linear-gradient(180deg, #d1fae5, #86efac); border-radius:8px 8px 0 0; height:100%; border:2px dashed #22c55e;">
+                            </div>
+                        </div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:1.1rem; color:#0f1f14;">
+                            2026</div>
+                        <div style="font-size:0.8rem; color:rgba(17,17,17,0.5);">12M+ Target</div>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top:2rem; text-align:center; padding-top:1.5rem; border-top:1px solid rgba(34,197,94,0.2);">
+                    <p style="font-family:'Sora',sans-serif; font-weight:600; font-size:0.95rem; color:#0f1f14;">
+                        🎯 On track to become <span style="color:#22c55e;">India's #1 Digital Insurance Platform</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- ════════════════════════════════════════════
+     SECTION 7 — TESTIMONIALS
+════════════════════════════════════════════ -->
+<section id="testimonials" style="background:var(--bg-deep); padding:6rem 0;">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="fade-in-section text-center" style="margin-bottom: 3.5rem;">
+            <div class="section-label">Customer Stories</div>
+            <h2 class="section-title">Real Experiences,<br>Real Satisfaction</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;">
+            <div class="testimonial-card">
+                <div class="stars" style="margin-bottom:0.75rem;">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span
+                        class="star">★</span><span class="star">★</span>
+                </div>
+                <p style="font-size:0.925rem; color:rgba(17,17,17,0.65); line-height:1.7; margin-bottom:1.25rem;">"The
+                    claim process was incredibly smooth. Got my settlement within 72 hours of filing. AcciSure truly
+                    delivers on their promise."
+                </p>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <img src="https://i.pravatar.cc/150?u=4" alt=""
+                        style="width:42px; height:42px; border-radius:50%; border:2px solid rgba(34,197,94,0.3);">
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem;">Rajesh Kumar
+                        </div>
+                        <div style="font-size:0.78rem; color:rgba(17,17,17,0.45);">Gold Plan Holder · Mumbai</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card">
+                <div class="stars" style="margin-bottom:0.75rem;">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span
+                        class="star">★</span><span class="star">★</span>
+                </div>
+                <p style="font-size:0.925rem; color:rgba(17,17,17,0.65); line-height:1.7; margin-bottom:1.25rem;">
+                    "Customer support was outstanding. They guided me through every step and ensured my claim was
+                    processed without hassle."
+                </p>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <img src="https://i.pravatar.cc/150?u=10" alt=""
+                        style="width:42px; height:42px; border-radius:50%; border:2px solid rgba(59,130,246,0.3);">
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem;">Ananya Sharma
+                        </div>
+                        <div style="font-size:0.78rem; color:rgba(17,17,17,0.45);">Platinum Plan Holder · Bengaluru
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card">
+                <div class="stars" style="margin-bottom:0.75rem;">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span
+                        class="star">★</span><span class="star">☆</span>
+                </div>
+                <p style="font-size:0.925rem; color:rgba(17,17,17,0.65); line-height:1.7; margin-bottom:1.25rem;">
+                    "I was skeptical at first, but the quick reimbursement and transparency won me over. Highly
+                    recommend AcciSure!"
+                </p>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <img src="https://i.pravatar.cc/150?u=20" alt=""
+                        style="width:42px; height:42px; border-radius:50%; border:2px solid rgba(239,68,68,0.3);">
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem;">Mohammed Ali
+                        </div>
+                        <div style="font-size:0.78rem; color:rgba(17,17,17,0.45);">Silver Plan Holder · Hyderabad</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card">
+                <div class="stars" style="margin-bottom:0.75rem;">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span
+                        class="star">★</span><span class="star">★</span>
+                </div>
+                <p style="font-size:0.925rem; color:rgba(17,17,17,0.65); line-height:1.7; margin-bottom:1.25rem;">
+                    "AcciSure made me feel secure. Their Diamond plan covers everything I need, and the peace of mind is
+                    priceless."
+                </p>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <img src="https://i.pravatar.cc/150?u=30" alt=""
+                        style="width:42px; height:42px; border-radius:50%; border:2px solid rgba(16,185,129,0.3);">
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem;">Priya Mehta</div>
+                        <div style="font-size:0.78rem; color:rgba(17,17,17,0.45);">Diamond Plan Holder · Delhi</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 4 -->
+            <div class="testimonial-card">
+                <div class="stars" style="margin-bottom:0.75rem;">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span
+                        class="star">☆</span><span class="star">☆</span>
+                </div>
+                <p style="font-size:0.925rem; color:rgba(17,17,17,0.65); line-height:1.7; margin-bottom:1.25rem;">
+                    "Affordable and reliable. Even with the Basic plan, I felt supported and valued as a customer."
+                </p>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <img src="https://i.pravatar.cc/150?u=40" alt=""
+                        style="width:42px; height:42px; border-radius:50%; border:2px solid rgba(245,158,11,0.3);">
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem;">Rohan Gupta</div>
+                        <div style="font-size:0.78rem; color:rgba(17,17,17,0.45);">Basic Plan Holder · Pune</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 5 -->
+            <div class="testimonial-card">
+                <div class="stars" style="margin-bottom:0.75rem;">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span
+                        class="star">★</span><span class="star">★</span>
+                </div>
+                <p style="font-size:0.925rem; color:rgba(17,17,17,0.65); line-height:1.7; margin-bottom:1.25rem;">
+                    "The Premium plan gave me complete coverage. I never had to worry about hidden clauses or delays."
+                </p>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <img src="https://i.pravatar.cc/150?u=50" alt=""
+                        style="width:42px; height:42px; border-radius:50%; border:2px solid rgba(168,85,247,0.3);">
+                    <div>
+                        <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.9rem;">Sneha Iyer</div>
+                        <div style="font-size:0.78rem; color:rgba(17,17,17,0.45);">Premium Plan Holder · Chennai</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     SECTION 8 — CTA
+════════════════════════════════════════════ -->
+<section class="cta-section" style="padding:8rem 0;">
+    <div class="max-w-4xl mx-auto px-6 text-center" style="position:relative; z-index:10;">
+        <div class="fade-in-section">
+            <div class="section-label" style="display:inline-flex; margin-bottom:1.5rem;">🛡️ Start Today</div>
+            <h2 class="cta-title" style="margin-bottom:1.25rem;">Ready to Protect<br>What Matters <span
+                    style="color:#4ade80;">Most?</span></h2>
+            <p
+                style="font-size:1.1rem; color:rgba(17,17,17,0.55); line-height:1.7; margin-bottom:2.5rem; max-width:480px; margin-left:auto; margin-right:auto;">
+                Join 9.6 million happy customers. Get your plan in under 2 minutes. No paperwork, no hidden fees.</p>
+            <button class="btn-hero-primary" style="margin: 0 auto;" (click)="goRegister()">Get A Free Quote Today
+                →</button>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer style="background:#f8faf9; border-top:1px solid rgba(22,163,74,0.1); padding:4rem 0 2rem;">
+    <div class="max-w-7xl mx-auto px-6">
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:2rem;">
+            <div>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                    <div class="logo-diamonds">
+                        <div class="diamond"></div>
+                        <div class="diamond"></div>
+                    </div>
+                    <span
+                        style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.2rem; color:#0f1f14;">AcciSure</span>
+                </div>
+                <p style="font-size:0.875rem; color:rgba(17,17,17,0.45); max-width:300px;">Protecting what matters most.
+                    Insurance for individuals, families and businesses.</p>
+            </div>
+            <div>
+                <h4 style="font-family:'Sora',sans-serif; color:#0f1f14; margin-bottom:1rem;">Company</h4>
+                <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                    <a href="#" class="footer-link">About Us</a>
+                    <a href="#" class="footer-link">Careers</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+            <div>
+                <h4 style="font-family:'Sora',sans-serif; color:#0f1f14; margin-bottom:1rem;">Legal</h4>
+                <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+        <div
+            style="border-top:1px solid rgba(17,17,17,0.08); margin-top:3rem; padding-top:1.5rem; font-size:0.8rem; color:rgba(17,17,17,0.3);">
+            © 2026 AcciSure Insurance. All rights reserved.
+        </div>
+    </div>
+</footer>

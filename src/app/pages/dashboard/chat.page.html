@@ -1,0 +1,85 @@
+<div class="chat-layout">
+    <!-- Sidebar (Unified) -->
+    <aside class="w-80 bg-brand-navy flex flex-col h-screen sticky top-0 shrink-0">
+        <!-- Logo -->
+        <div class="px-8 py-10">
+            <h1 class="text-2xl font-black text-white tracking-tighter">
+                INSURANCE<span class="text-brand-orange">PLATFORM</span>
+            </h1>
+        </div>
+
+        <!-- Role Badge -->
+        <div class="px-8 mb-8">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4">
+                <div
+                    class="w-10 h-10 bg-brand-orange rounded-xl flex items-center justify-center font-black text-white">
+                    {{ user.email?.[0]?.toUpperCase() }}
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-white text-xs font-black truncate">{{ user.email }}</p>
+                    <p class="text-white/40 text-[10px] uppercase font-bold tracking-widest">{{ user.role }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 space-y-2">
+            <button (click)="router.navigate([user.role === 'Customer' ? '/customer/dashboard' : '/agent/dashboard'])"
+                class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 transition-all group">
+                <span class="text-xl group-hover:scale-110 transition-transform">📊</span>
+                <span class="font-bold text-sm">Dashboard</span>
+            </button>
+            <button
+                class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl bg-brand-orange text-white shadow-xl shadow-orange-950/20">
+                <span class="text-xl">💬</span>
+                <span class="font-bold text-sm">Active Chat</span>
+            </button>
+        </nav>
+
+        <!-- Footer -->
+        <div class="p-4">
+            <button (click)="router.navigate([user.role === 'Customer' ? '/customer/dashboard' : '/agent/dashboard'])"
+                class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-red-400 hover:bg-red-400/10 transition-all font-bold text-sm">
+                <span>🚪</span>
+                <span>Exit Chat</span>
+            </button>
+        </div>
+    </aside>
+
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <header class="chat-header">
+            <div class="header-content">
+                <div class="chat-info" *ngIf="chatInfo()">
+                    <h2 class="font-black">Policy Chat: {{ policyId }}</h2>
+                    <p *ngIf="user.role === 'Customer'" class="font-bold">Chatting with Agent: {{ chatInfo().agentEmail
+                        }}</p>
+                    <p *ngIf="user.role === 'Agent'" class="font-bold">Chatting with Customer: {{
+                        chatInfo().customerEmail }}</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Messages List -->
+        <div class="messages-list" #scrollContainer>
+            <div *ngFor="let msg of messages$ | async"
+                [ngClass]="{'message-me': msg.senderRole === user.role, 'message-other': msg.senderRole !== user.role}"
+                class="message-wrapper">
+                <div class="message-bubble">
+                    <div class="sender-role">{{ msg.senderRole }}</div>
+                    <div class="text">{{ msg.message }}</div>
+                    <div class="timestamp">{{ msg.timestamp | date:'shortTime' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Input -->
+        <footer class="chat-footer">
+            <form (submit)="sendMessage(); $event.preventDefault()" class="input-area">
+                <input type="text" [(ngModel)]="newMessage" name="newMessage" placeholder="Type a message..."
+                    autocomplete="off">
+                <button type="submit" [disabled]="!newMessage.trim()">Send</button>
+            </form>
+        </footer>
+    </div>
+</div>

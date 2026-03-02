@@ -1,0 +1,77 @@
+<div class="notification-wrapper relative">
+    <!-- Notification Bell -->
+    <button (click)="togglePanel()" class="relative p-2 text-slate-400 hover:text-brand-orange transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+
+        <!-- Unread Badge -->
+        @if (notificationService.unreadCount() > 0) {
+        <span
+            class="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-lg shadow-red-200">
+            {{ notificationService.unreadCount() > 9 ? '9+' : notificationService.unreadCount() }}
+        </span>
+        }
+    </button>
+
+    <!-- Dropdown Panel -->
+    @if (isOpen()) {
+    <div
+        class="absolute right-0 mt-4 w-96 bg-white rounded-3xl shadow-2xl shadow-slate-200 border border-slate-50 overflow-hidden z-[100] transform transition-all">
+        <div class="p-6 border-b border-slate-50 flex justify-between items-center">
+            <h3 class="text-sm font-black text-brand-navy uppercase tracking-widest">Notifications</h3>
+            <button (click)="markAllAsRead()" class="text-[10px] font-bold text-brand-orange hover:underline">
+                Mark all as read
+            </button>
+        </div>
+
+        <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
+            @if (notificationService.notifications().length === 0) {
+            <div class="p-12 text-center">
+                <div
+                    class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-slate-200 mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0l-8 8-8-8" />
+                    </svg>
+                </div>
+                <p class="text-xs text-slate-400 italic">No notifications yet.</p>
+            </div>
+            } @else {
+            @for (n of notificationService.notifications(); track n.id) {
+            <div (click)="handleNotificationClick(n, $event)" [class.bg-slate-50]="!n.isRead"
+                class="p-5 border-b border-slate-50 hover:bg-slate-50/50 cursor-pointer transition-colors relative group">
+
+                @if (!n.isRead) {
+                <div class="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-brand-orange rounded-full"></div>
+                }
+
+                <div class="flex justify-between items-start mb-1">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-[#21c05c]">
+                        {{ getFormattedHeader(n.notificationType) }}
+                    </span>
+                    <span class="text-[10px] font-bold text-slate-300">
+                        {{ getRelativeTime(n.createdAt) }}
+                    </span>
+                </div>
+
+                <h4 class="text-xs font-black text-brand-navy mb-1">{{ n.title }}</h4>
+                <p class="text-[11px] text-slate-500 leading-relaxed">{{ n.message }}</p>
+
+                <button (click)="markAsRead(n.id, $event)"
+                    class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span class="text-[9px] font-bold text-slate-300 hover:text-brand-orange uppercase">Clear</span>
+                </button>
+            </div>
+            }
+            }
+        </div>
+
+        <div class="p-4 bg-slate-50/50 text-center">
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic">Live Updates Enabled ✨</p>
+        </div>
+    </div>
+    }
+</div>
