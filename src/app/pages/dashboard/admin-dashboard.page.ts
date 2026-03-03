@@ -60,6 +60,7 @@ export class AdminDashboardPage implements OnInit {
     allUsers = signal<any[]>([]);
     allClaims = signal<any[]>([]);
     unifiedPayments = signal<any[]>([]);
+    allStaff = signal<any[]>([]); // New signal for Agents/Officers
     agents = signal<any[]>([]);
     officers = signal<any[]>([]);
     agentsWithLoad = signal<any[]>([]);
@@ -86,6 +87,7 @@ export class AdminDashboardPage implements OnInit {
     selectedApplicationId = signal<string | null>(null);
     selectedClaimId = signal<string | null>(null);
     isSendingEmail = signal<boolean>(false);
+    includeCredentials = signal<boolean>(false); // Toggle for credentials
 
     // Forms
     agentForm: FormGroup;
@@ -151,7 +153,12 @@ export class AdminDashboardPage implements OnInit {
         if (section === 'analysis-users') this.loadAllUsers();
         if (section === 'analysis-commands') this.loadAllClaims();
         if (section === 'analysis-payments') this.loadUnifiedPayments();
-        if (section === 'email-automation') this.loadAllUsers();
+        if (section === 'email-automation') {
+            this.adminService.getAllUsers().subscribe({
+                next: (users) => this.allUsers.set(users.filter(u => u.role !== 'Customer')),
+                error: (err) => console.error('Error loading automation users:', err)
+            });
+        }
     }
 
     loadAdminStats() {
@@ -185,6 +192,10 @@ export class AdminDashboardPage implements OnInit {
         this.adminService.getAllUsers().subscribe({
             next: (users) => {
                 this.allUsers.set(users);
+                // Also updateスタッフ list for email automation if that's the active section
+                if (this.activeSection() === 'email-automation') {
+                    this.allUsers.set(users.filter(u => u.role !== 'Customer'));
+                }
                 this.initCharts();
             },
             error: (err) => console.error('Error loading users:', err)
@@ -522,12 +533,26 @@ export class AdminDashboardPage implements OnInit {
 
     openEmailForm(user: any) {
         this.selectedUserForEmail.set(user);
+        this.includeCredentials.set(false); // Reset toggle
         this.emailForm.patchValue({
             toEmail: user.email,
-            subject: 'Official Communication from AcciSure Admin',
+            subject: 'System Credentials: Your AcciSure Access',
             message: `Dear ${user.fullName || user.userName},\n\n`
         });
         this.showEmailModal.set(true);
+    }
+
+    toggleCredentials() {
+        const current = this.includeCredentials();
+        this.includeCredentials.set(!current);
+        const user = this.selectedUserForEmail();
+
+        if (!current && user) {
+            // Enabling: Inject credentials
+            const creds = `\n\n[ACCESS CREDENTIALS]\nEmail: ${user.email}\nPassword: ${user.initialPassword || '********'}\n\nPlease change your password after first login.`;
+            const currentMsg = this.emailForm.get('message')?.value || '';
+            this.emailForm.patchValue({ message: currentMsg + creds });
+        }
     }
 
     sendEmail() {
