@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { AdminService } from '../../services/admin.service';
 import { AuthService } from '../../services/auth.service';
 import { PolicyService } from '../../services/policy.service';
+import { ClaimService } from '../../services/claim.service';
 import { NotificationPanelComponent } from '../../components/notification-panel/notification-panel.component';
 import { Chart, registerables } from 'chart.js';
 import { jsPDF } from 'jspdf';
@@ -46,6 +47,7 @@ import { EmailAutomationSectionComponent } from './admin-components/email-automa
 export class AdminDashboardPage implements OnInit {
     private adminService = inject(AdminService);
     private authService = inject(AuthService);
+    private claimService = inject(ClaimService);
     private policyService = inject(PolicyService);
     private fb = inject(FormBuilder);
 
@@ -182,8 +184,8 @@ export class AdminDashboardPage implements OnInit {
     }
 
     loadPendingClaims() {
-        this.adminService.getAllClaims().subscribe({
-            next: (claims) => this.pendingClaims.set(claims.filter(c => c.status === 'Pending')),
+        this.claimService.getPendingClaims().subscribe({
+            next: (claims) => this.pendingClaims.set(claims),
             error: (err) => console.error('Error loading pending claims:', err)
         });
     }
@@ -444,18 +446,38 @@ export class AdminDashboardPage implements OnInit {
 
     openAssignOfficerModal(id: string) {
         this.selectedClaimId.set(id);
-        this.adminService.getClaimOfficers().subscribe({
+        this.isLoading.set(true);
+        this.claimService.getClaimOfficers().subscribe({
             next: (officers) => {
-                this.claimOfficersWithWorkload.set(officers.map(o => ({ ...o, claimOfficerId: o.id, assignedClaimsCount: 0 })));
+                this.claimOfficersWithWorkload.set(officers);
                 this.showAssignOfficerModal.set(true);
+                this.isLoading.set(false);
             },
-            error: (err) => console.error('Error loading officers:', err)
+            error: (err) => {
+                console.error('Error loading officers:', err);
+                this.isLoading.set(false);
+            }
         });
     }
 
     assignOfficer(officerId: string) {
-        this.message.set({ text: 'Officer assignment logic needs backend endpoint', type: 'error' });
-        this.showAssignOfficerModal.set(false);
+        const claimId = this.selectedClaimId();
+        if (!claimId) return;
+
+        this.isAssigning.set(true);
+        this.claimService.assignOfficer(claimId, officerId).subscribe({
+            next: () => {
+                this.isAssigning.set(false);
+                this.showAssignOfficerModal.set(false);
+                this.message.set({ text: 'Claim Officer assigned successfully!', type: 'success' });
+                this.loadPendingClaims();
+                setTimeout(() => this.message.set({ text: '', type: '' }), 3000);
+            },
+            error: (err) => {
+                this.isAssigning.set(false);
+                this.message.set({ text: 'Officer assignment failed!', type: 'error' });
+            }
+        });
     }
 
     viewUnifiedDetails(item: any, type: 'policy' | 'claim' = 'policy') {

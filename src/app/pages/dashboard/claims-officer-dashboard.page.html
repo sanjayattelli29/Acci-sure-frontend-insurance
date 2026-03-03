@@ -400,7 +400,7 @@
     @if (showReviewModal() && selectedClaim()) {
     <div class="fixed inset-0 bg-brand-navy/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div
-            class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+            class="bg-white w-full max-w-7xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
             <!-- Modal Header -->
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div>
@@ -573,23 +573,27 @@
                         </section>
 
                         <!-- 5. Verification Documents -->
-                        <section class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-widest">Evidence &
-                                    Documents</h4>
+                        <section class="space-y-6">
+                            <div
+                                class="flex items-center justify-between bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                                <div>
+                                    <h4 class="text-[10px] font-black text-brand-navy uppercase tracking-[0.2em]">
+                                        Evidence Repository</h4>
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{{
+                                        selectedClaim()?.documents?.length || 0 }} Support Files</p>
+                                </div>
                                 <!-- AI Insights Button -->
                                 @if (selectedClaim()?.documents?.length > 0) {
-                                <button (click)="getAIInsights(selectedClaim())"
-                                    [disabled]="isAILoading()"
-                                    class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg shadow-violet-200 hover:brightness-110 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+                                <button (click)="getAIInsights(selectedClaim())" [disabled]="isAILoading()"
+                                    class="flex items-center gap-2.5 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-700 text-white rounded-xl text-[9px] font-black uppercase tracking-[0.15em] shadow-xl shadow-indigo-100 hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed group">
                                     @if (isAILoading()) {
-                                    <svg class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                                    </svg>
-                                    Analyzing...
+                                    <div
+                                        class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin">
+                                    </div>
+                                    <span class="animate-pulse">Analyzing...</span>
                                     } @else {
-                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="w-4 h-4 group-hover:rotate-12 transition-transform" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                             d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.347.347a3.75 3.75 0 01-5.303 0l-.347-.347z" />
                                     </svg>
@@ -598,132 +602,175 @@
                                 </button>
                                 }
                             </div>
+
                             <div class="grid grid-cols-1 gap-3">
                                 @for (doc of selectedClaim()?.documents; track doc.id) {
                                 <a [href]="doc.fileUrl" target="_blank"
-                                    class="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-xl hover:bg-slate-50 transition-all group shadow-sm">
+                                    class="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-2xl hover:border-brand-orange/30 transition-all group shadow-sm">
                                     <div
-                                        class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600 font-bold group-hover:scale-110 transition-transform">
+                                        class="w-11 h-11 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center text-slate-400 font-bold group-hover:bg-brand-orange group-hover:text-white transition-all">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                                 d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                     <div class="grow">
-                                        <p class="text-xs font-bold text-brand-navy uppercase italic">{{ doc.fileName }}
+                                        <p class="text-xs font-black text-brand-navy truncate max-w-[200px]">{{
+                                            doc.fileName }}</p>
+                                        <p
+                                            class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 italic">
+                                            {{ (doc.fileSize / 1024 / 1024) | number:'1.1-1' }} MB • Audit Reference
                                         </p>
-                                        <p class="text-[10px] text-slate-400">{{ (doc.fileSize / 1024 / 1024) |
-                                            number:'1.1-1' }} MB • View Evidence</p>
                                     </div>
-                                    <div
-                                        class="bg-brand-navy text-white px-3 py-1 rounded text-[8px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-                                        Open</div>
+                                    <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-orange group-hover:translate-x-1 transition-all"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
                                 </a>
                                 } @empty {
-                                <div
-                                    class="p-8 border-2 border-dashed border-slate-100 rounded-2xl text-center bg-slate-50/50">
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase">No documents uploaded</p>
+                                <div class="p-12 border-2 border-dashed border-slate-100 rounded-3xl text-center">
+                                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">No
+                                        Evidence Uploaded</p>
                                 </div>
                                 }
                             </div>
 
-                            <!-- AI Insights Panel -->
+                            <!-- AI Insights Results Panel -->
                             @if (aiInsights()) {
-                            <div class="mt-4 rounded-2xl overflow-hidden border border-violet-200 shadow-lg shadow-violet-100/50 animate-in fade-in slide-in-from-bottom-3 duration-500">
-                                <!-- Panel Header -->
-                                <div class="bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.347.347a3.75 3.75 0 01-5.303 0l-.347-.347z" />
-                                        </svg>
-                                        <span class="text-[10px] font-black text-white uppercase tracking-widest">AI Document Analysis</span>
+                            <div
+                                class="mt-8 rounded-[2rem] overflow-hidden border border-violet-100 shadow-2xl shadow-indigo-100/50 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                <!-- Panel Glow Header -->
+                                <div
+                                    class="bg-gradient-to-r from-violet-600 via-indigo-600 to-brand-navy px-8 py-5 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-md">
+                                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">
+                                                Forensic AI Insights</h5>
+                                            <p class="text-[8px] text-white/60 font-bold uppercase">Automated Document
+                                                Adjudication</p>
+                                        </div>
                                     </div>
                                     <button (click)="clearAIInsights()"
-                                        class="text-white/60 hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                                        class="text-white/40 hover:text-white transition-colors">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
 
-                                <div class="bg-white p-6 space-y-5">
-                                    <!-- Risk Score -->
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Fraud Risk Score</p>
-                                            <div class="flex items-end gap-2">
-                                                <span [class]="'text-3xl font-black italic ' + getRiskScoreColor(aiInsights()!.riskScore)">
-                                                    {{ aiInsights()!.riskScore }}
-                                                </span>
-                                                <span class="text-slate-400 font-bold text-sm mb-1">/ 100</span>
+                                <div class="bg-white p-8 space-y-8">
+                                    <!-- Risk Circle & Settlement -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                                        <!-- Risk Gauge -->
+                                        <div
+                                            class="flex items-center gap-6 bg-slate-50/50 p-6 rounded-3xl border border-slate-50">
+                                            <div class="relative w-24 h-24 flex items-center justify-center">
+                                                <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                                                    <circle cx="18" cy="18" r="16" fill="none" stroke="#f1f5f9"
+                                                        stroke-width="3" />
+                                                    <circle cx="18" cy="18" r="16" fill="none"
+                                                        [attr.stroke]="getRiskScoreStroke(aiInsights()!.riskScore)"
+                                                        stroke-width="3.5" stroke-linecap="round"
+                                                        [attr.stroke-dasharray]="aiInsights()!.riskScore + ', 100'"
+                                                        class="transition-all duration-1000 ease-out" />
+                                                </svg>
+                                                <div class="absolute flex flex-col items-center">
+                                                    <span
+                                                        [class]="'text-lg font-black italic tracking-tighter ' + getRiskScoreColor(aiInsights()!.riskScore)">
+                                                        {{ aiInsights()!.riskScore }}%
+                                                    </span>
+                                                    <span
+                                                        [class]="'text-[8px] font-black uppercase tracking-widest ' + getRiskScoreColor(aiInsights()!.riskScore)">
+                                                        {{ getRiskLabel(aiInsights()!.riskScore) }} Risk
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="w-24 h-24 relative flex items-center justify-center">
-                                            <svg class="w-24 h-24 -rotate-90" viewBox="0 0 36 36">
-                                                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#f1f5f9" stroke-width="3"/>
-                                                <circle cx="18" cy="18" r="15.9" fill="none"
-                                                    [attr.stroke]="getRiskScoreStroke(aiInsights()!.riskScore)"
-                                                    stroke-width="3"
-                                                    stroke-linecap="round"
-                                                    [attr.stroke-dasharray]="(aiInsights()!.riskScore) + ' 100'"
-                                                    stroke-dashoffset="0"/>
-                                            </svg>
-                                            <span [class]="'absolute text-sm font-black ' + getRiskScoreColor(aiInsights()!.riskScore)">
-                                                {{ getRiskLabel(aiInsights()!.riskScore) }}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Suggested Amount Range -->
-                                    <div class="bg-gradient-to-br from-violet-50 to-indigo-50 rounded-xl p-4 border border-violet-100">
-                                        <p class="text-[9px] font-black text-violet-500 uppercase tracking-widest mb-2">AI-Suggested Settlement Range</p>
-                                        <div class="flex items-center justify-between">
                                             <div>
-                                                <p class="text-[9px] text-slate-400 font-bold uppercase">Minimum</p>
-                                                <p class="text-lg font-black text-brand-navy">₹{{ aiInsights()!.suggestedAmountMin | number:'1.0-0' }}</p>
-                                            </div>
-                                            <div class="flex-1 mx-4 border-t-2 border-dashed border-violet-200 relative">
-                                                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-violet-100 text-violet-600 text-[8px] font-black px-2 py-0.5 rounded-full uppercase">Range</div>
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-[9px] text-slate-400 font-bold uppercase">Maximum</p>
-                                                <p class="text-lg font-black text-brand-navy">₹{{ aiInsights()!.suggestedAmountMax | number:'1.0-0' }}</p>
+                                                <h6
+                                                    class="text-[10px] font-black text-brand-navy uppercase tracking-widest mb-1">
+                                                    Integrity Score</h6>
+                                                <p class="text-xs text-slate-500 leading-relaxed font-medium">Confidence
+                                                    in document authenticity and incident alignment.</p>
                                             </div>
                                         </div>
-                                        <p class="text-[9px] text-violet-500 font-medium mt-2 italic">Based on document analysis vs. customer requested ₹{{ selectedClaim()?.requestedAmount | number:'1.0-0' }}</p>
+
+                                        <!-- Settlement Range -->
+                                        <div class="space-y-4">
+                                            <div class="flex justify-between items-end">
+                                                <div>
+                                                    <p
+                                                        class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                                        AI Recommendation</p>
+                                                    <p class="text-2xl font-black text-brand-navy italic">₹{{
+                                                        aiInsights()!.suggestedAmountMin | number:'1.0-0' }} <span
+                                                            class="text-slate-300 mx-1 text-lg">-</span> ₹{{
+                                                        aiInsights()!.suggestedAmountMax | number:'1.0-0' }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden flex">
+                                                <div class="h-full bg-indigo-500 shadow-lg shadow-indigo-200"
+                                                    style="width: 70%; margin-left: 15%"></div>
+                                            </div>
+                                            <p class="text-[9px] text-indigo-500 font-bold italic">Range calculated
+                                                against customer request of ₹{{ selectedClaim()?.requestedAmount |
+                                                number }}</p>
+                                        </div>
                                     </div>
 
-                                    <!-- 5-Point Summary -->
+                                    <!-- Summary List -->
                                     <div class="space-y-3">
-                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Key Analysis Points</p>
-                                        @for (point of aiInsights()!.summaryPoints; track $index) {
-                                        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                                            <div class="w-5 h-5 bg-violet-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                                                <span class="text-[9px] font-black text-violet-600">{{ $index + 1 }}</span>
+                                        <h6 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            Executive Summary</h6>
+                                        <div class="grid grid-cols-1 gap-2">
+                                            @for (point of aiInsights()!.summaryPoints; track $index) {
+                                            <div
+                                                class="flex items-start gap-4 p-4 bg-slate-50/50 rounded-2xl border border-slate-100/50 group hover:bg-white hover:shadow-md transition-all">
+                                                <span
+                                                    class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[9px] font-black shrink-0 mt-0.5">{{
+                                                    $index + 1 }}</span>
+                                                <p class="text-[11px] text-slate-600 font-bold leading-relaxed">{{ point
+                                                    }}</p>
                                             </div>
-                                            <p class="text-xs text-slate-700 leading-relaxed font-medium">{{ point }}</p>
+                                            }
                                         </div>
-                                        }
                                     </div>
 
-                                    <!-- Apply Suggested Button -->
+                                    <!-- Action Button -->
                                     <button (click)="applyAISuggestedAmount()"
-                                        class="w-full py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg shadow-violet-200 hover:brightness-110 active:scale-95 transition-all">
-                                        Apply Midpoint Amount to Decision
+                                        class="w-full py-4 bg-indigo-600 hover:bg-brand-navy text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-indigo-100 transition-all active:scale-[0.98]">
+                                        Apply Midpoint to Final Decision
                                     </button>
                                 </div>
                             </div>
                             }
 
-                            <!-- AI Error State -->
+                            <!-- AI Error Display -->
                             @if (aiError()) {
-                            <div class="mt-3 p-4 bg-rose-50 border border-rose-100 rounded-xl flex items-center gap-3">
-                                <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <p class="text-[10px] font-bold text-rose-600">{{ aiError() }}</p>
+                            <div
+                                class="p-5 bg-rose-50 border border-rose-100 rounded-2xl flex items-center gap-4 animate-in zoom-in-95">
+                                <div
+                                    class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-rose-500 shadow-sm shrink-0">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-rose-600 uppercase tracking-widest">Analysis
+                                        Suspended</p>
+                                    <p class="text-xs text-rose-500 font-medium italic mt-1">{{ aiError() }}</p>
+                                </div>
                             </div>
                             }
                         </section>
@@ -791,7 +838,7 @@
     @if (showHistoryDetailModal() && selectedHistoryClaim()) {
     <div class="fixed inset-0 bg-brand-navy/95 backdrop-blur-xl flex items-center justify-center z-[60] p-4">
         <div
-            class="bg-white w-full max-w-3xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-500">
+            class="bg-white w-full max-w-6xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-500">
             <!-- Header -->
             <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
                 <div>

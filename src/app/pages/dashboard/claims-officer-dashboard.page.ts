@@ -12,8 +12,8 @@ import { UserOptions } from 'jspdf-autotable';
 import { NotificationPanelComponent } from '../../components/notification-panel/notification-panel.component';
 import { HttpClient } from '@angular/common/http';
 
-// n8n webhook URL — update to your actual endpoint
-const N8N_WEBHOOK_URL = 'https://your-n8n-instance.com/webhook/claim-ai-insights';
+// n8n webhook URL
+const N8N_WEBHOOK_URL = 'https://nextglidesol.app.n8n.cloud/webhook/claim-ai-insights';
 
 // AI Insights response shape expected back from n8n
 interface AIInsightsResponse {
@@ -227,6 +227,7 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         // Reset AI insights for each new claim review
         this.aiInsights.set(null);
         this.aiError.set(null);
+        this.isAILoading.set(false);
     }
 
     setSection(section: string) {
@@ -478,7 +479,7 @@ export class ClaimsOfficerDashboardPage implements OnInit {
     }
 
     /**
-     * Fetches text from all .net (ASP.NET-hosted) documents in the claim,
+     * Fetches text from all documents in the claim,
      * sends raw extracted text to n8n, and receives back AI analysis.
      */
     async getAIInsights(claim: any): Promise<void> {
@@ -489,52 +490,55 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         this.aiError.set(null);
 
         try {
-            // Step 1: Extract text from all supporting documents hosted on .net endpoints
-            const textParts: string[] = [];
+            // Step 1: Extract content from all uploaded documents
+            let rawDocumentText = '';
+            const dividers = '\n\n' + '='.repeat(30) + '\n\n';
 
             for (const doc of claim.documents) {
                 const fileUrl: string = doc.fileUrl ?? '';
-                // Only process documents served from .net backends
                 if (!fileUrl) continue;
 
                 try {
                     const resp = await fetch(fileUrl);
-                    const contentType = resp.headers.get('content-type') ?? '';
+                    if (!resp.ok) throw new Error('Fetch failed');
 
-                    if (contentType.includes('application/pdf') || fileUrl.toLowerCase().endsWith('.pdf')) {
-                        // For PDFs: read as ArrayBuffer and extract raw text via pdfjsLib if available,
-                        // otherwise send the binary as base64 and let n8n handle extraction
+                    const contentType = resp.headers.get('content-type') ?? '';
+                    let content = '';
+
+                    if (contentType.includes('application/pdf') || doc.fileName?.toLowerCase().endsWith('.pdf')) {
+                        // PDF -> ArrayBuffer -> Base64
                         const buffer = await resp.arrayBuffer();
-                        const base64 = btoa(
+                        content = btoa(
                             new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
                         );
-                        textParts.push(`[PDF:${doc.fileName}]\nbase64:${base64}`);
-                    } else if (contentType.includes('text') || fileUrl.toLowerCase().match(/\.(txt|csv|xml|json)$/)) {
-                        const text = await resp.text();
-                        textParts.push(`[DOC:${doc.fileName}]\n${text}`);
+                        content = `[PDF DOCUMENT: ${doc.fileName}]\nBASE64_DATA: ${content}`;
+                    } else if (contentType.includes('text') || contentType.includes('json') || contentType.includes('javascript') || contentType.includes('xml')) {
+                        // Text-based -> Plain Text
+                        content = await resp.text();
+                        content = `[TEXT DOCUMENT: ${doc.fileName}]\nCONTENT:\n${content}`;
                     } else {
-                        // Image or unsupported — pass URL for n8n to handle
-                        textParts.push(`[FILE:${doc.fileName}]\nurl:${fileUrl}`);
+                        // Reference URL for others
+                        content = `[FILE REFERENCE: ${doc.fileName}]\nURL: ${fileUrl}`;
                     }
+
+                    rawDocumentText += (rawDocumentText ? dividers : '') + content;
                 } catch (fetchErr) {
                     console.warn(`Could not fetch document ${doc.fileName}:`, fetchErr);
-                    textParts.push(`[FILE:${doc.fileName}]\nurl:${fileUrl}`);
+                    rawDocumentText += (rawDocumentText ? dividers : '') + `[UNFETCHABLE FILE: ${doc.fileName}]\nURL: ${fileUrl}`;
                 }
             }
 
-            const rawDocumentText = textParts.join('\n\n---\n\n');
-
-            // Step 2: Build the payload for n8n — includes raw text + claim context
+            // Step 2: Build the payload for n8n
             const payload = {
-                claimId: claim.id,
-                incidentType: claim.incidentType,
-                requestedAmount: claim.requestedAmount,
-                remainingCoverage: claim.remainingCoverage ?? claim.policy?.remainingCoverageAmount ?? 0,
-                totalCoverage: claim.totalCoverage ?? claim.policy?.totalCoverageAmount ?? 0,
+                claimId: claim.id ?? '',
+                incidentType: claim.incidentType ?? '',
+                requestedAmount: claim.requestedAmount ?? 0,
+                remainingCoverage: claim.policy?.remainingCoverageAmount ?? 0,
+                totalCoverage: claim.policy?.totalCoverageAmount ?? 0,
                 rawDocumentText
             };
 
-            // Step 3: POST to n8n webhook and await structured AI response
+            // Step 3: POST to n8n webhook
             const n8nResponse = await fetch(N8N_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -542,21 +546,43 @@ export class ClaimsOfficerDashboardPage implements OnInit {
             });
 
             if (!n8nResponse.ok) {
-                throw new Error(`n8n returned ${n8nResponse.status}: ${n8nResponse.statusText}`);
+                throw new Error(`n8n Error: ${n8nResponse.status}`);
             }
 
-            const result: AIInsightsResponse = await n8nResponse.json();
+            const rawResult = await n8nResponse.json();
 
-            // Validate and clamp
-            result.riskScore = Math.max(0, Math.min(100, result.riskScore ?? 50));
-            result.summaryPoints = (result.summaryPoints ?? []).slice(0, 5);
-            result.suggestedAmountMin = result.suggestedAmountMin ?? 0;
-            result.suggestedAmountMax = result.suggestedAmountMax ?? claim.requestedAmount;
+            // Step 4: Robust normalization of the response
+            let finalOutput: any = null;
 
-            this.aiInsights.set(result);
+            if (rawResult && rawResult.output) {
+                // Case 1: Response is wrapped in an 'output' field
+                const outputStr = rawResult.output;
+                try {
+                    // Try parsing the string (and clean markdown if present)
+                    const cleanJson = outputStr.replace(/```json|```/g, '').trim();
+                    finalOutput = JSON.parse(cleanJson);
+                } catch (e) {
+                    throw new Error('Failed to parse AI output field as JSON');
+                }
+            } else if (rawResult && rawResult.summaryPoints) {
+                // Case 2: Response is the direct insights object
+                finalOutput = rawResult;
+            } else {
+                throw new Error('AI Agent returned no recognized output format');
+            }
+
+            // Step 5: Normalize and store
+            const insights: AIInsightsResponse = {
+                summaryPoints: Array.isArray(finalOutput.summaryPoints) ? finalOutput.summaryPoints.slice(0, 5) : [],
+                riskScore: Math.min(100, Math.max(0, typeof finalOutput.riskScore === 'number' ? finalOutput.riskScore : 0)),
+                suggestedAmountMin: typeof finalOutput.suggestedAmountMin === 'number' ? finalOutput.suggestedAmountMin : 0,
+                suggestedAmountMax: typeof finalOutput.suggestedAmountMax === 'number' ? finalOutput.suggestedAmountMax : 0
+            };
+
+            this.aiInsights.set(insights);
         } catch (err: any) {
             console.error('AI Insights error:', err);
-            this.aiError.set(err?.message ?? 'Failed to get AI insights. Please try again.');
+            this.aiError.set(err?.message ?? 'Analysis failed. Please try again.');
         } finally {
             this.isAILoading.set(false);
         }
