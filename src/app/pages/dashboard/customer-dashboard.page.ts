@@ -9,11 +9,12 @@ import { ChatService } from '../../services/chat.service';
 
 import { RouterModule } from '@angular/router';
 import { NotificationPanelComponent } from '../../components/notification-panel/notification-panel.component';
+import { GooglePlacesInputComponent } from '../../components/incident-location/incident-location.component';
 
 @Component({
     selector: 'app-customer-dashboard',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, NotificationPanelComponent],
+    imports: [CommonModule, FormsModule, RouterModule, NotificationPanelComponent, GooglePlacesInputComponent],
     templateUrl: './customer-dashboard.page.html',
     styleUrls: ['./customer-dashboard.page.css']
 })
@@ -386,6 +387,16 @@ export class CustomerDashboardPage implements OnInit {
                 alert('Failed to raise claim: ' + (err.error?.message || 'Server error'));
             }
         });
+    }
+
+    onLocationSelected(address: string) {
+        this.claimForm.incidentLocation = address;
+        console.log('Location updated in dashboard form:', address);
+    }
+
+    onHospitalChanged(name: string) {
+        this.claimForm.hospitalName = name;
+        console.log('Hospital updated in dashboard form:', name);
     }
 
     logout() {

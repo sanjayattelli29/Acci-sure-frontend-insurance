@@ -5,11 +5,12 @@ import { PolicyService } from '../../services/policy.service';
 import { ClaimService } from '../../services/claim.service';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { GooglePlacesInputComponent } from '../../components/incident-location/incident-location.component';
 
 @Component({
     selector: 'app-policy-details',
     standalone: true,
-    imports: [CommonModule, RouterModule, FormsModule],
+    imports: [CommonModule, RouterModule, FormsModule, GooglePlacesInputComponent],
     templateUrl: './policy-details.page.html',
     styleUrls: ['./details.page.css']
 })
@@ -129,6 +130,16 @@ export class PolicyDetailsPage implements OnInit {
                 alert('Failed to raise claim: ' + (err.error?.message || 'Server error'));
             }
         });
+    }
+
+    onLocationSelected(address: string) {
+        this.claimForm.incidentLocation = address;
+        console.log('Location updated in form:', address);
+    }
+
+    onHospitalChanged(name: string) {
+        this.claimForm.hospitalName = name;
+        console.log('Hospital updated in form:', name);
     }
 
     goBack() {

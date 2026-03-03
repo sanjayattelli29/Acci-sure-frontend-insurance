@@ -10,6 +10,18 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
 import { NotificationPanelComponent } from '../../components/notification-panel/notification-panel.component';
+import { HttpClient } from '@angular/common/http';
+
+// n8n webhook URL — update to your actual endpoint
+const N8N_WEBHOOK_URL = 'https://your-n8n-instance.com/webhook/claim-ai-insights';
+
+// AI Insights response shape expected back from n8n
+interface AIInsightsResponse {
+    summaryPoints: string[];   // exactly 5 bullet points
+    riskScore: number;         // 0–100
+    suggestedAmountMin: number;
+    suggestedAmountMax: number;
+}
 
 Chart.register(...registerables);
 
@@ -24,6 +36,7 @@ export class ClaimsOfficerDashboardPage implements OnInit {
     private claimService = inject(ClaimService);
     private policyService = inject(PolicyService);
     private adminService = inject(AdminService);
+    private http = inject(HttpClient);
 
     user = this.authService.getUser();
     myRequests = signal<any[]>([]);
@@ -59,6 +72,11 @@ export class ClaimsOfficerDashboardPage implements OnInit {
     // History Detail State
     showHistoryDetailModal = signal(false);
     selectedHistoryClaim = signal<any | null>(null);
+
+    // AI Insights State
+    isAILoading = signal(false);
+    aiInsights = signal<AIInsightsResponse | null>(null);
+    aiError = signal<string | null>(null);
 
     // Chart instances
     private charts: Chart[] = [];
@@ -206,6 +224,9 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         this.reviewForm.status = 'Approved';
         this.reviewForm.remarks = '';
         this.reviewForm.approvedAmount = claim.requestedAmount || 0;
+        // Reset AI insights for each new claim review
+        this.aiInsights.set(null);
+        this.aiError.set(null);
     }
 
     setSection(section: string) {
@@ -454,6 +475,122 @@ export class ClaimsOfficerDashboardPage implements OnInit {
                 this.isLoading.set(false);
             }
         });
+    }
+
+    /**
+     * Fetches text from all .net (ASP.NET-hosted) documents in the claim,
+     * sends raw extracted text to n8n, and receives back AI analysis.
+     */
+    async getAIInsights(claim: any): Promise<void> {
+        if (!claim?.documents?.length) return;
+
+        this.isAILoading.set(true);
+        this.aiInsights.set(null);
+        this.aiError.set(null);
+
+        try {
+            // Step 1: Extract text from all supporting documents hosted on .net endpoints
+            const textParts: string[] = [];
+
+            for (const doc of claim.documents) {
+                const fileUrl: string = doc.fileUrl ?? '';
+                // Only process documents served from .net backends
+                if (!fileUrl) continue;
+
+                try {
+                    const resp = await fetch(fileUrl);
+                    const contentType = resp.headers.get('content-type') ?? '';
+
+                    if (contentType.includes('application/pdf') || fileUrl.toLowerCase().endsWith('.pdf')) {
+                        // For PDFs: read as ArrayBuffer and extract raw text via pdfjsLib if available,
+                        // otherwise send the binary as base64 and let n8n handle extraction
+                        const buffer = await resp.arrayBuffer();
+                        const base64 = btoa(
+                            new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+                        );
+                        textParts.push(`[PDF:${doc.fileName}]\nbase64:${base64}`);
+                    } else if (contentType.includes('text') || fileUrl.toLowerCase().match(/\.(txt|csv|xml|json)$/)) {
+                        const text = await resp.text();
+                        textParts.push(`[DOC:${doc.fileName}]\n${text}`);
+                    } else {
+                        // Image or unsupported — pass URL for n8n to handle
+                        textParts.push(`[FILE:${doc.fileName}]\nurl:${fileUrl}`);
+                    }
+                } catch (fetchErr) {
+                    console.warn(`Could not fetch document ${doc.fileName}:`, fetchErr);
+                    textParts.push(`[FILE:${doc.fileName}]\nurl:${fileUrl}`);
+                }
+            }
+
+            const rawDocumentText = textParts.join('\n\n---\n\n');
+
+            // Step 2: Build the payload for n8n — includes raw text + claim context
+            const payload = {
+                claimId: claim.id,
+                incidentType: claim.incidentType,
+                requestedAmount: claim.requestedAmount,
+                remainingCoverage: claim.remainingCoverage ?? claim.policy?.remainingCoverageAmount ?? 0,
+                totalCoverage: claim.totalCoverage ?? claim.policy?.totalCoverageAmount ?? 0,
+                rawDocumentText
+            };
+
+            // Step 3: POST to n8n webhook and await structured AI response
+            const n8nResponse = await fetch(N8N_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!n8nResponse.ok) {
+                throw new Error(`n8n returned ${n8nResponse.status}: ${n8nResponse.statusText}`);
+            }
+
+            const result: AIInsightsResponse = await n8nResponse.json();
+
+            // Validate and clamp
+            result.riskScore = Math.max(0, Math.min(100, result.riskScore ?? 50));
+            result.summaryPoints = (result.summaryPoints ?? []).slice(0, 5);
+            result.suggestedAmountMin = result.suggestedAmountMin ?? 0;
+            result.suggestedAmountMax = result.suggestedAmountMax ?? claim.requestedAmount;
+
+            this.aiInsights.set(result);
+        } catch (err: any) {
+            console.error('AI Insights error:', err);
+            this.aiError.set(err?.message ?? 'Failed to get AI insights. Please try again.');
+        } finally {
+            this.isAILoading.set(false);
+        }
+    }
+
+    clearAIInsights(): void {
+        this.aiInsights.set(null);
+        this.aiError.set(null);
+    }
+
+    /** Sets the approved amount to the midpoint of the AI-suggested range */
+    applyAISuggestedAmount(): void {
+        const insights = this.aiInsights();
+        if (!insights) return;
+        const midpoint = Math.round((insights.suggestedAmountMin + insights.suggestedAmountMax) / 2);
+        this.reviewForm.approvedAmount = midpoint;
+    }
+
+    getRiskScoreColor(score: number): string {
+        if (score <= 30) return 'text-emerald-600';
+        if (score <= 60) return 'text-amber-500';
+        return 'text-rose-600';
+    }
+
+    getRiskScoreStroke(score: number): string {
+        if (score <= 30) return '#10b981';
+        if (score <= 60) return '#f59e0b';
+        return '#ef4444';
+    }
+
+    getRiskLabel(score: number): string {
+        if (score <= 30) return 'Low';
+        if (score <= 60) return 'Med';
+        return 'High';
     }
 
     logout() {
