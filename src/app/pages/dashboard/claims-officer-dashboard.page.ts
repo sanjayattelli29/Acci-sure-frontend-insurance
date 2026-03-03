@@ -43,6 +43,7 @@ export class ClaimsOfficerDashboardPage implements OnInit {
     isLoading = signal(false);
     config = signal<any>(null);
     activeSection = signal('dashboard');
+    sidebarOpen = signal(false);
 
     // Payments Dashboard signals
     unifiedPayments = signal<any[]>([]);

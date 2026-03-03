@@ -56,6 +56,7 @@ export class AdminDashboardPage implements OnInit {
 
     // Signals for Data
     activeSection = signal<string>('dashboard');
+    sidebarOpen = signal<boolean>(false);
     adminStats = signal<any>(null);
     policyRequests = signal<any[]>([]);
     pendingClaims = signal<any[]>([]);

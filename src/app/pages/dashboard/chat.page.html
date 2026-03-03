@@ -1,6 +1,21 @@
 <div class="chat-layout">
+    <!-- Backdrop -->
+    @if (sidebarOpen()) {
+    <div (click)="sidebarOpen.set(false)" class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm z-40 lg:hidden"></div>
+    }
+
     <!-- Sidebar (Unified) -->
-    <aside class="w-80 bg-brand-navy flex flex-col h-screen sticky top-0 shrink-0">
+    <aside [class]="'fixed lg:sticky top-0 left-0 w-80 bg-brand-navy flex flex-col h-screen shrink-0 z-50 transform transition-transform duration-300 lg:translate-x-0 ' + 
+           (sidebarOpen() ? 'translate-x-0' : '-translate-x-full')">
+
+        <div class="lg:hidden flex justify-end px-4 pt-4">
+            <button (click)="sidebarOpen.set(false)" class="p-2 text-white/50 hover:text-white">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
         <!-- Logo -->
         <div class="px-8 py-10">
             <h1 class="text-2xl font-black text-white tracking-tighter">
@@ -24,7 +39,8 @@
 
         <!-- Navigation -->
         <nav class="flex-1 px-4 space-y-2">
-            <button (click)="router.navigate([user.role === 'Customer' ? '/customer/dashboard' : '/agent/dashboard'])"
+            <button
+                (click)="router.navigate([user.role === 'Customer' ? '/customer/dashboard' : '/agent/dashboard']); sidebarOpen.set(false)"
                 class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-white/60 hover:text-white hover:bg-white/5 transition-all group">
                 <span class="text-xl group-hover:scale-110 transition-transform">📊</span>
                 <span class="font-bold text-sm">Dashboard</span>
@@ -38,7 +54,8 @@
 
         <!-- Footer -->
         <div class="p-4">
-            <button (click)="router.navigate([user.role === 'Customer' ? '/customer/dashboard' : '/agent/dashboard'])"
+            <button
+                (click)="router.navigate([user.role === 'Customer' ? '/customer/dashboard' : '/agent/dashboard']); sidebarOpen.set(false)"
                 class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-red-400 hover:bg-red-400/10 transition-all font-bold text-sm">
                 <span>🚪</span>
                 <span>Exit Chat</span>
@@ -48,17 +65,26 @@
 
     <div class="chat-container">
         <!-- Chat Header -->
-        <header class="chat-header">
+        <header class="chat-header sticky top-0 z-30">
             <div class="header-content">
+                <button (click)="sidebarOpen.set(true)"
+                    class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
                 <div class="chat-info" *ngIf="chatInfo()">
-                    <h2 class="font-black">Policy Chat: {{ policyId }}</h2>
-                    <p *ngIf="user.role === 'Customer'" class="font-bold">Chatting with Agent: {{ chatInfo().agentEmail
+                    <h2 class="font-black text-sm md:text-base">Policy Chat: {{ policyId.substring(0,8) }}</h2>
+                    <p *ngIf="user.role === 'Customer'" class="font-bold text-[10px] md:text-xs">Chatting with Agent: {{
+                        chatInfo().agentEmail
                         }}</p>
-                    <p *ngIf="user.role === 'Agent'" class="font-bold">Chatting with Customer: {{
+                    <p *ngIf="user.role === 'Agent'" class="font-bold text-[10px] md:text-xs">Chatting with Customer: {{
                         chatInfo().customerEmail }}</p>
                 </div>
-                <button class="video-call-btn" (click)="startVideoCall()">
-                    <span>🎥</span> Start Video Call
+                <button class="video-call-btn text-xs md:text-sm" (click)="startVideoCall()">
+                    <span>🎥</span> <span class="hidden sm:inline">Start Video Call</span>
                 </button>
             </div>
         </header>
@@ -91,11 +117,11 @@
         </div>
 
         <!-- Message Input -->
-        <footer class="chat-footer">
+        <footer class="chat-footer sticky bottom-0">
             <form (submit)="sendMessage(); $event.preventDefault()" class="input-area">
                 <input type="text" [(ngModel)]="newMessage" name="newMessage" placeholder="Type a message..."
-                    autocomplete="off">
-                <button type="submit" [disabled]="!newMessage.trim()">Send</button>
+                    autocomplete="off" class="text-sm">
+                <button type="submit" [disabled]="!newMessage.trim()" class="text-sm">Send</button>
             </form>
         </footer>
     </div>

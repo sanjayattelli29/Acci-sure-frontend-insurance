@@ -27,6 +27,7 @@ export class CustomerDashboardPage implements OnInit {
 
     user = this.authService.getUser();
     activeView = signal<'dashboard' | 'my-policies' | 'buy-policy' | 'raise-claim' | 'my-claims' | 'policy-details' | 'claim-details' | 'chat'>('dashboard');
+    sidebarOpen = signal<boolean>(false);
 
     // Sub-view State
     selectedPolicyId = signal<string | null>(null);

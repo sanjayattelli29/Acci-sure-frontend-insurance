@@ -1,12 +1,20 @@
-<div class="min-h-screen flex flex-col bg-brand-gray">
+<div class="min-h-screen flex flex-col bg-brand-gray relative">
     <!-- Agent Header -->
     <header class="nav-header shrink-0">
         <div class="container mx-auto px-6 flex justify-between items-center">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <!-- Hamburger (mobile only) -->
+                <button class="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors text-white"
+                    (click)="sidebarOpen.set(true)" aria-label="Open menu">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
                 <span class="text-xl font-black tracking-tight">Insurance<span
                         class="text-brand-orange">Platform</span></span>
                 <span
-                    class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest border border-brand-orange/20">Agent
+                    class="bg-brand-orange/20 text-brand-orange px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-widest border border-brand-orange/20 hidden sm:inline-block">Agent
                     Portal</span>
             </div>
             <div class="flex items-center gap-6">
@@ -19,11 +27,27 @@
         </div>
     </header>
 
+    <!-- Mobile Overlay Backdrop -->
+    @if (sidebarOpen()) {
+    <div class="fixed inset-0 bg-black/40 z-30 lg:hidden" (click)="sidebarOpen.set(false)"></div>
+    }
+
     <div class="flex grow overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-brand-navy border-r border-white/5 flex flex-col pt-6 shrink-0">
+        <aside
+            class="fixed lg:relative inset-y-0 left-0 z-40 w-64 bg-brand-navy border-r border-white/5 flex flex-col pt-6 shrink-0 transition-transform duration-300"
+            [class.-translate-x-full]="!sidebarOpen()" [class.translate-x-0]="sidebarOpen()"
+            [class.lg:translate-x-0]="true">
+            <!-- Close button mobile -->
+            <button class="lg:hidden absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+                (click)="sidebarOpen.set(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
             <nav class="space-y-1 px-3">
-                <button (click)="setSection('dashboard')"
+                <button (click)="setSection('dashboard'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'dashboard' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -32,7 +56,7 @@
                     </svg>
                     Dashboard
                 </button>
-                <button (click)="setSection('policyRequests')"
+                <button (click)="setSection('policyRequests'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'policyRequests' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -41,7 +65,7 @@
                     </svg>
                     Policy Requests
                 </button>
-                <button (click)="setSection('commission')"
+                <button (click)="setSection('commission'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'commission' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,7 +74,7 @@
                     </svg>
                     Commission
                 </button>
-                <button (click)="setSection('claimsHistory')"
+                <button (click)="setSection('claimsHistory'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'claimsHistory' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,7 +83,7 @@
                     </svg>
                     Customer Claims
                 </button>
-                <button (click)="setSection('customers')"
+                <button (click)="setSection('customers'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'customers' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,7 +92,7 @@
                     </svg>
                     My Customers
                 </button>
-                <button (click)="setSection('sendEmail')"
+                <button (click)="setSection('sendEmail'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'sendEmail' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,7 +101,7 @@
                     </svg>
                     Send Email
                 </button>
-                <button (click)="setSection('chat')"
+                <button (click)="setSection('chat'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'chat' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,7 +110,7 @@
                     </svg>
                     Chat
                 </button>
-                <button (click)="setSection('payments')"
+                <button (click)="setSection('payments'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'payments' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +123,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="grow overflow-y-auto p-8">
+        <main class="grow overflow-y-auto p-4 md:p-8">
             <div class="max-w-6xl mx-auto space-y-8">
 
                 @if (message().text) {

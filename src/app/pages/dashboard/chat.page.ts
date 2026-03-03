@@ -18,6 +18,7 @@ export class ChatPage implements OnInit, OnDestroy {
     private chatService = inject(ChatService);
     private authService = inject(AuthService);
     public router = inject(Router);
+    sidebarOpen = signal(false);
 
     policyId = '';
     user = this.authService.getUser();

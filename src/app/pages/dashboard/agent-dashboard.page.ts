@@ -38,6 +38,7 @@ export class AgentDashboardPage implements OnInit {
 
     user = this.authService.getUser();
     activeSection = signal('dashboard');
+    sidebarOpen = signal(false);
     private claimService = inject(ClaimService);
     private policyService = inject(PolicyService);
     private chatService = inject(ChatService);

@@ -1,7 +1,15 @@
-<div class="min-h-screen flex flex-col bg-slate-50">
+<div class="min-h-screen flex flex-col bg-slate-50 relative">
     <!-- Premium Header -->
-    <header class="h-20 bg-brand-navy shrink-0 border-b border-white/5 flex items-center px-10 relative z-30">
-        <div class="flex items-center gap-6">
+    <header class="h-20 bg-brand-navy shrink-0 border-b border-white/5 flex items-center px-4 md:px-10 relative z-30">
+        <div class="flex items-center gap-3 md:gap-6">
+            <!-- Hamburger Button (Mobile Only) -->
+            <button
+                class="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all border border-white/5"
+                (click)="sidebarOpen.set(true)" aria-label="Open sidebar">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
             <div class="flex items-center gap-3">
                 <div
                     class="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center shadow-lg shadow-brand-orange/20">
@@ -10,24 +18,24 @@
                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                 </div>
-                <span class="text-2xl font-black text-white tracking-tighter italic">Acci <span
+                <span class="text-xl md:text-2xl font-black text-white tracking-tighter italic">Acci <span
                         class="text-brand-orange">Sure</span></span>
             </div>
-            <div class="h-6 w-px bg-white/10"></div>
+            <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
             <span
-                class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-indigo-500/20">Admin
+                class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-indigo-500/20 hidden sm:inline-block">Admin
                 Console</span>
         </div>
-        <div class="ml-auto flex items-center gap-8">
+        <div class="ml-auto flex items-center gap-4 md:gap-8">
             <!-- Notifications -->
             <app-notification-panel portalRole="Admin"></app-notification-panel>
 
-            <div class="flex flex-col items-end">
+            <div class="flex flex-col items-end hidden md:flex">
                 <p class="text-sm font-black text-white italic">{{ user.email }}</p>
                 <p class="text-[10px] text-brand-orange font-black uppercase tracking-widest">Master Administrator</p>
             </div>
             <button (click)="logout()"
-                class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all border border-white/5 group">
+                class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all border border-white/5 group">
                 <svg class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -37,13 +45,29 @@
         </div>
     </header>
 
+    <!-- Mobile Backdrop -->
+    @if (sidebarOpen()) {
+    <div class="fixed inset-0 bg-black/40 z-40 lg:hidden backdrop-blur-sm" (click)="sidebarOpen.set(false)"></div>
+    }
+
     <div class="flex grow overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-72 bg-brand-navy border-r border-white/5 flex flex-col pt-8 shrink-0 sticky top-0 h-screen">
+        <aside
+            class="fixed lg:relative inset-y-0 left-0 w-72 bg-brand-navy border-r border-white/5 flex flex-col pt-8 shrink-0 z-50 transition-transform duration-300 h-screen"
+            [class.-translate-x-full]="!sidebarOpen()" [class.translate-x-0]="sidebarOpen()"
+            [class.lg:translate-x-0]="true">
+            <!-- Close Button (Mobile Only) -->
+            <button class="lg:hidden absolute top-6 right-6 p-2 text-slate-400 hover:text-white transition-colors"
+                (click)="sidebarOpen.set(false)">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
             <div class="px-6 mb-8">
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Main Menu</p>
                 <nav class="space-y-2">
-                    <button (click)="setSection('dashboard')"
+                    <button (click)="setSection('dashboard'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'dashboard' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -52,7 +76,7 @@
                         </svg>
                         Overview
                     </button>
-                    <button (click)="setSection('policyRequests')"
+                    <button (click)="setSection('policyRequests'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'policyRequests' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -61,7 +85,7 @@
                         </svg>
                         Policy Queue
                     </button>
-                    <button (click)="setSection('claimRequests')"
+                    <button (click)="setSection('claimRequests'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'claimRequests' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,7 +101,7 @@
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Complete Analysis
                 </p>
                 <nav class="space-y-2">
-                    <button (click)="setSection('analysis-users')"
+                    <button (click)="setSection('analysis-users'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-users' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,7 +110,7 @@
                         </svg>
                         Users Registry
                     </button>
-                    <button (click)="setSection('analysis-policies')"
+                    <button (click)="setSection('analysis-policies'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-policies' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,7 +119,7 @@
                         </svg>
                         Active Policies
                     </button>
-                    <button (click)="setSection('analysis-commands')"
+                    <button (click)="setSection('analysis-commands'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-commands' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,7 +128,7 @@
                         </svg>
                         Global Data Section
                     </button>
-                    <button (click)="setSection('analysis-payments')"
+                    <button (click)="setSection('analysis-payments'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-payments' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,7 +143,7 @@
             <div class="px-6 mb-8">
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Administration</p>
                 <nav class="space-y-2">
-                    <button (click)="setSection('agents')"
+                    <button (click)="setSection('agents'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'agents' ? 'bg-brand-navy-light text-white border border-white/10' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,7 +152,7 @@
                         </svg>
                         Manage Agents
                     </button>
-                    <button (click)="setSection('officers')"
+                    <button (click)="setSection('officers'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'officers' ? 'bg-brand-navy-light text-white border border-white/10' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,7 +161,7 @@
                         </svg>
                         Manage Officers
                     </button>
-                    <button (click)="setSection('email-automation')"
+                    <button (click)="setSection('email-automation'); sidebarOpen.set(false)"
                         [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'email-automation' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,7 +175,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="grow overflow-y-auto p-12 bg-slate-50/50">
+        <main class="grow overflow-y-auto p-4 md:p-12 bg-slate-50/50 relative">
             <div class="max-w-7xl mx-auto space-y-12">
 
                 @if (message().text) {

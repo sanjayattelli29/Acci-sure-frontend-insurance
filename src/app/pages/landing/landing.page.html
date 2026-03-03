@@ -4,7 +4,7 @@
      NAVBAR
 ════════════════════════════════════════════ -->
 <nav class="navbar">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between nav-container"
         style="display:flex; justify-content:space-between; align-items:center;">
         <!-- Logo -->
         <a href="#" class="flex items-center gap-2.5"
@@ -18,7 +18,8 @@
         </a>
 
         <!-- Desktop Nav -->
-        <div class="hidden md:flex items-center gap-8" style="display:flex; align-items:center; gap:2rem;">
+        <div class="desktop-nav-links hidden md:flex items-center gap-8"
+            style="display:flex; align-items:center; gap:2rem;">
             <a href="#hero" class="nav-link">Home</a>
             <a routerLink="/learning" class="nav-link">Learning</a>
             <a href="#categories" class="nav-link">Services</a>
@@ -27,11 +28,30 @@
             <a href="#" class="nav-link">Contact</a>
         </div>
 
-        <div class="flex items-center gap-4" style="display:flex; align-items:center; gap:1rem;">
+        <div class="flex items-center gap-3" style="display:flex; align-items:center; gap:0.75rem;">
             <button class="btn-primary-nav" (click)="goRegister()">Get In Touch</button>
+            <!-- Hamburger Button (mobile only) -->
+            <button class="hamburger-btn" (click)="mobileNavOpen = true" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </div>
 </nav>
+
+<!-- Mobile Nav Drawer -->
+<div class="mobile-nav-drawer" [class.open]="mobileNavOpen" (click)="mobileNavOpen = false">
+    <div class="mobile-nav-panel" (click)="$event.stopPropagation()">
+        <button class="mobile-nav-close" (click)="mobileNavOpen = false">✕</button>
+        <a href="#hero" class="mobile-nav-link" (click)="mobileNavOpen = false">Home</a>
+        <a routerLink="/learning" class="mobile-nav-link" (click)="mobileNavOpen = false">Learning</a>
+        <a href="#categories" class="mobile-nav-link" (click)="mobileNavOpen = false">Services</a>
+        <a href="#plans" class="mobile-nav-link" (click)="mobileNavOpen = false">Plans</a>
+        <a href="#testimonials" class="mobile-nav-link" (click)="mobileNavOpen = false">Testimonials</a>
+        <a href="#" class="mobile-nav-link" (click)="mobileNavOpen = false">Contact</a>
+        <button class="btn-primary-nav" (click)="goRegister(); mobileNavOpen = false" style="margin-top: 0.5rem;">Get In
+            Touch</button>
+    </div>
+</div>
 
 
 <!-- ════════════════════════════════════════════
@@ -78,21 +98,22 @@
                     <button class="btn-hero-primary" (click)="goRegister()">Get A Free Quote →</button>
                     <button class="btn-hero-secondary" (click)="scrollTo('plans')">View Plans</button>
                 </div>
-              <a href="/learning" style="text-decoration:none;">
-    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; cursor:pointer;">
-        <div class="play-btn">
-            <span style="color:white; margin-left:3px;">▶</span>
-        </div>
-        <div>
-            <p style="font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:700; color:#0f1f14; margin-bottom:0;">
-                Coverage Options
-            </p>
-            <p style="font-size:0.72rem; color:rgba(17,17,17,0.45);">
-                Watch 2-min overview
-            </p>
-        </div>
-    </div>
-</a>
+                <a href="/learning" style="text-decoration:none;">
+                    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; cursor:pointer;">
+                        <div class="play-btn">
+                            <span style="color:white; margin-left:3px;">▶</span>
+                        </div>
+                        <div>
+                            <p
+                                style="font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:700; color:#0f1f14; margin-bottom:0;">
+                                Coverage Options
+                            </p>
+                            <p style="font-size:0.72rem; color:rgba(17,17,17,0.45);">
+                                Watch 2-min overview
+                            </p>
+                        </div>
+                    </div>
+                </a>
             </div>
 
             <!-- CENTER - IMAGE -->

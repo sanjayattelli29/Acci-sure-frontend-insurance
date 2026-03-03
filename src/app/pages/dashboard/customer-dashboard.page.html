@@ -1,16 +1,34 @@
-<div class="min-h-screen flex bg-brand-gray">
+<div class="min-h-screen flex bg-brand-gray relative">
+    <!-- Mobile Overlay Backdrop -->
+    @if (sidebarOpen()) {
+    <div class="fixed inset-0 bg-black/40 z-30 lg:hidden" (click)="sidebarOpen.set(false)"></div>
+    }
+
     <!-- Sidebar -->
-    <aside class="w-72 bg-white border-r border-border-light flex flex-col shrink-0">
-        <div class="p-8 flex items-center gap-3">
-            <div
-                class="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-orange-200">
-                I</div>
-            <span class="text-xl font-black tracking-tighter text-brand-navy">AcciSure</span>
+    <aside
+        class="fixed lg:relative inset-y-0 left-0 z-40 w-72 bg-white border-r border-border-light flex flex-col shrink-0 transition-transform duration-300"
+        [class.-translate-x-full]="!sidebarOpen()" [class.translate-x-0]="sidebarOpen()"
+        [class.lg:translate-x-0]="true">
+        <div class="p-8 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-orange-200">
+                    I</div>
+                <span class="text-xl font-black tracking-tighter text-brand-navy">AcciSure</span>
+            </div>
+            <!-- Close button (mobile only) -->
+            <button class="lg:hidden text-slate-400 hover:text-brand-navy transition-colors p-1"
+                (click)="sidebarOpen.set(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
 
         <nav class="grow px-4 space-y-2 mt-4">
-            <button (click)="switchView('dashboard')" [class.active]="activeView() === 'dashboard'"
-                class="sidebar-link w-full">
+            <button (click)="switchView('dashboard'); sidebarOpen.set(false)"
+                [class.active]="activeView() === 'dashboard'" class="sidebar-link w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -19,8 +37,8 @@
                 Dashboard
             </button>
 
-            <button (click)="switchView('my-policies')" [class.active]="activeView() === 'my-policies'"
-                class="sidebar-link w-full">
+            <button (click)="switchView('my-policies'); sidebarOpen.set(false)"
+                [class.active]="activeView() === 'my-policies'" class="sidebar-link w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -29,8 +47,8 @@
                 My Policies
             </button>
 
-            <button (click)="switchView('my-claims')" [class.active]="activeView() === 'my-claims'"
-                class="sidebar-link w-full">
+            <button (click)="switchView('my-claims'); sidebarOpen.set(false)"
+                [class.active]="activeView() === 'my-claims'" class="sidebar-link w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -39,8 +57,8 @@
                 My Claims
             </button>
 
-            <button (click)="switchView('buy-policy')" [class.active]="activeView() === 'buy-policy'"
-                class="sidebar-link w-full">
+            <button (click)="switchView('buy-policy'); sidebarOpen.set(false)"
+                [class.active]="activeView() === 'buy-policy'" class="sidebar-link w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -49,7 +67,8 @@
                 Buy a New Policy
             </button>
 
-            <button (click)="switchView('chat')" [class.active]="activeView() === 'chat'" class="sidebar-link w-full">
+            <button (click)="switchView('chat'); sidebarOpen.set(false)" [class.active]="activeView() === 'chat'"
+                class="sidebar-link w-full">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -81,23 +100,36 @@
         </div>
     </aside>
 
+
     <!-- Main Content -->
-    <main class="grow flex flex-col h-screen overflow-hidden">
-        <header class="bg-white/50 backdrop-blur-md px-10 py-6 shrink-0 z-20 flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-black text-brand-navy tracking-tighter">
-                    {{ activeView() === 'dashboard' ? 'Welcome Back!' :
-                    activeView() === 'my-policies' ? 'My Portfolio' :
-                    activeView() === 'raise-claim' ? 'Raise a Claim' :
-                    activeView() === 'my-claims' ? 'Claim History' :
-                    activeView() === 'chat' ? 'Customer Support Chat' :
-                    'Find Your Plan' }}
-                </h1>
-                <p class="text-sm text-slate-400 font-medium">
-                    {{ activeView() === 'raise-claim' ? 'Submit your incident details and documents for review.' :
-                    'Manage
-                    your protection and peace of mind.' }}
-                </p>
+    <main class="grow flex flex-col min-h-screen lg:h-screen overflow-hidden">
+        <header
+            class="bg-white/50 backdrop-blur-md px-4 md:px-10 py-4 md:py-6 shrink-0 z-20 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <!-- Hamburger button (mobile only) -->
+                <button class="lg:hidden p-2 rounded-xl hover:bg-slate-100 transition-colors text-slate-500"
+                    (click)="sidebarOpen.set(true)" aria-label="Open menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="text-xl md:text-3xl font-black text-brand-navy tracking-tighter">
+                        {{ activeView() === 'dashboard' ? 'Welcome Back!' :
+                        activeView() === 'my-policies' ? 'My Portfolio' :
+                        activeView() === 'raise-claim' ? 'Raise a Claim' :
+                        activeView() === 'my-claims' ? 'Claim History' :
+                        activeView() === 'chat' ? 'Customer Support Chat' :
+                        'Find Your Plan' }}
+                    </h1>
+                    <p class="text-xs md:text-sm text-slate-400 font-medium hidden sm:block">
+                        {{ activeView() === 'raise-claim' ? 'Submit your incident details and documents for review.' :
+                        'Manage
+                        your protection and peace of mind.' }}
+                    </p>
+                </div>
             </div>
 
             <div class="flex items-center gap-4">
@@ -105,7 +137,7 @@
             </div>
         </header>
 
-        <div class="grow overflow-y-auto px-10 pb-10">
+        <div class="grow overflow-y-auto px-4 md:px-10 pb-10">
             <!-- DASHBOARD VIEW -->
             @if (activeView() === 'dashboard') {
             <div class="space-y-10 py-6">
@@ -182,44 +214,48 @@
             <div class="py-6">
                 @if (myPolicies.length > 0) {
                 <div class="card p-0 overflow-hidden">
-                    <table class="w-full text-left text-sm">
-                        <thead
-                            class="bg-slate-50 border-b border-border-light text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            <tr>
-                                <th class="px-8 py-6">Policy ID</th>
-                                <th class="px-8 py-6">Category</th>
-                                <th class="px-8 py-6">Tier</th>
-                                <th class="px-8 py-6">Premium Paid</th>
-                                <th class="px-8 py-6">Date</th>
-                                <th class="px-8 py-6 text-right">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            @for (pol of myPolicies; track pol.id) {
-                            <tr class="hover:bg-slate-50/50 transition-colors">
-                                <td class="px-8 py-6 font-mono font-bold text-slate-400">{{ pol.id.substring(0, 8) }}...
-                                </td>
-                                <td class="px-8 py-6 font-bold text-brand-navy">{{ pol.policyCategory }}</td>
-                                <td class="px-8 py-6">
-                                    <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold">{{ pol.tierId
-                                        }}</span>
-                                </td>
-                                <td class="px-8 py-6 font-black text-brand-navy">₹{{ pol.calculatedPremium }}</td>
-                                <td class="px-8 py-6 text-slate-400">{{ pol.submissionDate | date:'mediumDate' }}</td>
-                                <td class="px-8 py-6 text-right flex items-center justify-end gap-3">
-                                    <span
-                                        [class]="'badge ' + (pol.status === 'Active' ? 'badge-success' : (pol.status === 'AwaitingPayment' ? 'badge-warning' : 'badge-pending'))">
-                                        ● {{ pol.status === 'AwaitingPayment' ? 'Awaiting Payment' : pol.status }}
-                                    </span>
-                                    <button (click)="openPolicyDetails(pol.id)"
-                                        class="px-4 py-1.5 bg-brand-gray text-brand-navy rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-slate-100 transition-all border border-slate-100">
-                                        Open
-                                    </button>
-                                </td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm min-w-[600px]">
+                            <thead
+                                class="bg-slate-50 border-b border-border-light text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                <tr>
+                                    <th class="px-8 py-6">Policy ID</th>
+                                    <th class="px-8 py-6">Category</th>
+                                    <th class="px-8 py-6">Tier</th>
+                                    <th class="px-8 py-6">Premium Paid</th>
+                                    <th class="px-8 py-6">Date</th>
+                                    <th class="px-8 py-6 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                @for (pol of myPolicies; track pol.id) {
+                                <tr class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="px-8 py-6 font-mono font-bold text-slate-400">{{ pol.id.substring(0, 8)
+                                        }}...
+                                    </td>
+                                    <td class="px-8 py-6 font-bold text-brand-navy">{{ pol.policyCategory }}</td>
+                                    <td class="px-8 py-6">
+                                        <span class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold">{{ pol.tierId
+                                            }}</span>
+                                    </td>
+                                    <td class="px-8 py-6 font-black text-brand-navy">₹{{ pol.calculatedPremium }}</td>
+                                    <td class="px-8 py-6 text-slate-400">{{ pol.submissionDate | date:'mediumDate' }}
+                                    </td>
+                                    <td class="px-8 py-6 text-right flex items-center justify-end gap-3">
+                                        <span
+                                            [class]="'badge ' + (pol.status === 'Active' ? 'badge-success' : (pol.status === 'AwaitingPayment' ? 'badge-warning' : 'badge-pending'))">
+                                            ● {{ pol.status === 'AwaitingPayment' ? 'Awaiting Payment' : pol.status }}
+                                        </span>
+                                        <button (click)="openPolicyDetails(pol.id)"
+                                            class="px-4 py-1.5 bg-brand-gray text-brand-navy rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-slate-100 transition-all border border-slate-100">
+                                            Open
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 } @else {
                 <div class="card p-20 text-center flex flex-col items-center">
@@ -446,43 +482,47 @@
             <div class="py-6">
                 @if (myClaims.length > 0) {
                 <div class="card p-0 overflow-hidden">
-                    <table class="w-full text-left text-sm">
-                        <thead
-                            class="bg-slate-50 border-b border-border-light text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            <tr>
-                                <th class="px-8 py-6">Claim ID</th>
-                                <th class="px-8 py-6">Policy</th>
-                                <th class="px-8 py-6">Incident Type</th>
-                                <th class="px-8 py-6">Amount Requested</th>
-                                <th class="px-8 py-6">Date Raised</th>
-                                <th class="px-8 py-6 text-right">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            @for (claim of myClaims; track claim.id) {
-                            <tr class="hover:bg-slate-50/50 transition-colors">
-                                <td class="px-8 py-6 font-mono font-bold text-slate-400">{{ claim.id.substring(0, 8)
-                                    }}...</td>
-                                <td class="px-8 py-6 font-bold text-brand-navy">{{ claim.policy?.tierId }}</td>
-                                <td class="px-8 py-6 font-bold text-slate-500">{{ claim.incidentType }}</td>
-                                <td class="px-8 py-6 font-black text-brand-navy">₹{{ claim.requestedAmount |
-                                    number:'1.0-0' }}</td>
-                                <td class="px-8 py-6 text-slate-400">{{ claim.submissionDate | date:'mediumDate' }}</td>
-                                <td class="px-8 py-6 text-right flex items-center justify-end gap-3">
-                                    <span
-                                        [class]="'badge ' + (claim.status === 'Approved' || claim.status === 'Paid' ? 'badge-success' : (claim.status === 'Rejected' ? 'badge-pending' : 'badge-warning'))">
-                                        ● {{ (claim.status === 'Assigned' || claim.status === 'Pending') ? 'Processing'
-                                        : claim.status }}
-                                    </span>
-                                    <button (click)="openClaimDetails(claim.id)"
-                                        class="px-4 py-1.5 bg-brand-orange text-white rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-brand-navy transition-all shadow-md shadow-orange-100">
-                                        View Detail
-                                    </button>
-                                </td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm min-w-[620px]">
+                            <thead
+                                class="bg-slate-50 border-b border-border-light text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                <tr>
+                                    <th class="px-8 py-6">Claim ID</th>
+                                    <th class="px-8 py-6">Policy</th>
+                                    <th class="px-8 py-6">Incident Type</th>
+                                    <th class="px-8 py-6">Amount Requested</th>
+                                    <th class="px-8 py-6">Date Raised</th>
+                                    <th class="px-8 py-6 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                @for (claim of myClaims; track claim.id) {
+                                <tr class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="px-8 py-6 font-mono font-bold text-slate-400">{{ claim.id.substring(0, 8)
+                                        }}...</td>
+                                    <td class="px-8 py-6 font-bold text-brand-navy">{{ claim.policy?.tierId }}</td>
+                                    <td class="px-8 py-6 font-bold text-slate-500">{{ claim.incidentType }}</td>
+                                    <td class="px-8 py-6 font-black text-brand-navy">₹{{ claim.requestedAmount |
+                                        number:'1.0-0' }}</td>
+                                    <td class="px-8 py-6 text-slate-400">{{ claim.submissionDate | date:'mediumDate' }}
+                                    </td>
+                                    <td class="px-8 py-6 text-right flex items-center justify-end gap-3">
+                                        <span
+                                            [class]="'badge ' + (claim.status === 'Approved' || claim.status === 'Paid' ? 'badge-success' : (claim.status === 'Rejected' ? 'badge-pending' : 'badge-warning'))">
+                                            ● {{ (claim.status === 'Assigned' || claim.status === 'Pending') ?
+                                            'Processing'
+                                            : claim.status }}
+                                        </span>
+                                        <button (click)="openClaimDetails(claim.id)"
+                                            class="px-4 py-1.5 bg-brand-orange text-white rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-brand-navy transition-all shadow-md shadow-orange-100">
+                                            View Detail
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 } @else {
                 <div class="card p-20 text-center flex flex-col items-center">

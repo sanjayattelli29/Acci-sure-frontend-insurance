@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class LandingComponent implements AfterViewInit {
   activePolicy: 'individual' | 'family' = 'individual';
+  mobileNavOpen = false;
 
   constructor(private router: Router, private el: ElementRef) { }
 
