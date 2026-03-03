@@ -1,0 +1,79 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div>
+        <h1 class="text-3xl font-black text-brand-navy">Policy Requests</h1>
+        <p class="text-slate-500 text-sm">
+            Monitor and assign agents to new policy applications.
+        </p>
+    </div>
+
+    <div class="card p-0 overflow-hidden">
+        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <h3 class="font-bold text-sm uppercase tracking-wide">
+                Incoming Applications
+            </h3>
+            <button (click)="refresh()"
+                class="text-[10px] font-bold text-brand-orange hover:underline uppercase tracking-widest">
+                Refresh Data
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                        <th class="px-6 py-4">Customer Email</th>
+                        <th class="px-6 py-4">Category</th>
+                        <th class="px-6 py-4">Tier/Plan</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-center">Action</th>
+                        <th class="px-6 py-4 text-right">Insight</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    @for (request of policyRequests; track request.id) {
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+
+                        <td class="px-6 py-4 font-bold text-brand-navy">
+                            {{ request.user?.email }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded font-bold uppercase text-[9px]">
+                                {{ request.policyCategory }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 font-bold">
+                            {{ request.tierId }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="badge badge-warning">
+                                ● {{ request.status }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 text-center">
+                            <button (click)="assign(request.id)"
+                                class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter">
+                                Assign Agent
+                            </button>
+                        </td>
+
+                        <td class="px-6 py-4 text-right">
+                            <button (click)="view(request)"
+                                class="bg-brand-navy hover:bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
+                                View
+                            </button>
+                        </td>
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

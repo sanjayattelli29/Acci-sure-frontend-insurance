@@ -1,113 +1,131 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, inject, signal, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../services/admin.service';
-import { ClaimService } from '../../services/claim.service';
+import { AuthService } from '../../services/auth.service';
 import { PolicyService } from '../../services/policy.service';
 import { NotificationPanelComponent } from '../../components/notification-panel/notification-panel.component';
 import { Chart, registerables } from 'chart.js';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 Chart.register(...registerables);
 
+/* 🔹 Import All Sections */
+import { DashboardSectionComponent } from './admin-components/dashboard-section.component';
+import { AgentsSectionComponent } from './admin-components/agents-section.component';
+import { OfficersSectionComponent } from './admin-components/officers-section.component';
+import { PolicyRequestsSectionComponent } from './admin-components/policy-requests-section.component';
+import { ClaimRequestsSectionComponent } from './admin-components/claim-requests-section.component';
+import { AnalysisUsersSectionComponent } from './admin-components/analysis-users-section.component';
+import { AnalysisPoliciesSectionComponent } from './admin-components/analysis-policies-section.component';
+import { AnalysisCommandsSectionComponent } from './admin-components/analysis-commands-section.component';
+import { AnalysisPaymentsSectionComponent } from './admin-components/analysis-payments-section.component';
+import { EmailAutomationSectionComponent } from './admin-components/email-automation-section.component';
+
 @Component({
     selector: 'app-admin-dashboard',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, NotificationPanelComponent],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        NotificationPanelComponent,
+        DashboardSectionComponent,
+        AgentsSectionComponent,
+        OfficersSectionComponent,
+        PolicyRequestsSectionComponent,
+        ClaimRequestsSectionComponent,
+        AnalysisUsersSectionComponent,
+        AnalysisPoliciesSectionComponent,
+        AnalysisCommandsSectionComponent,
+        AnalysisPaymentsSectionComponent,
+        EmailAutomationSectionComponent
+    ],
     templateUrl: './admin-dashboard.page.html'
 })
 export class AdminDashboardPage implements OnInit {
-    private authService = inject(AuthService);
     private adminService = inject(AdminService);
-    private claimService = inject(ClaimService);
+    private authService = inject(AuthService);
     private policyService = inject(PolicyService);
     private fb = inject(FormBuilder);
 
-    protected readonly JSON = JSON;
-
-    parseJson(json: string | null | undefined): any {
-        try {
-            return json ? JSON.parse(json) : null;
-        } catch {
-            return null;
-        }
-    }
-
+    // User Info
     user = this.authService.getUser();
-    activeSection = signal('dashboard'); // dashboard, agents, officers, analysis-users, analysis-policies, analysis-commands, analysis-payments, email-automation
-    isLoading = signal(false);
-    message = signal({ type: '', text: '' });
 
-    // Data
+    // Signals for Data
+    activeSection = signal<string>('dashboard');
     adminStats = signal<any>(null);
-    recentActivities: any[] = [];
-    agents: any[] = [];
-    officers: any[] = [];
     policyRequests = signal<any[]>([]);
-    agentsWithLoad = signal<any[]>([]);
     pendingClaims = signal<any[]>([]);
-    claimOfficersWithWorkload = signal<any[]>([]);
-
-    // Complete Analysis Data
     allUsers = signal<any[]>([]);
     allClaims = signal<any[]>([]);
-    allPolicyApps = signal<any[]>([]);
-    config = signal<any>(null);
     unifiedPayments = signal<any[]>([]);
+    agents = signal<any[]>([]);
+    officers = signal<any[]>([]);
+    agentsWithLoad = signal<any[]>([]);
+    claimOfficersWithWorkload = signal<any[]>([]);
+    config = signal<any>(null);
+
+    // UI State Signals
+    isLoading = signal<boolean>(false);
+    isAssigning = signal<boolean>(false);
+    message = signal<{ text: string, type: 'success' | 'error' | '' }>({ text: '', type: '' });
 
     // Chart instances
     private charts: Chart[] = [];
 
-    // UI State
-    showAssignModal = signal(false);
-    showAssignOfficerModal = signal(false);
-    selectedApplicationId = signal<string | null>(null);
-    selectedClaimId = signal<string | null>(null);
-    showUnifiedDetail = signal(false);
+    // Modal Signals
+    showAssignModal = signal<boolean>(false);
+    showAssignOfficerModal = signal<boolean>(false);
+    showInvoiceModal = signal<boolean>(false);
+    showUnifiedDetail = signal<boolean>(false);
+    showEmailModal = signal<boolean>(false);
     selectedUnifiedDetail = signal<any>(null);
     selectedPayment = signal<any>(null);
-    showInvoiceModal = signal(false);
-    isAssigning = signal(false);
-    showEmailModal = signal(false);
     selectedUserForEmail = signal<any>(null);
-    isSendingEmail = signal(false);
+    selectedApplicationId = signal<string | null>(null);
+    selectedClaimId = signal<string | null>(null);
+    isSendingEmail = signal<boolean>(false);
 
     // Forms
-    agentForm = this.fb.group({
-        name: ['', [Validators.required, Validators.maxLength(100)]],
-        emailId: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        bankAccountNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]
-    });
+    agentForm: FormGroup;
+    officerForm: FormGroup;
+    emailForm: FormGroup;
 
-    officerForm = this.fb.group({
-        name: ['', [Validators.required, Validators.maxLength(100)]],
-        emailId: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        bankAccountNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]]
-    });
+    constructor() {
+        this.agentForm = this.fb.group({
+            name: ['', Validators.required],
+            emailId: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            bankAccountNumber: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]]
+        });
 
-    emailForm = this.fb.group({
-        toEmail: ['', [Validators.required, Validators.email]],
-        subject: ['', [Validators.required, Validators.minLength(5)]],
-        message: ['', [Validators.required, Validators.minLength(10)]]
-    });
+        this.officerForm = this.fb.group({
+            name: ['', Validators.required],
+            emailId: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            bankAccountNumber: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]]
+        });
 
-    ngOnInit() {
-        this.loadData();
+        this.emailForm = this.fb.group({
+            toEmail: ['', [Validators.required, Validators.email]],
+            subject: ['', Validators.required],
+            message: ['', Validators.required]
+        });
     }
 
-    loadData() {
+    ngOnInit() {
+        this.loadInitialData();
+    }
+
+    loadInitialData() {
         this.loadAdminStats();
+        this.loadPolicyRequests();
         this.loadAgents();
         this.loadOfficers();
-        this.loadPolicyRequests();
-        this.loadPendingClaims();
-        this.loadAllUsers();
-        this.loadAllClaims();
         this.loadConfig();
+        this.loadAllClaims();
+        this.loadAllUsers();
         this.loadUnifiedPayments();
     }
 
@@ -118,44 +136,95 @@ export class AdminDashboardPage implements OnInit {
         });
     }
 
+    setSection(section: string) {
+        this.activeSection.set(section);
+        this.message.set({ text: '', type: '' });
+
+        if (section === 'dashboard') {
+            this.initCharts();
+        } else {
+            this.destroyCharts();
+        }
+
+        if (section === 'policyRequests') this.loadPolicyRequests();
+        if (section === 'claimRequests') this.loadPendingClaims();
+        if (section === 'analysis-users') this.loadAllUsers();
+        if (section === 'analysis-commands') this.loadAllClaims();
+        if (section === 'analysis-payments') this.loadUnifiedPayments();
+        if (section === 'email-automation') this.loadAllUsers();
+    }
+
     loadAdminStats() {
         this.adminService.getAdminStats().subscribe({
-            next: (data: any) => this.adminStats.set(data),
-            error: (err: any) => console.error('Failed to load admin stats', err)
-        });
-    }
-
-    loadAllUsers() {
-        this.adminService.getAllUsers().subscribe({
-            next: (data: any) => this.allUsers.set(data),
-            error: (err: any) => console.error('Failed to load all users', err)
-        });
-    }
-
-    loadAllClaims() {
-        this.adminService.getAllClaims().subscribe({
-            next: (data: any) => {
-                this.allClaims.set(data);
+            next: (stats) => {
+                this.adminStats.set(stats);
                 this.initCharts();
             },
-            error: (err: any) => console.error('Failed to load all claims', err)
+            error: (err) => console.error('Error loading stats:', err)
         });
     }
 
     loadPolicyRequests() {
         this.adminService.getPolicyRequests().subscribe({
-            next: (data: any) => {
-                this.policyRequests.set(data);
+            next: (requests) => {
+                this.policyRequests.set(requests);
                 this.initCharts();
             },
-            error: (err: any) => console.error('Failed to load policy requests', err)
+            error: (err) => console.error('Error loading policy requests:', err)
+        });
+    }
+
+    loadPendingClaims() {
+        this.adminService.getAllClaims().subscribe({
+            next: (claims) => this.pendingClaims.set(claims.filter(c => c.status === 'Pending')),
+            error: (err) => console.error('Error loading pending claims:', err)
+        });
+    }
+
+    loadAllUsers() {
+        this.adminService.getAllUsers().subscribe({
+            next: (users) => {
+                this.allUsers.set(users);
+                this.initCharts();
+            },
+            error: (err) => console.error('Error loading users:', err)
+        });
+    }
+
+    loadAllClaims() {
+        this.adminService.getAllClaims().subscribe({
+            next: (claims) => {
+                this.allClaims.set(claims);
+                this.initCharts();
+            },
+            error: (err) => console.error('Error loading all claims:', err)
         });
     }
 
     loadUnifiedPayments() {
         this.adminService.getUnifiedPayments().subscribe({
-            next: (data) => this.unifiedPayments.set(data),
-            error: (err) => console.error('Failed to load unified payments', err)
+            next: (payments) => this.unifiedPayments.set(payments),
+            error: (err) => console.error('Error loading payments:', err)
+        });
+    }
+
+    loadAgents() {
+        this.adminService.getAgents().subscribe({
+            next: (agents) => {
+                this.agents.set(agents);
+                this.initCharts();
+            },
+            error: (err) => console.error('Error loading agents:', err)
+        });
+    }
+
+    loadOfficers() {
+        this.adminService.getClaimOfficers().subscribe({
+            next: (officers) => {
+                this.officers.set(officers);
+                this.initCharts();
+            },
+            error: (err) => console.error('Error loading officers:', err)
         });
     }
 
@@ -167,7 +236,7 @@ export class AdminDashboardPage implements OnInit {
             this.createBestAgentChart();
             this.createRatioChart();
             this.createClaimsChart();
-        }, 100);
+        }, 300);
     }
 
     private destroyCharts() {
@@ -238,8 +307,8 @@ export class AdminDashboardPage implements OnInit {
         const canvas = document.getElementById('ratioChart') as HTMLCanvasElement;
         if (!canvas) return;
         const totalUsers = this.allUsers().length;
-        const totalAgents = this.agents.length;
-        const totalOfficers = this.officers.length;
+        const totalAgents = this.agents().length;
+        const totalOfficers = this.officers().length;
         this.charts.push(new Chart(canvas, {
             type: 'doughnut',
             data: {
@@ -285,158 +354,97 @@ export class AdminDashboardPage implements OnInit {
         }));
     }
 
-    setSection(section: string) {
-        this.activeSection.set(section);
-        this.message.set({ type: '', text: '' });
-        if (section === 'dashboard') {
-            this.initCharts();
-        } else if (section === 'analysis-payments') {
-            this.loadUnifiedPayments();
-            this.destroyCharts();
-        } else if (section === 'analysis-commands') {
-            this.loadAllClaims();
-            this.destroyCharts();
-        } else if (section === 'email-automation') {
-            this.loadAllUsers();
-            this.destroyCharts();
-        } else {
-            this.destroyCharts();
-        }
-    }
-
-    loadAgents() {
-        this.adminService.getAgents().subscribe({
-            next: (data) => this.agents = data,
-            error: (err) => console.error('Failed to load agents', err)
-        });
-    }
-
-    loadOfficers() {
-        this.adminService.getClaimOfficers().subscribe({
-            next: (data) => this.officers = data,
-            error: (err) => console.error('Failed to load officers', err)
-        });
-    }
-
-    openAssignModal(applicationId: string) {
-        this.selectedApplicationId.set(applicationId);
-        this.showAssignModal.set(true);
+    registerAgent() {
+        if (this.agentForm.invalid) return;
         this.isLoading.set(true);
-        this.adminService.getAgentsWithLoad().subscribe({
-            next: (data) => {
-                this.agentsWithLoad.set(data);
+        this.adminService.createAgent(this.agentForm.value).subscribe({
+            next: () => {
                 this.isLoading.set(false);
+                this.message.set({ text: 'Agent registered successfully', type: 'success' });
+                this.agentForm.reset();
+                this.loadAgents();
             },
             error: (err) => {
-                console.error('Failed to load agents with load', err);
                 this.isLoading.set(false);
+                this.message.set({ text: err.error?.message || 'Error registering agent', type: 'error' });
             }
+        });
+    }
+
+    registerOfficer() {
+        if (this.officerForm.invalid) return;
+        this.isLoading.set(true);
+        this.adminService.createClaimOfficer(this.officerForm.value).subscribe({
+            next: () => {
+                this.isLoading.set(false);
+                this.message.set({ text: 'Claims officer registered successfully', type: 'success' });
+                this.officerForm.reset();
+                this.loadOfficers();
+            },
+            error: (err) => {
+                this.isLoading.set(false);
+                this.message.set({ text: err.error?.message || 'Error registering officer', type: 'error' });
+            }
+        });
+    }
+
+    deleteUser(id: string) {
+        if (!confirm('Are you sure you want to remove this user?')) return;
+        this.adminService.deleteUser(id).subscribe({
+            next: () => {
+                this.message.set({ text: 'User removed successfully', type: 'success' });
+                this.loadAgents();
+                this.loadOfficers();
+                this.loadAllUsers();
+            },
+            error: (err) => this.message.set({ text: 'Error removing user', type: 'error' })
+        });
+    }
+
+    openAssignModal(id: string) {
+        this.selectedApplicationId.set(id);
+        this.adminService.getAgentsWithLoad().subscribe({
+            next: (agents) => {
+                this.agentsWithLoad.set(agents);
+                this.showAssignModal.set(true);
+            },
+            error: (err) => console.error('Error loading agents with load:', err)
         });
     }
 
     assignAgent(agentId: string) {
-        const appId = this.selectedApplicationId();
-        if (!appId) return;
+        const applicationId = this.selectedApplicationId();
+        if (!applicationId) return;
+
         this.isAssigning.set(true);
-        this.adminService.assignAgent(appId, agentId).subscribe({
-            next: (res) => {
+        this.adminService.assignAgent(applicationId, agentId).subscribe({
+            next: () => {
                 this.isAssigning.set(false);
                 this.showAssignModal.set(false);
-                this.message.set({ type: 'success', text: 'Agent assigned successfully!' });
+                this.message.set({ text: 'Agent assigned successfully', type: 'success' });
                 this.loadPolicyRequests();
-                setTimeout(() => this.message.set({ type: '', text: '' }), 3000);
             },
             error: (err) => {
                 this.isAssigning.set(false);
-                this.message.set({ type: 'error', text: 'Assignment failed!' });
+                this.message.set({ text: 'Error assigning agent', type: 'error' });
             }
         });
     }
 
-    loadPendingClaims() {
-        this.claimService.getPendingClaims().subscribe({
-            next: (data) => this.pendingClaims.set(data),
-            error: (err) => console.error('Failed to load pending claims', err)
-        });
-    }
-
-    openAssignOfficerModal(claimId: string) {
-        this.selectedClaimId.set(claimId);
-        this.showAssignOfficerModal.set(true);
-        this.isLoading.set(true);
-        this.claimService.getClaimOfficers().subscribe({
-            next: (data) => {
-                this.claimOfficersWithWorkload.set(data);
-                this.isLoading.set(false);
+    openAssignOfficerModal(id: string) {
+        this.selectedClaimId.set(id);
+        this.adminService.getClaimOfficers().subscribe({
+            next: (officers) => {
+                this.claimOfficersWithWorkload.set(officers.map(o => ({ ...o, claimOfficerId: o.id, assignedClaimsCount: 0 })));
+                this.showAssignOfficerModal.set(true);
             },
-            error: (err) => {
-                console.error('Failed to load claim officers', err);
-                this.isLoading.set(false);
-            }
+            error: (err) => console.error('Error loading officers:', err)
         });
     }
 
     assignOfficer(officerId: string) {
-        const claimId = this.selectedClaimId();
-        if (!claimId) return;
-        this.isAssigning.set(true);
-        this.claimService.assignOfficer(claimId, officerId).subscribe({
-            next: (res) => {
-                this.isAssigning.set(false);
-                this.showAssignOfficerModal.set(false);
-                this.message.set({ type: 'success', text: 'Claim Officer assigned successfully!' });
-                this.loadPendingClaims();
-                setTimeout(() => this.message.set({ type: '', text: '' }), 3000);
-            },
-            error: (err) => {
-                this.isAssigning.set(false);
-                this.message.set({ type: 'error', text: 'Officer assignment failed!' });
-            }
-        });
-    }
-
-    registerAgent() {
-        if (this.agentForm.valid) {
-            this.isLoading.set(true);
-            this.adminService.createAgent(this.agentForm.value).subscribe({
-                next: (res: any) => {
-                    this.isLoading.set(false);
-                    if (res.status === 'Success') {
-                        this.message.set({ type: 'success', text: res.message });
-                        this.agentForm.reset();
-                        this.loadAgents();
-                    } else {
-                        this.message.set({ type: 'error', text: res.message });
-                    }
-                },
-                error: (err) => {
-                    this.isLoading.set(false);
-                    this.message.set({ type: 'error', text: 'Registration failed!' });
-                }
-            });
-        }
-    }
-
-    registerOfficer() {
-        if (this.officerForm.valid) {
-            this.isLoading.set(true);
-            this.adminService.createClaimOfficer(this.officerForm.value).subscribe({
-                next: (res: any) => {
-                    this.isLoading.set(false);
-                    if (res.status === 'Success') {
-                        this.message.set({ type: 'success', text: res.message });
-                        this.officerForm.reset();
-                        this.loadOfficers();
-                    } else {
-                        this.message.set({ type: 'error', text: res.message });
-                    }
-                },
-                error: (err) => {
-                    this.isLoading.set(false);
-                    this.message.set({ type: 'error', text: 'Registration failed!' });
-                }
-            });
-        }
+        this.message.set({ text: 'Officer assignment logic needs backend endpoint', type: 'error' });
+        this.showAssignOfficerModal.set(false);
     }
 
     viewUnifiedDetails(item: any, type: 'policy' | 'claim' = 'policy') {
@@ -483,7 +491,6 @@ export class AdminDashboardPage implements OnInit {
 
                 const fullDetails = normalize(raw) || {};
 
-                // Extract applicant with fallback to user object
                 let applicant = normalize(fullDetails.applicant || fullDetails.primaryApplicant || raw.Applicant || raw.PrimaryApplicant);
                 if (!applicant || !applicant.fullName) {
                     applicant = {
@@ -513,6 +520,49 @@ export class AdminDashboardPage implements OnInit {
         this.showUnifiedDetail.set(true);
     }
 
+    openEmailForm(user: any) {
+        this.selectedUserForEmail.set(user);
+        this.emailForm.patchValue({
+            toEmail: user.email,
+            subject: 'Official Communication from AcciSure Admin',
+            message: `Dear ${user.fullName || user.userName},\n\n`
+        });
+        this.showEmailModal.set(true);
+    }
+
+    sendEmail() {
+        if (this.emailForm.invalid) return;
+
+        this.isSendingEmail.set(true);
+        const form = this.emailForm.value;
+        const payload = {
+            toEmail: form.toEmail!,
+            subject: form.subject!,
+            htmlBody: `
+                <div style="font-family: sans-serif; padding: 20px; color: #0f172a;">
+                    <h2 style="color: #f97316;">AcciSure Insurance</h2>
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+                    <p>${form.message?.replace(/\n/g, '<br>')}</p>
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+                    <p style="font-size: 12px; color: #64748b;">This is an automated communication from the AcciSure Administration Department.</p>
+                </div>
+            `
+        };
+
+        this.adminService.sendAdminEmail(payload).subscribe({
+            next: () => {
+                this.isSendingEmail.set(false);
+                this.showEmailModal.set(false);
+                this.message.set({ text: 'Email sent successfully via automation!', type: 'success' });
+                setTimeout(() => this.message.set({ text: '', type: '' }), 3000);
+            },
+            error: (err) => {
+                this.isSendingEmail.set(false);
+                this.message.set({ text: 'Failed to trigger email automation.', type: 'error' });
+            }
+        });
+    }
+
     openInvoiceModal(payment: any) {
         this.selectedPayment.set(payment);
         this.showInvoiceModal.set(true);
@@ -524,7 +574,6 @@ export class AdminDashboardPage implements OnInit {
         const secondaryColor = [15, 23, 42]; // #0f172a
         const accentColor = [74, 222, 128]; // #4ade80
 
-        // 1. ADD CUSTOM LOGO (Diamonds)
         const drawDiamond = (x: number, y: number, size: number, color: number[]) => {
             doc.setFillColor(color[0], color[1], color[2]);
             doc.setDrawColor(color[0], color[1], color[2]);
@@ -534,11 +583,9 @@ export class AdminDashboardPage implements OnInit {
             );
         };
 
-        // Draw the two overlapping diamonds from the landing page logo
         drawDiamond(25, 20, 4, primaryColor);
         drawDiamond(29, 24, 4, accentColor);
 
-        // 2. HEADER BRANDING
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(24);
         doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
@@ -548,22 +595,18 @@ export class AdminDashboardPage implements OnInit {
         doc.setTextColor(100, 116, 139);
         doc.text('PROTECT TODAY. BRIGHTER TOMORROW.', 38, 28);
 
-        // Right-aligned Invoice Label
         doc.setFontSize(28);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
         doc.text('INVOICE', 190, 25, { align: 'right' });
 
-        // Decorative Line
         doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
         doc.setLineWidth(1.5);
         doc.line(20, 35, 190, 35);
 
-        // 3. INVOICE INFO & BILL TO
         doc.setFontSize(10);
         doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
 
-        // Left Side: Bill To
         doc.setFont('helvetica', 'bold');
         doc.text('BILL TO:', 20, 50);
         doc.setFont('helvetica', 'normal');
@@ -571,7 +614,6 @@ export class AdminDashboardPage implements OnInit {
         doc.text(`${payment.customerEmail || 'Valued Customer'}`, 20, 56);
         doc.text('India', 20, 61);
 
-        // Right Side: Invoice Details
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
         doc.text('INVOICE DETAILS:', 130, 50);
@@ -592,10 +634,8 @@ export class AdminDashboardPage implements OnInit {
         doc.setTextColor(71, 85, 105);
         doc.setFontSize(8);
         doc.setFont('helvetica', 'normal');
-        doc.text(`${payment.transactionId || 'Pending'}`, 130, 77); // Shifted down and smaller to avoid overlap
-        doc.setFontSize(10); // Reset for table
+        doc.text(`${payment.transactionId || 'Pending'}`, 130, 77);
 
-        // 4. MAIN TABLE
         autoTable(doc, {
             startY: 85,
             head: [['DESCRIPTION', 'POLICY DETAILS', 'AMOUNT']],
@@ -630,7 +670,6 @@ export class AdminDashboardPage implements OnInit {
 
         const tableEndY = (doc as any).lastAutoTable.finalY + 15;
 
-        // 5. SUMMARY & TOTAL
         doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.5);
         doc.line(120, tableEndY, 190, tableEndY);
@@ -642,7 +681,6 @@ export class AdminDashboardPage implements OnInit {
         doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
         doc.text(`INR ${payment.paidAmount?.toLocaleString() || payment.premiumAmount.toLocaleString()}`, 190, tableEndY + 10, { align: 'right' });
 
-        // 6. TERMS & CONDITIONS (Norms)
         const footerY = 230;
         doc.setDrawColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
         doc.setLineWidth(0.5);
@@ -667,77 +705,17 @@ export class AdminDashboardPage implements OnInit {
             doc.text(term, 20, footerY + 14 + (index * 4));
         });
 
-        // 7. FOOTER & SIGNATURE
         doc.setFontSize(8);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(148, 163, 184);
         doc.text('This is a computer-generated invoice and requires no physical signature.', 105, 275, { align: 'center' });
 
-        // Brand Footer
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
         doc.text('AcciSure Insurance - Protecting Your Brighter Tomorrow', 105, 285, { align: 'center' });
 
         doc.save(`AcciSure_Invoice_${payment.transactionId?.substring(0, 8) || 'Doc'}.pdf`);
-    }
-
-    deleteUser(userId: string) {
-        if (confirm('Are you sure you want to delete this user?')) {
-            this.adminService.deleteUser(userId).subscribe({
-                next: (res: any) => {
-                    if (res.status === 'Success') {
-                        this.loadData();
-                    } else {
-                        alert(res.message);
-                    }
-                },
-                error: (err) => alert('Delete failed!')
-            });
-        }
-    }
-
-    openEmailForm(user: any) {
-        this.selectedUserForEmail.set(user);
-        this.emailForm.patchValue({
-            toEmail: user.email,
-            subject: 'Official Communication from AcciSure Admin',
-            message: `Dear ${user.fullName || user.userName},\n\n`
-        });
-        this.showEmailModal.set(true);
-    }
-
-    sendEmail() {
-        if (this.emailForm.valid) {
-            this.isSendingEmail.set(true);
-            const form = this.emailForm.value;
-            const payload = {
-                toEmail: form.toEmail!,
-                subject: form.subject!,
-                htmlBody: `
-                    <div style="font-family: sans-serif; padding: 20px; color: #0f172a;">
-                        <h2 style="color: #f97316;">AcciSure Insurance</h2>
-                        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
-                        <p>${form.message?.replace(/\n/g, '<br>')}</p>
-                        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
-                        <p style="font-size: 12px; color: #64748b;">This is an automated communication from the AcciSure Administration Department.</p>
-                    </div>
-                `
-            };
-
-            this.adminService.sendAdminEmail(payload).subscribe({
-                next: () => {
-                    this.isSendingEmail.set(false);
-                    this.showEmailModal.set(false);
-                    this.message.set({ type: 'success', text: 'Email sent successfully via automation!' });
-                    setTimeout(() => this.message.set({ type: '', text: '' }), 3000);
-                },
-                error: (err) => {
-                    this.isSendingEmail.set(false);
-                    this.message.set({ type: 'error', text: 'Failed to trigger email automation.' });
-                }
-            });
-        }
     }
 
     logout() {

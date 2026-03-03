@@ -1,0 +1,79 @@
+<div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+
+    <div class="flex justify-between items-end">
+        <div>
+            <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">
+                Email Automation
+            </h1>
+            <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">
+                Direct communication channel to all platform stakeholders.
+            </p>
+        </div>
+
+        <button (click)="refresh()"
+            class="bg-indigo-50 text-indigo-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-100 transition-all">
+            Refresh User Registry
+        </button>
+    </div>
+
+    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                        <th class="px-8 py-5">Global ID</th>
+                        <th class="px-8 py-5">User Profile</th>
+                        <th class="px-8 py-5">Role/Access</th>
+                        <th class="px-8 py-5">Date Created</th>
+                        <th class="px-8 py-5 text-right">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-50">
+
+                    @for (u of allUsers; track u.id) {
+                    <tr class="hover:bg-slate-50/30 transition-colors group">
+
+                        <td class="px-8 py-6">
+                            <span class="font-mono text-[11px] text-brand-navy font-black">
+                                #{{ u.id.substring(0,8) }}
+                            </span>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-xs font-black text-brand-navy">
+                                {{ u.fullName || u.userName }}
+                            </p>
+                            <p class="text-[10px] text-slate-400 font-bold italic lowercase">
+                                {{ u.email }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-indigo-50 text-indigo-600">
+                                {{ u.role || 'Partner' }}
+                            </span>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-[10px] text-slate-500 font-bold">
+                                {{ u.createdDate | date:'mediumDate' }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6 text-right">
+                            <button (click)="email(u)"
+                                class="bg-brand-navy hover:bg-black text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">
+                                Send Email
+                            </button>
+                        </td>
+
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

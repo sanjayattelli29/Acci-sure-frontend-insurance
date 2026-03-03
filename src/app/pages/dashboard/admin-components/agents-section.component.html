@@ -1,0 +1,85 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div class="flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-black text-brand-navy">Agent Management</h1>
+            <p class="text-slate-500 text-sm">Register and manage your field agents.</p>
+        </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="card p-0 overflow-hidden border-t-4 border-brand-orange">
+        <div class="p-6">
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-6">Register New Agent</h3>
+            <form [formGroup]="agentForm" (ngSubmit)="register()"
+                class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Full Name</label>
+                    <input type="text" formControlName="name" placeholder="Agent's full name"
+                        class="input-field py-3 text-sm">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Email ID</label>
+                    <input type="email" formControlName="emailId" placeholder="official@agency.com"
+                        class="input-field py-3 text-sm">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">System Password</label>
+                    <input type="password" formControlName="password" placeholder="••••••••"
+                        class="input-field py-3 text-sm">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Bank Account (16 Digits)</label>
+                    <input type="text" formControlName="bankAccountNumber"
+                        placeholder="1234567890123456" class="input-field py-3 text-sm">
+                </div>
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="submit" [disabled]="agentForm.invalid || isLoading"
+                        class="btn-primary px-10 py-3 text-xs shadow-lg shadow-orange-500/20">
+                        {{ isLoading ? 'Registering...' : '+ Create Agent Profile' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User List -->
+    <div class="card p-0 overflow-hidden">
+        <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="font-bold text-sm uppercase tracking-wide">Existing Agents</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr
+                        class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                        <th class="px-6 py-4">Full Name</th>
+                        <th class="px-6 py-4">Email ID</th>
+                        <th class="px-6 py-4">Account Number</th>
+                        <th class="px-6 py-4 text-right">Delete</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @for (agent of agents; track agent.id) {
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-brand-navy">{{ agent.fullName }}</td>
+                        <td class="px-6 py-4">{{ agent.email }}</td>
+                        <td class="px-6 py-4 font-mono text-slate-500">{{ agent.bankAccountNumber }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button (click)="delete(agent.id)"
+                                class="text-rose-500 hover:text-rose-700 font-bold uppercase tracking-tighter">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="4" class="p-12 text-center text-slate-400 font-bold italic">
+                            No agents registered yet.
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

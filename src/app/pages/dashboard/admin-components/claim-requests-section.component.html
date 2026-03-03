@@ -1,0 +1,74 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div>
+        <h1 class="text-3xl font-black text-brand-navy">Claim Requests</h1>
+        <p class="text-slate-500 text-sm">
+            Review and assign claim officers to incoming claims.
+        </p>
+    </div>
+
+    <div class="card p-0 overflow-hidden">
+        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <h3 class="font-bold text-sm uppercase tracking-wide">
+                Pending Claims
+            </h3>
+            <button (click)="refresh()"
+                class="text-[10px] font-bold text-brand-orange hover:underline uppercase tracking-widest">
+                Refresh Data
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                        <th class="px-6 py-4">Customer</th>
+                        <th class="px-6 py-4">Incident Type</th>
+                        <th class="px-6 py-4">Request Amount</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-right">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    @for (claim of pendingClaims; track claim.id) {
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <p class="font-bold text-brand-navy">
+                                {{ claim.user?.email }}
+                            </p>
+                            <p class="text-[9px] text-slate-400">
+                                Policy: {{ claim.policy?.tierId }}
+                            </p>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded font-bold uppercase text-[9px]">
+                                {{ claim.incidentType }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 font-black">
+                            ₹{{ claim.requestedAmount | number:'1.0-0' }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="badge badge-warning">
+                                ● {{ claim.status }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 text-right">
+                            <button (click)="assign(claim.id)"
+                                class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter">
+                                Assign Officer
+                            </button>
+                        </td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

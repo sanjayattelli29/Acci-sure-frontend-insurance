@@ -1,0 +1,107 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+    <div>
+        <h1 class="text-3xl font-black text-brand-navy">Claims Management</h1>
+        <p class="text-slate-500 text-sm">
+            Register and manage claims assessment officers.
+        </p>
+    </div>
+
+    <div class="card p-0 overflow-hidden border-t-4 border-indigo-600">
+        <div class="p-6">
+            <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-indigo-600">
+                Assign New Claims Officer
+            </h3>
+
+            <form [formGroup]="officerForm" (ngSubmit)="register()"
+                class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">
+                        Officer Name
+                    </label>
+                    <input type="text" formControlName="name"
+                        class="input-field py-3 text-sm focus:border-indigo-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">
+                        Corporate Email
+                    </label>
+                    <input type="email" formControlName="emailId"
+                        class="input-field py-3 text-sm focus:border-indigo-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">
+                        Secure Password
+                    </label>
+                    <input type="password" formControlName="password"
+                        class="input-field py-3 text-sm focus:border-indigo-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">
+                        Salary Account (16 Digits)
+                    </label>
+                    <input type="text" formControlName="bankAccountNumber"
+                        class="input-field py-3 text-sm focus:border-indigo-500">
+                </div>
+
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="submit"
+                        [disabled]="officerForm.invalid || isLoading"
+                        class="bg-indigo-600 text-white rounded-lg font-black px-10 py-3 text-xs shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all uppercase tracking-widest">
+                        {{ isLoading ? 'Assigning...' : 'Confirm Assignment' }}
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="card p-0 overflow-hidden">
+        <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="font-bold text-sm uppercase tracking-wide">
+                Active Assessment Team
+            </h3>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                        <th class="px-6 py-4">Name</th>
+                        <th class="px-6 py-4">Work Email</th>
+                        <th class="px-6 py-4">Account Number</th>
+                        <th class="px-6 py-4 text-right">Access</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    @for (off of officers; track off.id) {
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-brand-navy">
+                            {{ off.fullName }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ off.email }}
+                        </td>
+                        <td class="px-6 py-4 font-mono text-slate-500">
+                            {{ off.bankAccountNumber }}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button (click)="delete(off.id)"
+                                class="text-rose-500 hover:text-rose-700 font-bold uppercase tracking-tighter">
+                                Revoke Access
+                            </button>
+                        </td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

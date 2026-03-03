@@ -1,0 +1,98 @@
+<div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+    <div>
+        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">
+            Enterprise Payments
+        </h1>
+        <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">
+            Consolidated premium collection and financial settlement audit.
+        </p>
+    </div>
+
+    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">
+                Premium Ledger
+            </h3>
+            <button (click)="refresh()"
+                class="text-brand-orange hover:underline font-black text-[10px] uppercase tracking-widest">
+                Refresh Payments
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr
+                        class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                        <th class="px-8 py-5">Policyholder</th>
+                        <th class="px-8 py-5">Personnel</th>
+                        <th class="px-8 py-5">Plan/Category</th>
+                        <th class="px-8 py-5">Financial Coverage</th>
+                        <th class="px-8 py-5">Premium Status</th>
+                        <th class="px-8 py-5 text-right">Invoice</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-50">
+
+                    @for (pay of unifiedPayments; track pay.transactionId) {
+                    <tr class="hover:bg-slate-50/30 transition-colors">
+                        <td class="px-8 py-6">
+                            <p class="text-xs font-black text-brand-navy">
+                                {{ pay.customerEmail }}
+                            </p>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tight italic">
+                                {{ pay.transactionId || 'Awaiting Payment' }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-[10px] font-bold text-slate-600">
+                                A: {{ pay.agentEmail || 'Direct' }}
+                            </p>
+                            <p class="text-[10px] font-bold text-slate-400">
+                                O: {{ pay.claimsOfficerEmail || 'Unassigned' }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-xs font-black text-indigo-600 italic tracking-tight">
+                                {{ pay.tierId }}
+                            </p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">
+                                {{ pay.policyCategory }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-xs font-black text-brand-navy">
+                                ₹{{ pay.totalCoverage | number }}
+                            </p>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                Curr: ₹{{ pay.currentCoverage | number }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-xs font-black text-emerald-600">
+                                ₹{{ pay.paidAmount | number }}
+                            </p>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                Premium: ₹{{ pay.premiumAmount | number }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6 text-right">
+                            <button (click)="invoice(pay)"
+                                class="bg-brand-navy hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">
+                                Invoice
+                            </button>
+                        </td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

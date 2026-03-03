@@ -1,0 +1,77 @@
+<div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
+    <div>
+        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">
+            Registry: Identity Master
+        </h1>
+        <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">
+            Total system users including Agents, Officers and Customers.
+        </p>
+    </div>
+
+    <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
+        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
+            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">
+                Master User List
+            </h3>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-100">
+                        <th class="px-8 py-5">Global ID</th>
+                        <th class="px-8 py-5">User Profile</th>
+                        <th class="px-8 py-5">Role/Access</th>
+                        <th class="px-8 py-5">Contact Details</th>
+                        <th class="px-8 py-5 text-right">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-50">
+
+                    @for (u of allUsers; track u.id) {
+                    <tr class="hover:bg-slate-50/30 transition-colors group">
+                        <td class="px-8 py-6 font-mono text-[11px] text-slate-400">
+                            #{{ u.id.substring(0,8) }}
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-xs font-black text-brand-navy">
+                                {{ u.fullName }}
+                            </p>
+                            <p class="text-[10px] text-slate-400 font-bold italic">
+                                {{ u.email }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6">
+                            @for (role of u.roles; track role) {
+                            <span class="px-3 py-1 bg-brand-navy/5 text-brand-navy rounded-full text-[9px] font-black uppercase tracking-widest mr-2">
+                                {{ role }}
+                            </span>
+                            }
+                        </td>
+
+                        <td class="px-8 py-6">
+                            <p class="text-xs font-bold text-slate-600">
+                                {{ u.phoneNumber || 'N/A' }}
+                            </p>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                                Verified Phone
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6 text-right">
+                            <button (click)="delete(u.id)"
+                                class="text-[10px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-700 transition-colors">
+                                Termiate
+                            </button>
+                        </td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
