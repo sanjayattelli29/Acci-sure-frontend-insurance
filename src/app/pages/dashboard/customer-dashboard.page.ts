@@ -98,7 +98,7 @@ export class CustomerDashboardPage implements OnInit {
     showPolicyDetailModal = signal(false);
     selectedPolicy = signal<any | null>(null);
 
-    // load all data on init from backend via services
+    // This function loads all required data when the component initializes including configuration, policies, claims and chat list from the backend services.
     ngOnInit() {
         this.loadConfig();
         this.loadMyPolicies();
@@ -106,8 +106,7 @@ export class CustomerDashboardPage implements OnInit {
         this.loadChatList();
     }
 
-    // fetch policy config from backend db
-    // contains categories tiers benefits etc
+    // This function fetches the policy configuration data from the backend database which contains all available policy categories, tiers and benefits information.
     loadConfig() {
         this.policyService.getConfiguration().subscribe({
             next: (config) => {
@@ -117,7 +116,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
-    // load user's policies from backend filtered by user id
+    // This function loads all policies associated with the current logged in user from the backend and recalculates the dashboard totals.
     loadMyPolicies() {
         this.policyService.getMyPolicies().subscribe({
             next: (policies) => {
@@ -128,7 +127,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
-    // load user's claims from backend via claim service
+    // This function loads all insurance claims submitted by the current user from the backend using the claim service and updates the dashboard statistics.
     loadMyClaims() {
         this.claimService.getMyClaims().subscribe({
             next: (claims) => {
@@ -139,7 +138,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
-    // load chat rooms from backend
+    // This function retrieves all active chat conversations between the customer and insurance agents from the backend chat service.
     loadChatList() {
         this.chatService.getChatList().subscribe({
             next: (chats) => this.myChats.set(chats),
@@ -147,7 +146,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
-    // calculate dashboard summary stats from policies and claims
+    // This function calculates the total coverage amount, total claims paid, remaining balance and claim amounts by aggregating data from all policies and claims.
     calculateTotals() {
         let coverage = 0;
         let claims = 0;
@@ -178,7 +177,7 @@ export class CustomerDashboardPage implements OnInit {
         this.approvedClaimAmount.set(approved);
     }
 
-    // switch between dashboard sections
+    // This function allows users to navigate between different sections of the dashboard like policies, claims, buy policy and chat by updating the active view.
     switchView(view: 'dashboard' | 'my-policies' | 'buy-policy' | 'raise-claim' | 'my-claims' | 'chat') {
         this.activeView.set(view);
         // reset selections when entering buy policy
@@ -192,7 +191,7 @@ export class CustomerDashboardPage implements OnInit {
         }
     }
 
-    // navigate to chat page with policy
+    // This function navigates to the chat page for a specific policy and initializes a new chat session with an agent if it doesn't already exist.
     navigateToChat(chat: any) {
         // if new chat init it first via backend
         if (chat.id && chat.id.startsWith('new_')) {
@@ -213,38 +212,37 @@ export class CustomerDashboardPage implements OnInit {
         }
     }
 
-    // check if user has already purchased a category to prevent duplicates
+    // This function checks whether the user already has an active policy in a specific category to prevent purchasing duplicate policies.
     hasActivePolicy(categoryId: string): boolean {
         return this.myPolicies.some(p => p.policyCategory === categoryId && p.status === 'Active');
     }
 
-    // user selects policy category like individual or family
+    // This function handles the user selection of a policy category such as individual or family and resets the tier selection and family members list.
     selectCategory(category: any) {
         this.selectedCategory = category;
         this.selectedTier = null;
         this.applicationForm.familyMembers = [];
     }
 
-    // user selects tier within category like silver gold platinum
+    // This function handles the user selection of a specific tier within the chosen policy category like silver, gold or platinum and triggers premium calculation.
     selectTier(tier: any) {
         this.selectedTier = tier;
         this.updatePremium(); // calc premium when tier selected
     }
 
-    // add family member to application for family policies
+    // This function adds a new family member entry to the policy application form allowing up to three family members for family policy types.
     addFamilyMember() {
         if (this.applicationForm.familyMembers.length < 3) {
             this.applicationForm.familyMembers.push({ fullName: '', relation: 'Spouse' });
         }
     }
 
-    // remove family member from list
+    // This function removes a family member from the application form at the specified index position.
     removeFamilyMember(index: number) {
         this.applicationForm.familyMembers.splice(index, 1);
     }
 
-    // recalculate premium based on form inputs
-    // calls backend with risk factors to compute premium
+    // This function recalculates the insurance premium based on user inputs and risk factors by sending the data to the backend pricing engine.
     updatePremium() {
         if (!this.selectedCategory || !this.selectedTier) return;
 
@@ -264,8 +262,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
-    // submit policy application to backend
-    // creates pending policy application in db for agent review
+    // This function submits the completed policy application to the backend which creates a pending policy record in the database for agent review and approval.
     submitApplication() {
         this.isSubmitting.set(true);
         const request = {
@@ -295,6 +292,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
+    // This function opens the detailed view of a specific policy by loading its complete information including associated claims from the database.
     openPolicyDetails(polId: string) {
         const pol = this.myPolicies.find(p => p.id === polId);
         if (!pol) return;
@@ -312,6 +310,7 @@ export class CustomerDashboardPage implements OnInit {
         this.activeView.set('policy-details');
     }
 
+    // This function processes the premium payment for a policy from the detailed policy view and activates the policy upon successful payment.
     payPremiumFromDetails() {
         const pol = this.detailedPolicy();
         if (!pol) return;
@@ -333,6 +332,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
+    // This function opens the detailed view of a specific insurance claim showing all information about the claim including status and associated policy details.
     openClaimDetails(claimId: string) {
         const claim = this.myClaims.find(c => c.id === claimId);
         if (!claim) return;
@@ -341,6 +341,7 @@ export class CustomerDashboardPage implements OnInit {
         this.activeView.set('claim-details');
     }
 
+    // This function processes the premium payment for a selected policy from the modal view and closes the modal after successful payment.
     payPremium() {
         const pol = this.selectedPolicy();
         if (!pol) return;
@@ -377,26 +378,34 @@ export class CustomerDashboardPage implements OnInit {
         affectedMemberRelation: ''
     };
     claimFiles: File[] = []; // uploaded documents
+    hasFirReport = signal<boolean>(false);
+    hasHospitalBill = signal<boolean>(false);
     selectedLocationCoords = signal<{ lat: number, lng: number } | null>(null);
 
-    // init claim form for selected policy
+    // This function initializes the claim submission form for a selected policy by resetting all form fields and navigating to the raise claim view.
     initiateClaim(pol: any) {
         this.selectedPolicyForClaim.set(pol);
         this.claimForm.affectedMemberName = '';
         this.claimForm.affectedMemberRelation = '';
         this.claimFiles = [];
+        this.hasFirReport.set(false);
+        this.hasHospitalBill.set(false);
         this.selectedLocationCoords.set(null);
         this.switchView('raise-claim');
     }
 
-    // handle file upload for claim documents
-    onFileChange(event: any) {
+    // This function handles the file upload event when users select supporting documents like medical reports and bills for their insurance claims.
+    onFileChange(event: any, type: 'fir' | 'bill' | 'others' = 'others') {
         if (event.target.files.length > 0) {
-            this.claimFiles = Array.from(event.target.files);
+            const files = Array.from(event.target.files) as File[];
+            this.claimFiles = [...this.claimFiles, ...files];
+            
+            if (type === 'fir') this.hasFirReport.set(true);
+            if (type === 'bill') this.hasHospitalBill.set(true);
         }
     }
 
-    // submit claim to backend with form data and files
+    // This function submits a new insurance claim to the backend by sending the claim form data along with uploaded supporting documents as multipart form data.
     submitClaim() {
         if (!this.selectedPolicyForClaim()) return;
 
@@ -438,6 +447,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
+    // This function handles the location selection from the Google Places autocomplete and updates the incident location with address and coordinates.
     onLocationSelected(data: any) {
         if (typeof data === 'string') {
             this.claimForm.incidentLocation = data;
@@ -448,16 +458,18 @@ export class CustomerDashboardPage implements OnInit {
         console.log('Location updated in dashboard form:', data);
     }
 
+    // This function updates the hospital name in the claim form when the user selects a hospital from the autocomplete dropdown.
     onHospitalChanged(name: string) {
         this.claimForm.hospitalName = name;
         console.log('Hospital updated in dashboard form:', name);
     }
 
+    // This function logs out the current user by calling the authentication service logout method which clears the session and redirects to login page.
     logout() {
         this.authService.logout();
     }
 
-    // Chat Helper Logic
+    // This function opens the AI chat assistant helper for a specific policy tier and sends an initial greeting message to start the conversation.
     openChatHelper(tier: any) {
         if (!this.selectedCategory) return;
 
@@ -480,6 +492,7 @@ export class CustomerDashboardPage implements OnInit {
         this.sendChatMessage(initialText, true);
     }
 
+    // This function sends a chat message to the AI policy assistant by posting the customer details, policy information and message to the backend AI service.
     sendChatMessage(messageText?: string, isInitial: boolean = false) {
         const text = messageText || this.chatUserMessage();
         if (!text && !isInitial) return;
@@ -541,6 +554,7 @@ export class CustomerDashboardPage implements OnInit {
         });
     }
 
+    // This function closes the AI chat assistant dialog by setting the chat open state to false.
     closeChat() {
         this.isChatOpen.set(false);
     }

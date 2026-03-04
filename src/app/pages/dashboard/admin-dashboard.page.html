@@ -3,16 +3,13 @@
     <header class="h-20 bg-brand-navy shrink-0 border-b border-white/5 flex items-center px-4 md:px-10 relative z-30">
         <div class="flex items-center gap-3 md:gap-6">
             <!-- Hamburger Button (Mobile Only) -->
-            <button
-                class="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all border border-white/5"
-                (click)="sidebarOpen.set(true)" aria-label="Open sidebar">
+            <button class="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all border border-white/5" (click)="sidebarOpen.set(true)" aria-label="Open sidebar">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
             <div class="flex items-center gap-3">
-                <div
-                    class="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center shadow-lg shadow-brand-orange/20">
+                <div class="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center shadow-lg shadow-brand-orange/20">
                     <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -22,8 +19,7 @@
                         class="text-brand-orange">Sure</span></span>
             </div>
             <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
-            <span
-                class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-indigo-500/20 hidden sm:inline-block">Admin
+            <span class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-indigo-500/20 hidden sm:inline-block">Admin
                 Console</span>
         </div>
         <div class="ml-auto flex items-center gap-4 md:gap-8">
@@ -34,8 +30,7 @@
                 <p class="text-sm font-black text-white italic">{{ user.email }}</p>
                 <p class="text-[10px] text-brand-orange font-black uppercase tracking-widest">Master Administrator</p>
             </div>
-            <button (click)="logout()"
-                class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all border border-white/5 group">
+            <button (click)="logout()" class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all border border-white/5 group">
                 <svg class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -52,13 +47,9 @@
 
     <div class="flex grow overflow-hidden">
         <!-- Sidebar -->
-        <aside
-            class="fixed lg:relative inset-y-0 left-0 w-72 bg-brand-navy border-r border-white/5 flex flex-col pt-8 shrink-0 z-50 transition-transform duration-300 h-screen"
-            [class.-translate-x-full]="!sidebarOpen()" [class.translate-x-0]="sidebarOpen()"
-            [class.lg:translate-x-0]="true">
+        <aside class="fixed lg:relative inset-y-0 left-0 w-72 bg-brand-navy border-r border-white/5 flex flex-col pt-8 shrink-0 z-50 transition-transform duration-300 h-screen" [class.-translate-x-full]="!sidebarOpen()" [class.translate-x-0]="sidebarOpen()" [class.lg:translate-x-0]="true">
             <!-- Close Button (Mobile Only) -->
-            <button class="lg:hidden absolute top-6 right-6 p-2 text-slate-400 hover:text-white transition-colors"
-                (click)="sidebarOpen.set(false)">
+            <button class="lg:hidden absolute top-6 right-6 p-2 text-slate-400 hover:text-white transition-colors" (click)="sidebarOpen.set(false)">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -67,8 +58,7 @@
             <div class="px-6 mb-8">
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Main Menu</p>
                 <nav class="space-y-2">
-                    <button (click)="setSection('dashboard'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('dashboard'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'dashboard' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -76,8 +66,7 @@
                         </svg>
                         Overview
                     </button>
-                    <button (click)="setSection('policyRequests'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('policyRequests'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'policyRequests' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -85,8 +74,8 @@
                         </svg>
                         Policy Queue
                     </button>
-                    <button (click)="setSection('claimRequests'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+
+                    <button (click)="setSection('claimRequests'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'claimRequests' ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -94,6 +83,25 @@
                         </svg>
                         Claim Queue
                     </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </nav>
             </div>
 
@@ -101,8 +109,7 @@
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Complete Analysis
                 </p>
                 <nav class="space-y-2">
-                    <button (click)="setSection('analysis-users'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('analysis-users'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-users' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -110,8 +117,7 @@
                         </svg>
                         Users Registry
                     </button>
-                    <button (click)="setSection('analysis-policies'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('analysis-policies'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-policies' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -119,8 +125,7 @@
                         </svg>
                         Active Policies
                     </button>
-                    <button (click)="setSection('analysis-commands'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('analysis-commands'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-commands' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -128,8 +133,7 @@
                         </svg>
                         Global Data Section
                     </button>
-                    <button (click)="setSection('analysis-payments'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('analysis-payments'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'analysis-payments' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -143,8 +147,7 @@
             <div class="px-6 mb-8">
                 <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Administration</p>
                 <nav class="space-y-2">
-                    <button (click)="setSection('agents'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('agents'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'agents' ? 'bg-brand-navy-light text-white border border-white/10' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -152,8 +155,7 @@
                         </svg>
                         Manage Agents
                     </button>
-                    <button (click)="setSection('officers'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('officers'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'officers' ? 'bg-brand-navy-light text-white border border-white/10' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -161,8 +163,7 @@
                         </svg>
                         Manage Officers
                     </button>
-                    <button (click)="setSection('email-automation'); sidebarOpen.set(false)"
-                        [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
+                    <button (click)="setSection('email-automation'); sidebarOpen.set(false)" [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ' + 
                         (activeSection() === 'email-automation' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -179,78 +180,44 @@
             <div class="max-w-7xl mx-auto space-y-12">
 
                 @if (message().text) {
-                <div
-                    [class]="'p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-300 ' + (message().type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-lg shadow-emerald-500/5' : 'bg-rose-50 text-rose-700 border border-rose-100 shadow-lg shadow-rose-500/5')">
-                    <div
-                        [class]="'w-10 h-10 rounded-full flex items-center justify-center ' + (message().type === 'success' ? 'bg-emerald-100' : 'bg-rose-100')">
+                <div [class]="'p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-300 ' + (message().type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-lg shadow-emerald-500/5' : 'bg-rose-50 text-rose-700 border border-rose-100 shadow-lg shadow-rose-500/5')">
+                    <div [class]="'w-10 h-10 rounded-full flex items-center justify-center ' + (message().type === 'success' ? 'bg-emerald-100' : 'bg-rose-100')">
                         <span class="font-black text-lg">{{ message().type === 'success' ? '✓' : '!' }}</span>
                     </div>
                     <div>
-                        <p class="text-sm font-black uppercase tracking-widest">{{ message().type === 'success' ?
-                            'Success' :
-                            'Attention' }}</p>
+                        <p class="text-sm font-black uppercase tracking-widest">{{ message().type === 'success' ? 'Success' : 'Attention' }}</p>
                         <p class="text-xs opacity-80 font-bold mt-0.5">{{ message().text }}</p>
                     </div>
                 </div>
-                }
-
-                @if (activeSection() === 'dashboard') {
+                } @if (activeSection() === 'dashboard') {
                 <app-dashboard-section [adminStats]="adminStats()" (openCommands)="setSection('analysis-commands')">
                 </app-dashboard-section>
-                }
-
-
-                @if (activeSection() === 'agents') {
-                <app-agents-section [agentForm]="agentForm" [agents]="agents()" [isLoading]="isLoading()"
-                    (registerAgent)="registerAgent()" (deleteUser)="deleteUser($event)">
+                } @if (activeSection() === 'agents') {
+                <app-agents-section [agentForm]="agentForm" [agents]="agents()" [isLoading]="isLoading()" (registerAgent)="registerAgent()" (deleteUser)="deleteUser($event)">
                 </app-agents-section>
-                }
-
-
-                @if (activeSection() === 'policyRequests') {
-                <app-policy-requests-section [policyRequests]="policyRequests()" (refreshData)="loadPolicyRequests()"
-                    (assignAgent)="openAssignModal($event)" (viewDetails)="viewUnifiedDetails($event, 'policy')">
+                } @if (activeSection() === 'policyRequests') {
+                <app-policy-requests-section [policyRequests]="policyRequests()" (refreshData)="loadPolicyRequests()" (assignAgent)="openAssignModal($event)" (viewDetails)="viewUnifiedDetails($event, 'policy')">
                 </app-policy-requests-section>
-                }
-
-                @if (activeSection() === 'officers') {
-                <app-officers-section [officerForm]="officerForm" [officers]="officers()" [isLoading]="isLoading()"
-                    (registerOfficer)="registerOfficer()" (deleteUser)="deleteUser($event)">
+                } @if (activeSection() === 'officers') {
+                <app-officers-section [officerForm]="officerForm" [officers]="officers()" [isLoading]="isLoading()" (registerOfficer)="registerOfficer()" (deleteUser)="deleteUser($event)">
                 </app-officers-section>
-                }
-
-                @if (activeSection() === 'claimRequests') {
-                <app-claim-requests-section [pendingClaims]="pendingClaims()" (refreshClaims)="loadPendingClaims()"
-                    (assignOfficer)="openAssignOfficerModal($event)">
+                } @if (activeSection() === 'claimRequests') {
+                <app-claim-requests-section [pendingClaims]="pendingClaims()" (refreshClaims)="loadPendingClaims()" (assignOfficer)="openAssignOfficerModal($event)">
                 </app-claim-requests-section>
-                }
-
-                @if (activeSection() === 'analysis-users') {
+                } @if (activeSection() === 'analysis-users') {
                 <app-analysis-users-section [allUsers]="allUsers()" (deleteUser)="deleteUser($event)">
                 </app-analysis-users-section>
-                }
-
-                @if (activeSection() === 'analysis-policies') {
-                <app-analysis-policies-section [policyRequests]="policyRequests()"
-                    (viewPolicy)="viewUnifiedDetails($event, 'policy')">
+                } @if (activeSection() === 'analysis-policies') {
+                <app-analysis-policies-section [policyRequests]="policyRequests()" (viewPolicy)="viewUnifiedDetails($event, 'policy')">
                 </app-analysis-policies-section>
-                }
-
-                @if (activeSection() === 'analysis-commands') {
-                <app-analysis-commands-section [allClaims]="allClaims()" [isLoading]="isLoading()"
-                    (refreshAudit)="loadAllClaims()" (viewDetails)="viewUnifiedDetails($event, 'claim')">
+                } @if (activeSection() === 'analysis-commands') {
+                <app-analysis-commands-section [allClaims]="allClaims()" [isLoading]="isLoading()" (refreshAudit)="loadAllClaims()" (viewDetails)="viewUnifiedDetails($event, 'claim')">
                 </app-analysis-commands-section>
-                }
-
-                @if (activeSection() === 'analysis-payments') {
-                <app-analysis-payments-section [unifiedPayments]="unifiedPayments()"
-                    (refreshPayments)="loadUnifiedPayments()" (openInvoice)="openInvoiceModal($event)">
+                } @if (activeSection() === 'analysis-payments') {
+                <app-analysis-payments-section [unifiedPayments]="unifiedPayments()" (refreshPayments)="loadUnifiedPayments()" (openInvoice)="openInvoiceModal($event)">
                 </app-analysis-payments-section>
-                }
-
-                @if (activeSection() === 'email-automation') {
-                <app-email-automation-section [allUsers]="allUsers()" (refreshUsers)="loadAllUsers()"
-                    (sendEmail)="openEmailForm($event)">
+                } @if (activeSection() === 'email-automation') {
+                <app-email-automation-section [allUsers]="allUsers()" (refreshUsers)="loadAllUsers()" (sendEmail)="openEmailForm($event)">
                 </app-email-automation-section>
                 }
             </div>
@@ -264,12 +231,9 @@
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div>
                     <h3 class="font-black text-brand-navy uppercase tracking-tight">Select Agent for Assignment</h3>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Application ID:
-                        {{
-                        selectedApplicationId() }}</p>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Application ID: {{ selectedApplicationId() }}</p>
                 </div>
-                <button (click)="showAssignModal.set(false)"
-                    class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+                <button (click)="showAssignModal.set(false)" class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
@@ -280,8 +244,7 @@
             <div class="p-0 max-h-[400px] overflow-y-auto">
                 <table class="w-full text-left text-xs">
                     <thead>
-                        <tr
-                            class="sticky top-0 bg-white text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                        <tr class="sticky top-0 bg-white text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
                             <th class="px-6 py-4">Agent Email</th>
                             <th class="px-6 py-4">Current Load</th>
                             <th class="px-6 py-4 text-right">Assign</th>
@@ -296,15 +259,12 @@
                                     agent.assignedPolicyCount }} Policies</span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <button (click)="assignAgent(agent.agentId)" [disabled]="isAssigning()"
-                                    class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter disabled:opacity-50">Confirm</button>
+                                <button (click)="assignAgent(agent.agentId)" [disabled]="isAssigning()" class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter disabled:opacity-50">Confirm</button>
                             </td>
                         </tr>
                         } @empty {
                         <tr>
-                            <td colspan="3" class="p-10 text-center text-slate-400 italic font-bold">No active
-                                agents
-                                found in system.</td>
+                            <td colspan="3" class="p-10 text-center text-slate-400 italic font-bold">No active agents found in system.</td>
                         </tr>
                         }
                     </tbody>
@@ -316,19 +276,15 @@
             </div>
         </div>
     </div>
-    }
-
-    @if (showAssignOfficerModal()) {
+    } @if (showAssignOfficerModal()) {
     <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div>
                     <h3 class="font-black text-brand-navy uppercase tracking-tight">Select Claims Officer</h3>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Claim ID: {{
-                        selectedClaimId()?.substring(0,8) }}...</p>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Claim ID: {{ selectedClaimId()?.substring(0,8) }}...</p>
                 </div>
-                <button (click)="showAssignOfficerModal.set(false)"
-                    class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+                <button (click)="showAssignOfficerModal.set(false)" class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
@@ -339,8 +295,7 @@
             <div class="p-0 max-h-[400px] overflow-y-auto">
                 <table class="w-full text-left text-xs">
                     <thead>
-                        <tr
-                            class="sticky top-0 bg-white text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
+                        <tr class="sticky top-0 bg-white text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100">
                             <th class="px-6 py-4">Officer Email</th>
                             <th class="px-6 py-4">Active Claims</th>
                             <th class="px-6 py-4 text-right">Assign</th>
@@ -355,15 +310,12 @@
                                     officer.assignedClaimsCount }} Claims</span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <button (click)="assignOfficer(officer.claimOfficerId)" [disabled]="isAssigning()"
-                                    class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter disabled:opacity-50">Confirm</button>
+                                <button (click)="assignOfficer(officer.claimOfficerId)" [disabled]="isAssigning()" class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter disabled:opacity-50">Confirm</button>
                             </td>
                         </tr>
                         } @empty {
                         <tr>
-                            <td colspan="3" class="p-10 text-center text-slate-400 italic font-bold">No claims
-                                officers
-                                found in system.</td>
+                            <td colspan="3" class="p-10 text-center text-slate-400 italic font-bold">No claims officers found in system.</td>
                         </tr>
                         }
                     </tbody>
@@ -371,8 +323,7 @@
             </div>
 
             <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-                <button (click)="showAssignOfficerModal.set(false)"
-                    class="btn-secondary py-2 text-[10px]">Cancel</button>
+                <button (click)="showAssignOfficerModal.set(false)" class="btn-secondary py-2 text-[10px]">Cancel</button>
             </div>
         </div>
     </div>
@@ -381,34 +332,27 @@
     @if (showUnifiedDetail() && selectedUnifiedDetail()) {
     <div class="fixed inset-0 z-[100] flex justify-end overflow-hidden">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
-            (click)="showUnifiedDetail.set(false)"></div>
+        <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" (click)="showUnifiedDetail.set(false)"></div>
 
         <!-- Sidebar Panel -->
-        <div
-            class="relative w-full max-w-xl bg-slate-50 shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-500">
+        <div class="relative w-full max-w-xl bg-slate-50 shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-500">
             <!-- Header -->
             <div class="p-8 bg-brand-navy text-white shrink-0 relative overflow-hidden">
                 <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-orange/10 rounded-full blur-3xl"></div>
                 <div class="relative z-10 flex justify-between items-start">
                     <div>
                         <div class="flex items-center gap-3 mb-2">
-                            <span
-                                class="bg-brand-orange text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">Master
+                            <span class="bg-brand-orange text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">Master
                                 Audit</span>
                             <span class="text-slate-400 text-[10px] font-mono">REC_{{
                                 (selectedUnifiedDetail().policy?.id
                                 || selectedUnifiedDetail().claim?.id || '000').substring(0,8).toUpperCase()
                                 }}</span>
                         </div>
-                        <h2 class="text-4xl text-white tracking-tighter italic">Unified <span
-                                class="text-brand-orange">Enterprise</span> Ledger</h2>
-                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">End-to-end
-                            data
-                            reconciliation protocol</p>
+                        <h2 class="text-4xl text-white tracking-tighter italic">Unified <span class="text-brand-orange">Enterprise</span> Ledger</h2>
+                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">End-to-end data reconciliation protocol</p>
                     </div>
-                    <button (click)="showUnifiedDetail.set(false)"
-                        class="p-3 hover:bg-white/10 rounded-2xl transition-all text-slate-400 hover:text-white group">
+                    <button (click)="showUnifiedDetail.set(false)" class="p-3 hover:bg-white/10 rounded-2xl transition-all text-slate-400 hover:text-white group">
                         <svg class="w-7 h-7 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -424,16 +368,13 @@
                 <!-- 1. Customer Context -->
                 <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
                     <div class="flex items-center gap-4 mb-8">
-                        <div
-                            class="w-12 h-12 bg-brand-orange text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-orange-200">
+                        <div class="w-12 h-12 bg-brand-orange text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-orange-200">
                             {{ selectedUnifiedDetail().customer?.email?.[0]?.toUpperCase() || 'C' }}
                         </div>
                         <div>
-                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Customer
-                                Integrity
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Customer Integrity
                             </h3>
-                            <p
-                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
                                 Verified policyholder records</p>
                         </div>
                     </div>
@@ -441,21 +382,18 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm col-span-2">
                             <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-3">
-                                Electronic
-                                Identity</p>
-                            <p class="text-sm font-black text-brand-navy">{{ selectedUnifiedDetail().customer?.email
-                                }}
+                                Electronic Identity
+                            </p>
+                            <p class="text-sm font-black text-brand-navy">{{ selectedUnifiedDetail().customer?.email }}
                             </p>
                             <div class="mt-4 pt-4 border-t border-slate-50 grid grid-cols-2 gap-4">
                                 <div>
                                     <p class="text-[8px] text-slate-400 font-bold uppercase">Account Name</p>
-                                    <p class="text-[10px] font-black text-slate-600 uppercase">{{
-                                        selectedUnifiedDetail().customer?.name || 'Verified User' }}</p>
+                                    <p class="text-[10px] font-black text-slate-600 uppercase">{{ selectedUnifiedDetail().customer?.name || 'Verified User' }}</p>
                                 </div>
                                 <div>
                                     <p class="text-[8px] text-slate-400 font-bold uppercase">Phone Trace</p>
-                                    <p class="text-[10px] font-black text-slate-600">{{
-                                        selectedUnifiedDetail().customer?.phoneNumber || '--' }}</p>
+                                    <p class="text-[10px] font-black text-slate-600">{{ selectedUnifiedDetail().customer?.phoneNumber || '--' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -466,18 +404,16 @@
                 <!-- 2. Medical & Risk Profile (MATCHING CLAIMS OFFICER DEPTH) -->
                 <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
                     <div class="flex items-center gap-4 mb-8">
-                        <div
-                            class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Medical & Risk
-                                Audit</h3>
-                            <p
-                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Medical & Risk Audit
+                            </h3>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
                                 Health metrics and lifestyle underwriting</p>
                         </div>
                     </div>
@@ -486,20 +422,16 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                             <div class="text-center md:text-left">
                                 <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Applicant Age</p>
-                                <p class="text-xl font-black text-brand-navy italic">{{
-                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.age }} <span
-                                        class="text-[10px] font-bold text-slate-400 not-italic">Yrs</span></p>
+                                <p class="text-xl font-black text-brand-navy italic">{{ selectedUnifiedDetail().policy?.fullDetails?.applicant?.age }} <span class="text-[10px] font-bold text-slate-400 not-italic">Yrs</span></p>
                             </div>
                             <div class="text-center border-x border-slate-100">
                                 <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Tobacco Logic</p>
-                                <p class="text-sm font-black text-brand-navy capitalize">{{
-                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.smokingHabit }}
+                                <p class="text-sm font-black text-brand-navy capitalize">{{ selectedUnifiedDetail().policy?.fullDetails?.applicant?.smokingHabit }}
                                 </p>
                             </div>
                             <div class="text-center border-r border-slate-100">
                                 <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Alcohol Habit</p>
-                                <p class="text-sm font-black text-brand-navy capitalize">{{
-                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.alcoholHabit }}
+                                <p class="text-sm font-black text-brand-navy capitalize">{{ selectedUnifiedDetail().policy?.fullDetails?.applicant?.alcoholHabit }}
                                 </p>
                             </div>
 
@@ -509,18 +441,13 @@
                             <div class="p-4 bg-slate-50 rounded-2xl">
                                 <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Professional Vertical
                                 </p>
-                                <p class="text-xs font-black text-slate-700">{{
-                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.profession || 'Standard
-                                    Employment' }}</p>
+                                <p class="text-xs font-black text-slate-700">{{ selectedUnifiedDetail().policy?.fullDetails?.applicant?.profession || 'Standard Employment' }}</p>
                             </div>
                             <div class="p-4 bg-slate-50 rounded-2xl">
-                                <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Risk Exposure
-                                    (KM/Month)
+                                <p class="text-[8px] text-slate-400 font-black uppercase mb-1">Risk Exposure (KM/Month)
                                 </p>
-                                <p class="text-xs font-black text-slate-700">{{
-                                    selectedUnifiedDetail().policy?.fullDetails?.applicant?.travelKmPerMonth || '0'
-                                    }}
-                                    Kilometers</p>
+                                <p class="text-xs font-black text-slate-700">{{ selectedUnifiedDetail().policy?.fullDetails?.applicant?.travelKmPerMonth || '0' }} Kilometers
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -529,19 +456,16 @@
                 <!-- 3. Nominee & Financial Beneficiary -->
                 <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
                     <div class="flex items-center gap-4 mb-8">
-                        <div
-                            class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 shadow-sm">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 shadow-sm">
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Nominee
-                                Information
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Nominee Information
                             </h3>
-                            <p
-                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
                                 Financial settlement beneficiaries</p>
                         </div>
                     </div>
@@ -552,37 +476,30 @@
 
 
                             <div>
-                                <p class="text-lg font-black text-brand-navy">{{
-                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeName }}</p>
-                                <p class="text-[10px] text-slate-400 font-bold">{{
-                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeEmail }}</p>
+                                <p class="text-lg font-black text-brand-navy">{{ selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeName }}</p>
+                                <p class="text-[10px] text-slate-400 font-bold">{{ selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeEmail }}</p>
                             </div>
 
 
 
-                            <span
-                                class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-100">Primary
+                            <span class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-100">Primary
                                 Beneficiary</span>
                         </div>
                         <div class="grid grid-cols-2 gap-4 pt-6 border-t border-slate-50">
                             <div class="p-4 bg-emerald-50/30 rounded-2xl border border-emerald-50">
                                 <p class="text-[8px] text-slate-400 font-bold uppercase mb-1">Settlement A/C</p>
-                                <p class="text-xs font-mono font-black text-brand-navy uppercase">{{
-                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeBankAccountNumber }}
+                                <p class="text-xs font-mono font-black text-brand-navy uppercase">{{ selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineeBankAccountNumber }}
                                 </p>
                             </div>
                             <div class="p-4 bg-emerald-50/30 rounded-2xl border border-emerald-50">
                                 <p class="text-[8px] text-slate-400 font-bold uppercase mb-1">Contact Anchor</p>
-                                <p class="text-xs font-black text-brand-navy">{{
-                                    selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineePhone }}</p>
+                                <p class="text-xs font-black text-brand-navy">{{ selectedUnifiedDetail().policy.fullDetails?.nominee?.nomineePhone }}</p>
                             </div>
                         </div>
                     </div>
                     } @else {
                     <div class="p-10 text-center bg-white rounded-[2rem] border border-slate-100 border-dashed">
-                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest italic">No nominee
-                            records
-                            detected in application</p>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest italic">No nominee records detected in application</p>
                     </div>
                     }
                 </section>
@@ -590,50 +507,37 @@
                 <!-- 4. Personnel & Logistics -->
                 <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
                     <div class="flex items-center gap-4 mb-8">
-                        <div
-                            class="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                        <div class="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M12 4.354l1.1 3.383h3.558l-2.877 2.091 1.1 3.383-2.881-2.091-2.881 2.091 1.1-3.383-2.877-2.091h3.558l1.1-3.383z" />
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Servicing
-                                Personnel
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Servicing Personnel
                             </h3>
-                            <p
-                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
                                 Personnel assigned to this asset lifecycle</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div
-                            class="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center gap-4 shadow-sm group hover:border-indigo-200 transition-all">
+                        <div class="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center gap-4 shadow-sm group hover:border-indigo-200 transition-all">
                             <div>
                                 <p class="text-[8px] text-slate-400 font-black uppercase tracking-widest">
                                     Verification Agent</p>
-                                <p class="text-xs font-black text-brand-navy">{{
-                                    selectedUnifiedDetail().agent?.email ||
-                                    'UNASSIGNED' }}</p>
-                                <p class="text-[10px] font-bold text-indigo-500 mt-1 uppercase">{{
-                                    selectedUnifiedDetail().agent?.email ? 'Certified Partner' : 'Awaiting
-                                    Allocation'
-                                    }}</p>
+                                <p class="text-xs font-black text-brand-navy">{{ selectedUnifiedDetail().agent?.email || 'UNASSIGNED' }}</p>
+                                <p class="text-[10px] font-bold text-indigo-500 mt-1 uppercase">{{ selectedUnifiedDetail().agent?.email ? 'Certified Partner' : 'Awaiting Allocation' }}
+                                </p>
                             </div>
                         </div>
-                        <div
-                            class="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center gap-4 shadow-sm group hover:border-brand-orange/20 transition-all">
+                        <div class="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center gap-4 shadow-sm group hover:border-brand-orange/20 transition-all">
 
                             <div>
-                                <p class="text-[8px] text-slate-400 font-black uppercase tracking-widest">Claims
-                                    Adjudicator</p>
-                                <p class="text-xs font-black text-brand-navy">{{
-                                    selectedUnifiedDetail().claimOfficer?.userName || 'UNASSIGNED' }}</p>
-                                <p class="text-[10px] font-bold text-brand-orange mt-1 uppercase">{{
-                                    selectedUnifiedDetail().claimOfficer?.userName ? 'Senior Assessor' : 'Audit
-                                    Pending'
-                                    }}
+                                <p class="text-[8px] text-slate-400 font-black uppercase tracking-widest">Claims Adjudicator
+                                </p>
+                                <p class="text-xs font-black text-brand-navy">{{ selectedUnifiedDetail().claimOfficer?.userName || 'UNASSIGNED' }}</p>
+                                <p class="text-[10px] font-bold text-brand-orange mt-1 uppercase">{{ selectedUnifiedDetail().claimOfficer?.userName ? 'Senior Assessor' : 'Audit Pending' }}
                                 </p>
                             </div>
                         </div>
@@ -643,8 +547,7 @@
                 <!-- 5. Claims Forensics & Incident Evidence -->
                 <section class="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
                     <div class="flex items-center gap-4 mb-8">
-                        <div
-                            class="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
+                        <div class="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -653,53 +556,40 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Claims Forensic
-                                Ledger</h3>
-                            <p
-                                class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                            <h3 class="font-black text-brand-navy uppercase tracking-[0.1em] italic">Claims Forensic Ledger
+                            </h3>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">
                                 Incident history and evidence repository</p>
                         </div>
                     </div>
 
                     @if (selectedUnifiedDetail().claim) {
                     <div class="space-y-6">
-                        <div
-                            class="bg-brand-navy p-10 rounded-[3rem] text-white relative overflow-hidden group shadow-2xl shadow-navy-100">
-                            <div
-                                class="absolute -right-10 -bottom-10 w-48 h-48 bg-brand-orange/10 rounded-full group-hover:scale-125 transition-all duration-700">
+                        <div class="bg-brand-navy p-10 rounded-[3rem] text-white relative overflow-hidden group shadow-2xl shadow-navy-100">
+                            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-brand-orange/10 rounded-full group-hover:scale-125 transition-all duration-700">
                             </div>
                             <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
                                 <div>
-                                    <span
-                                        class="bg-brand-orange text-white text-[8px] font-black px-3 py-1 rounded uppercase tracking-[0.2em] italic mb-4 inline-block">●
+                                    <span class="bg-brand-orange text-white text-[8px] font-black px-3 py-1 rounded uppercase tracking-[0.2em] italic mb-4 inline-block">●
                                         Incident Verified</span>
-                                    <h4 class="text-4xl text-white italic tracking-tighter">₹{{
-                                        (selectedUnifiedDetail().claim.approvedAmount ||
-                                        selectedUnifiedDetail().claim.requestedAmount) | number }}</h4>
-                                    <p
-                                        class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-2 underline decoration-brand-orange decoration-2">
+                                    <h4 class="text-4xl text-white italic tracking-tighter">₹{{ (selectedUnifiedDetail().claim.approvedAmount || selectedUnifiedDetail().claim.requestedAmount) | number }}</h4>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-2 underline decoration-brand-orange decoration-2">
                                         Settlement Amount</p>
                                     <div class="mt-4 p-4 bg-white/5 rounded-2xl border border-white/10">
                                         <p class="text-[9px] text-brand-orange font-black uppercase tracking-widest">
                                             Policy Coverage Ratio</p>
-                                        <p class="text-sm font-black text-white mt-1">₹{{
-                                            selectedUnifiedDetail().claim.remainingCoverage | number }} <span
-                                                class="text-slate-500 font-bold">/ ₹{{
+                                        <p class="text-sm font-black text-white mt-1">₹{{ selectedUnifiedDetail().claim.remainingCoverage | number }} <span class="text-slate-500 font-bold">/ ₹{{
                                                 selectedUnifiedDetail().claim.totalCoverage | number }}</span></p>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-10 md:text-right">
-                                    <div
-                                        class="border-l-2 md:border-l-0 md:border-r-2 border-brand-orange/30 pl-4 md:pl-0 md:pr-4">
+                                    <div class="border-l-2 md:border-l-0 md:border-r-2 border-brand-orange/30 pl-4 md:pl-0 md:pr-4">
                                         <p class="text-[9px] text-slate-400 font-black uppercase mb-1">Type</p>
-                                        <p class="text-xs font-black italic">{{
-                                            selectedUnifiedDetail().claim.incidentType }}</p>
+                                        <p class="text-xs font-black italic">{{ selectedUnifiedDetail().claim.incidentType }}</p>
                                     </div>
-                                    <div
-                                        class="border-l-2 md:border-l-0 md:border-r-2 border-brand-orange/30 pl-4 md:pl-0 md:pr-4">
+                                    <div class="border-l-2 md:border-l-0 md:border-r-2 border-brand-orange/30 pl-4 md:pl-0 md:pr-4">
                                         <p class="text-[9px] text-slate-400 font-black uppercase mb-1">Date</p>
-                                        <p class="text-xs font-black italic">{{
-                                            selectedUnifiedDetail().claim.incidentDate | date:'longDate' }}</p>
+                                        <p class="text-xs font-black italic">{{ selectedUnifiedDetail().claim.incidentDate | date:'longDate' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -707,31 +597,25 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
-                                <p
-                                    class="text-[9px] font-black text-brand-navy uppercase tracking-widest mb-6 border-b border-slate-50 pb-2">
+                                <p class="text-[9px] font-black text-brand-navy uppercase tracking-widest mb-6 border-b border-slate-50 pb-2">
                                     Logistics Forensics</p>
                                 <div class="space-y-4">
                                     <div>
-                                        <p class="text-[8px] text-slate-400 font-black uppercase">Incident
-                                            Geo-Location
+                                        <p class="text-[8px] text-slate-400 font-black uppercase">Incident Geo-Location
                                         </p>
-                                        <p class="text-sm font-black text-brand-navy italic">{{
-                                            selectedUnifiedDetail().claim.incidentLocation }}</p>
+                                        <p class="text-sm font-black text-brand-navy italic">{{ selectedUnifiedDetail().claim.incidentLocation }}</p>
                                     </div>
                                     <div>
                                         <p class="text-[8px] text-slate-400 font-black uppercase">Facility Admitted
                                         </p>
-                                        <p class="text-xs font-bold text-slate-600">{{
-                                            selectedUnifiedDetail().claim.hospitalName }}</p>
+                                        <p class="text-xs font-bold text-slate-600">{{ selectedUnifiedDetail().claim.hospitalName }}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
-                                <p
-                                    class="text-[9px] font-black text-brand-navy uppercase tracking-widest mb-6 border-b border-slate-50 pb-2">
+                                <p class="text-[9px] font-black text-brand-navy uppercase tracking-widest mb-6 border-b border-slate-50 pb-2">
                                     Incident Narrative</p>
-                                <p class="text-xs text-slate-500 leading-relaxed font-medium italic">"{{
-                                    selectedUnifiedDetail().claim.description }}"</p>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium italic">"{{ selectedUnifiedDetail().claim.description }}"</p>
                             </div>
                         </div>
 
@@ -786,16 +670,13 @@
                     </div>
                     } @else {
                     <div class="bg-slate-100 p-12 rounded-[2.5rem] text-center border-4 border-dashed border-slate-200">
-                        <div
-                            class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
                             <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest italic">Asset
-                            Lifecycle
-                            Clear • No Active Claims Documented</p>
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest italic">Asset Lifecycle Clear • No Active Claims Documented</p>
                     </div>
                     }
                 </section>
@@ -803,16 +684,13 @@
 
             <!-- Footer Action -->
             <div class="p-10 bg-white border-t border-slate-100 shadow-2xl shrink-0 flex gap-4">
-                <button (click)="showUnifiedDetail.set(false)"
-                    class="grow bg-brand-navy text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-slate-900 transition-all shadow-xl shadow-navy-200 active:scale-95">
+                <button (click)="showUnifiedDetail.set(false)" class="grow bg-brand-navy text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-slate-900 transition-all shadow-xl shadow-navy-200 active:scale-95">
                     Acknowledge Review
                 </button>
             </div>
         </div>
     </div>
-    }
-
-    @if (showInvoiceModal() && selectedPayment()) {
+    } @if (showInvoiceModal() && selectedPayment()) {
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[110] p-4">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
             <!-- Simplified Header -->
@@ -820,15 +698,12 @@
                 <div>
                     <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
                         Premium Invoice
-                        <span
-                            class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-black">Verified</span>
+                        <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-black">Verified</span>
                     </h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Transaction
-                        Ledger
-                        Record</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Transaction Ledger Record
+                    </p>
                 </div>
-                <button (click)="showInvoiceModal.set(false)"
-                    class="p-2 hover:bg-slate-100 rounded-xl transition-all text-slate-400">
+                <button (click)="showInvoiceModal.set(false)" class="p-2 hover:bg-slate-100 rounded-xl transition-all text-slate-400">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
@@ -840,17 +715,14 @@
                 <!-- Compact Settlement Box -->
                 <div class="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl flex justify-between items-center">
                     <div>
-                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Settlement
-                            Amount
+                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Settlement Amount
                         </p>
-                        <h4 class="text-2xl font-black text-indigo-600 mt-1">₹{{ selectedPayment().paidAmount |
-                            number
-                            }}</h4>
+                        <h4 class="text-2xl font-black text-indigo-600 mt-1">₹{{ selectedPayment().paidAmount | number }}
+                        </h4>
                     </div>
                     <div class="text-right">
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Payment Date</p>
-                        <p class="text-xs font-bold text-slate-600 mt-1">{{ selectedPayment().nextPaymentDate |
-                            date:'mediumDate' }}</p>
+                        <p class="text-xs font-bold text-slate-600 mt-1">{{ selectedPayment().nextPaymentDate | date:'mediumDate' }}</p>
                     </div>
                 </div>
 
@@ -862,8 +734,7 @@
                     </div>
                     <div class="space-y-1 text-right">
                         <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Transaction ID</p>
-                        <p class="text-xs font-mono font-bold text-slate-700">{{ selectedPayment().transactionId ||
-                            'Awaiting Sync' }}</p>
+                        <p class="text-xs font-mono font-bold text-slate-700">{{ selectedPayment().transactionId || 'Awaiting Sync' }}</p>
                     </div>
                 </div>
 
@@ -892,33 +763,26 @@
             </div>
 
             <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
-                <button (click)="generateInvoicePDF(selectedPayment())"
-                    class="grow bg-brand-orange text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] shadow-lg shadow-orange-100 hover:brightness-110 active:scale-95 transition-all">
+                <button (click)="generateInvoicePDF(selectedPayment())" class="grow bg-brand-orange text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] shadow-lg shadow-orange-100 hover:brightness-110 active:scale-95 transition-all">
                     Download Invoice
                 </button>
-                <button (click)="showInvoiceModal.set(false)"
-                    class="px-8 bg-white text-slate-500 py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] border border-slate-200 hover:bg-slate-50 transition-all active:scale-95">
+                <button (click)="showInvoiceModal.set(false)" class="px-8 bg-white text-slate-500 py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] border border-slate-200 hover:bg-slate-50 transition-all active:scale-95">
                     Close
                 </button>
             </div>
         </div>
     </div>
-    }
-    @if (showEmailModal()) {
+    } @if (showEmailModal()) {
     <div class="fixed inset-0 bg-brand-navy/60 backdrop-blur-sm flex items-center justify-center z-[200] p-4">
-        <div
-            class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div>
                     <h3 class="font-black text-brand-navy uppercase tracking-tight text-xl italic">Email Automation
                         <span class="text-brand-orange">Protocol</span>
                     </h3>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Secure
-                        transmission
-                        to: {{ selectedUserForEmail()?.email }}</p>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Secure transmission to: {{ selectedUserForEmail()?.email }}</p>
                 </div>
-                <button (click)="showEmailModal.set(false)"
-                    class="p-3 hover:bg-slate-200 rounded-2xl transition-colors text-slate-400">
+                <button (click)="showEmailModal.set(false)" class="p-3 hover:bg-slate-200 rounded-2xl transition-colors text-slate-400">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                             d="M6 18L18 6M6 6l12 12" />
@@ -931,29 +795,23 @@
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Recipient
                             Identity</label>
-                        <input type="email" formControlName="toEmail" readonly
-                            class="w-full bg-slate-100 border-none rounded-2xl px-6 py-4 text-xs font-bold text-slate-500 cursor-not-allowed">
+                        <input type="email" formControlName="toEmail" readonly class="w-full bg-slate-100 border-none rounded-2xl px-6 py-4 text-xs font-bold text-slate-500 cursor-not-allowed">
                     </div>
                     <div class="space-y-2">
-                        <label
-                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Communication
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Communication
                             Subject</label>
-                        <input type="text" formControlName="subject" placeholder="Enter formal subject line"
-                            class="w-full bg-white border-2 border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-brand-navy focus:border-brand-orange focus:ring-0 transition-all">
+                        <input type="text" formControlName="subject" placeholder="Enter formal subject line" class="w-full bg-white border-2 border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold text-brand-navy focus:border-brand-orange focus:ring-0 transition-all">
                     </div>
                 </div>
 
                 <!-- Credentials Toggle -->
                 <div class="mb-4 flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
                     <div>
-                        <p class="text-[10px] font-black text-brand-navy uppercase tracking-widest">Onboarding: Share
-                            Credentials</p>
-                        <p class="text-[9px] text-slate-400 font-bold mt-0.5">Inject user's email and initial password
-                            into message.</p>
+                        <p class="text-[10px] font-black text-brand-navy uppercase tracking-widest">Onboarding: Share Credentials
+                        </p>
+                        <p class="text-[9px] text-slate-400 font-bold mt-0.5">Inject user's email and initial password into message.</p>
                     </div>
-                    <button type="button" (click)="toggleCredentials()"
-                        [ngClass]="includeCredentials() ? 'bg-brand-orange shadow-lg shadow-orange-100' : 'bg-slate-200'"
-                        class="w-12 h-6 rounded-full relative transition-all duration-300">
+                    <button type="button" (click)="toggleCredentials()" [ngClass]="includeCredentials() ? 'bg-brand-orange shadow-lg shadow-orange-100' : 'bg-slate-200'" class="w-12 h-6 rounded-full relative transition-all duration-300">
                         <div [ngClass]="includeCredentials() ? 'translate-x-6' : 'translate-x-1'"
                             class="absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300">
                         </div>
@@ -964,18 +822,14 @@
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Message
                         Payload
                         (HTML Content Support)</label>
-                    <textarea formControlName="message" rows="8"
-                        placeholder="Compose your secure communication message..."
-                        class="w-full bg-white border-2 border-slate-100 rounded-[2rem] px-8 py-6 text-xs font-medium text-slate-600 focus:border-brand-orange focus:ring-0 transition-all leading-relaxed"></textarea>
+                    <textarea formControlName="message" rows="8" placeholder="Compose your secure communication message..." class="w-full bg-white border-2 border-slate-100 rounded-[2rem] px-8 py-6 text-xs font-medium text-slate-600 focus:border-brand-orange focus:ring-0 transition-all leading-relaxed"></textarea>
                 </div>
 
                 <div class="flex gap-4 pt-4">
-                    <button type="button" (click)="showEmailModal.set(false)"
-                        class="grow px-8 py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:bg-slate-50 transition-all">
+                    <button type="button" (click)="showEmailModal.set(false)" class="grow px-8 py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:bg-slate-50 transition-all">
                         Cancel
                     </button>
-                    <button type="submit" [disabled]="emailForm.invalid || isSendingEmail()"
-                        class="grow-[2] bg-brand-navy text-white px-8 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-navy-100 disabled:opacity-50 flex items-center justify-center gap-3">
+                    <button type="submit" [disabled]="emailForm.invalid || isSendingEmail()" class="grow-[2] bg-brand-navy text-white px-8 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-navy-100 disabled:opacity-50 flex items-center justify-center gap-3">
                         @if (isSendingEmail()) {
                         <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24">

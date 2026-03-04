@@ -21,11 +21,9 @@ export class CustomerLoginPage implements OnInit {
     // ui state signals for reactive updates
     isLoading = signal(false);
     errorMessage = signal('');
-    // captcha numbers for math challenge
-    num1 = signal(0);
-    num2 = signal(0);
+    // captcha text for alphanumeric challenge
+    captchaText = signal('');
 
-    // reactive form for login with validation rules
     loginForm = this.fb.group({
         emailId: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required]],
@@ -37,17 +35,21 @@ export class CustomerLoginPage implements OnInit {
         this.generateCaptcha();
     }
 
-    // create random math problem for captcha
+    // create random alphanumeric string for captcha
     generateCaptcha() {
-        this.num1.set(Math.floor(Math.random() * 10) + 1);
-        this.num2.set(Math.floor(Math.random() * 10) + 1);
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        this.captchaText.set(result);
         this.loginForm.get('captchaInput')?.reset();
     }
 
-    // check if user entered correct captcha answer
+    // check if user entered correct captcha text (case-insensitive for better UX)
     isCaptchaCorrect(): boolean {
-        const answer = parseInt(this.loginForm.get('captchaInput')?.value || '0');
-        return answer === (this.num1() + this.num2());
+        const userInput = (this.loginForm.get('captchaInput')?.value || '').toLowerCase();
+        return userInput === this.captchaText().toLowerCase();
     }
 
     // submit login form to backend via auth service
@@ -56,7 +58,8 @@ export class CustomerLoginPage implements OnInit {
         if (this.loginForm.valid) {
             // verify captcha before calling backend
             if (!this.isCaptchaCorrect()) {
-                this.errorMessage.set('Incorrect captcha answer.');
+                this.errorMessage.set('Wrong captcha. Please re-enter.');
+                this.generateCaptcha(); // regenerate on failure
                 return;
             }
             // show loading spinner
