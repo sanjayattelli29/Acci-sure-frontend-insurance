@@ -318,8 +318,13 @@
                                 <div class="md:col-span-2">
                                     <app-google-places-input [label]="'Incident Location'"
                                         [placeholder]="'Where did it happen?'" [types]="['geocode', 'establishment']"
-                                        (valueSelected)="onLocationSelected($event)">
+                                        (valueSelected)="onLocationSelected($event)"
+                                        (locationSelected)="onLocationSelected($event)">
                                     </app-google-places-input>
+
+                                    <app-location-map [lat]="selectedLocationCoords()?.lat ?? null"
+                                        [lng]="selectedLocationCoords()?.lng ?? null">
+                                    </app-location-map>
                                 </div>
 
                                 <div class="space-y-2 md:col-span-2">

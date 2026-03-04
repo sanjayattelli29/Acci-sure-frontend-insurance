@@ -50,16 +50,22 @@
                         </td>
 
                         <td class="px-6 py-4">
-                            <span class="badge badge-warning">
+                            <span [class]="'badge ' + (request.status === 'Pending' ? 'badge-warning' : request.status === 'Assigned' ? 'badge-info' : 'badge-success')">
                                 ● {{ request.status }}
                             </span>
                         </td>
 
                         <td class="px-6 py-4 text-center">
-                            <button (click)="assign(request.id)"
-                                class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter">
-                                Assign Agent
-                            </button>
+                            @if (request.status === 'Pending') {
+                                <button (click)="assign(request.id)"
+                                    class="text-brand-orange hover:text-orange-700 font-black uppercase tracking-tighter">
+                                    Assign Agent
+                                </button>
+                            } @else {
+                                <span class="text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                                    {{ request.status === 'Assigned' ? 'Agent Linked' : 'Processed' }}
+                                </span>
+                            }
                         </td>
 
                         <td class="px-6 py-4 text-right">

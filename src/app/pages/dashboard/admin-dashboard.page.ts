@@ -10,9 +10,10 @@ import { Chart, registerables } from 'chart.js';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+// register chartjs for analytics graphs
 Chart.register(...registerables);
 
-/* 🔹 Import All Sections */
+// import all admin dashboard sub-sections as components
 import { DashboardSectionComponent } from './admin-components/dashboard-section.component';
 import { AgentsSectionComponent } from './admin-components/agents-section.component';
 import { OfficersSectionComponent } from './admin-components/officers-section.component';
@@ -24,6 +25,9 @@ import { AnalysisCommandsSectionComponent } from './admin-components/analysis-co
 import { AnalysisPaymentsSectionComponent } from './admin-components/analysis-payments-section.component';
 import { EmailAutomationSectionComponent } from './admin-components/email-automation-section.component';
 
+// admin dashboard main component
+// comprehensive admin panel for managing agents officers policies claims
+// includes analytics charts email automation and data export
 @Component({
     selector: 'app-admin-dashboard',
     standalone: true,
@@ -45,59 +49,61 @@ import { EmailAutomationSectionComponent } from './admin-components/email-automa
     templateUrl: './admin-dashboard.page.html'
 })
 export class AdminDashboardPage implements OnInit {
+    // inject all services needed for admin operations
     private adminService = inject(AdminService);
     private authService = inject(AuthService);
     private claimService = inject(ClaimService);
     private policyService = inject(PolicyService);
     private fb = inject(FormBuilder);
 
-    // User Info
+    // logged in admin user info
     user = this.authService.getUser();
 
-    // Signals for Data
-    activeSection = signal<string>('dashboard');
-    sidebarOpen = signal<boolean>(false);
-    adminStats = signal<any>(null);
-    policyRequests = signal<any[]>([]);
-    pendingClaims = signal<any[]>([]);
-    allUsers = signal<any[]>([]);
-    allClaims = signal<any[]>([]);
-    unifiedPayments = signal<any[]>([]);
-    allStaff = signal<any[]>([]); // New signal for Agents/Officers
-    agents = signal<any[]>([]);
-    officers = signal<any[]>([]);
-    agentsWithLoad = signal<any[]>([]);
-    claimOfficersWithWorkload = signal<any[]>([]);
-    config = signal<any>(null);
+    // signals for data from backend
+    activeSection = signal<string>('dashboard'); // current tab
+    sidebarOpen = signal<boolean>(false); // mobile nav
+    adminStats = signal<any>(null); // dashboard summary stats
+    policyRequests = signal<any[]>([]); // pending policy applications
+    pendingClaims = signal<any[]>([]); // claims waiting for officer assignment
+    allUsers = signal<any[]>([]); // all users for analytics
+    allClaims = signal<any[]>([]); // all claims for analytics
+    unifiedPayments = signal<any[]>([]); // all payments from backend
+    allStaff = signal<any[]>([]); // agents and officers combined
+    agents = signal<any[]>([]); // agent users
+    officers = signal<any[]>([]); // claim officer users
+    agentsWithLoad = signal<any[]>([]); // agents with workload count
+    claimOfficersWithWorkload = signal<any[]>([]); // officers with workload
+    config = signal<any>(null); // policy configuration
 
-    // UI State Signals
+    // ui state signals for loading and messages
     isLoading = signal<boolean>(false);
     isAssigning = signal<boolean>(false);
     message = signal<{ text: string, type: 'success' | 'error' | '' }>({ text: '', type: '' });
 
-    // Chart instances
+    // chartjs instances for analytics graphs
     private charts: Chart[] = [];
 
-    // Modal Signals
-    showAssignModal = signal<boolean>(false);
-    showAssignOfficerModal = signal<boolean>(false);
-    showInvoiceModal = signal<boolean>(false);
-    showUnifiedDetail = signal<boolean>(false);
-    showEmailModal = signal<boolean>(false);
+    // modal state signals
+    showAssignModal = signal<boolean>(false); // assign agent modal
+    showAssignOfficerModal = signal<boolean>(false); // assign officer modal
+    showInvoiceModal = signal<boolean>(false); // payment invoice
+    showUnifiedDetail = signal<boolean>(false); // payment details
+    showEmailModal = signal<boolean>(false); // email compose modal
     selectedUnifiedDetail = signal<any>(null);
     selectedPayment = signal<any>(null);
     selectedUserForEmail = signal<any>(null);
     selectedApplicationId = signal<string | null>(null);
     selectedClaimId = signal<string | null>(null);
     isSendingEmail = signal<boolean>(false);
-    includeCredentials = signal<boolean>(false); // Toggle for credentials
+    includeCredentials = signal<boolean>(false); // include password in email
 
-    // Forms
+    // reactive forms for creating users and sending emails
     agentForm: FormGroup;
     officerForm: FormGroup;
     emailForm: FormGroup;
 
     constructor() {
+        // agent creation form with validation
         this.agentForm = this.fb.group({
             name: ['', Validators.required],
             emailId: ['', [Validators.required, Validators.email]],
@@ -105,6 +111,7 @@ export class AdminDashboardPage implements OnInit {
             bankAccountNumber: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]]
         });
 
+        // officer creation form
         this.officerForm = this.fb.group({
             name: ['', Validators.required],
             emailId: ['', [Validators.required, Validators.email]],
@@ -112,6 +119,7 @@ export class AdminDashboardPage implements OnInit {
             bankAccountNumber: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]]
         });
 
+        // email compose form
         this.emailForm = this.fb.group({
             toEmail: ['', [Validators.required, Validators.email]],
             subject: ['', Validators.required],
@@ -119,10 +127,12 @@ export class AdminDashboardPage implements OnInit {
         });
     }
 
+    // load all dashboard data on init from backend
     ngOnInit() {
         this.loadInitialData();
     }
 
+    // load all required data from backend via services
     loadInitialData() {
         this.loadAdminStats();
         this.loadPolicyRequests();
@@ -134,6 +144,7 @@ export class AdminDashboardPage implements OnInit {
         this.loadUnifiedPayments();
     }
 
+    // load policy configuration from backend
     loadConfig() {
         this.policyService.getConfiguration().subscribe({
             next: (data) => this.config.set(data),
@@ -141,10 +152,12 @@ export class AdminDashboardPage implements OnInit {
         });
     }
 
+    // switch between dashboard sections
     setSection(section: string) {
         this.activeSection.set(section);
         this.message.set({ text: '', type: '' });
 
+        // init charts when viewing dashboard section
         if (section === 'dashboard') {
             this.initCharts();
         } else {

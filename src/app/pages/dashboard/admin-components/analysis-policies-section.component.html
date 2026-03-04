@@ -68,9 +68,10 @@
                         <td class="px-8 py-6">
                             <span
                                 [class]="'px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ' +
-                                (p.status === 'Approved'
-                                    ? 'bg-emerald-50 text-emerald-600'
-                                    : 'bg-brand-orange/10 text-brand-orange')">
+                                (p.status === 'Active' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 
+                                 p.status === 'Approved' ? 'bg-indigo-50 text-indigo-600 border border-indigo-100' :
+                                 p.status === 'Pending' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
+                                 'bg-slate-50 text-slate-600 border border-slate-100')">
                                 ● {{ p.status }}
                             </span>
                         </td>

@@ -4,6 +4,8 @@ import { NotificationService, Notification } from '../../services/notification.s
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
+// notification panel component shows alerts dropdown
+// displays real-time notifications via signalr from backend
 @Component({
     selector: 'app-notification-panel',
     standalone: true,
@@ -12,27 +14,34 @@ import { Router } from '@angular/router';
     styleUrl: './notification-panel.component.css'
 })
 export class NotificationPanelComponent implements OnInit {
+    // inject services
     public notificationService = inject(NotificationService);
     private authService = inject(AuthService);
     private router = inject(Router);
 
+    // optional role input to filter notifications by portal
     @Input() portalRole?: string;
+    // panel open/close state
     isOpen = signal(false);
 
+    // init signalr connection on component load
     ngOnInit() {
-        // Start connection with portal-specific role or fallback to user role
+        // use portal specific role or fallback to user role
         const user = this.authService.getUser();
         const roleToUse = this.portalRole || user.role;
 
+        // start signalr connection to receive real-time notifications
         if (roleToUse) {
             this.notificationService.startConnection(roleToUse);
         }
     }
 
+    // toggle notification panel open/closed
     togglePanel() {
         this.isOpen.update(v => !v);
     }
 
+    // close panel when clicking outside
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent) {
         const target = event.target as HTMLElement;
@@ -41,26 +50,29 @@ export class NotificationPanelComponent implements OnInit {
         }
     }
 
+    // mark single notification as read via backend api
     markAsRead(id: string, event: Event) {
         event.stopPropagation();
         this.notificationService.markAsRead(id).subscribe();
     }
 
+    // handle notification click to navigate to related page
     handleNotificationClick(notification: Notification, event: Event) {
         event.stopPropagation();
 
-        // 1. Mark as read
+        // mark as read first
         if (!notification.isRead) {
             this.notificationService.markAsRead(notification.id).subscribe();
         }
 
-        // 2. Parse target and navigate
+        // parse notification type and extract id for navigation
         const rawType = notification.notificationType || '';
-        // Remove role prefix if present (e.g., ADM:Policy:ID -> Policy:ID)
+        // remove role prefix like ADM: AGENT: from type
         const type = rawType.includes(':') && ['ADM', 'AGENT', 'CUST', 'OFF'].includes(rawType.split(':')[0])
             ? rawType.substring(rawType.indexOf(':') + 1)
             : rawType;
 
+        // navigate based on notification type
         if (type.startsWith('Policy:')) {
             const policyId = type.split(':')[1];
             if (policyId && policyId !== 'undefined') {
@@ -76,10 +88,12 @@ export class NotificationPanelComponent implements OnInit {
         }
     }
 
+    // mark all notifications as read via backend
     markAllAsRead() {
         this.notificationService.markAllAsRead().subscribe();
     }
 
+    // convert timestamp to relative time like 5m ago
     getRelativeTime(dateStr: string): string {
         const now = new Date();
         const date = new Date(dateStr);
@@ -91,6 +105,7 @@ export class NotificationPanelComponent implements OnInit {
         return date.toLocaleDateString();
     }
 
+    // format notification type for display header
     getFormattedHeader(type: string): string {
         if (!type) return 'NOTIFICATION';
         const t = type.toUpperCase();

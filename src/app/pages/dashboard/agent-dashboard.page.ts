@@ -14,8 +14,11 @@ import { Chart, registerables } from 'chart.js';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+// register chartjs for commission analytics
 Chart.register(...registerables);
 
+// agent dashboard for insurance agents
+// manages policy requests commission tracking customer claims
 @Component({
     selector: 'app-agent-dashboard',
     standalone: true,
@@ -23,11 +26,14 @@ Chart.register(...registerables);
     templateUrl: './agent-dashboard.page.html'
 })
 export class AgentDashboardPage implements OnInit {
+    // inject services for agent operations
     private authService = inject(AuthService);
     private agentService = inject(AgentService);
 
+    // expose JSON for template parsing
     protected readonly JSON = JSON;
 
+    // parse json strings from backend safely
     parseJson(json: string | null | undefined): any {
         try {
             return json ? JSON.parse(json) : null;
@@ -36,18 +42,23 @@ export class AgentDashboardPage implements OnInit {
         }
     }
 
+    // logged in agent user
     user = this.authService.getUser();
+    // active dashboard section
     activeSection = signal('dashboard');
+    // mobile sidebar toggle
     sidebarOpen = signal(false);
+    // more service injections
     private claimService = inject(ClaimService);
     private policyService = inject(PolicyService);
     private chatService = inject(ChatService);
     private adminService = inject(AdminService);
     private router = inject(Router);
+    // ui state
     isLoading = signal(false);
     message = signal({ type: '', text: '' });
 
-    // Data
+    // agent dashboard data from backend
     stats: any = {
         pendingReview: 0,
         totalCommission: 0,
@@ -58,15 +69,15 @@ export class AgentDashboardPage implements OnInit {
         bestTier: '',
         totalPremium: 0
     };
-    analytics = signal<any>(null);
-    policyRequests = signal<any[]>([]);
-    commissionData = signal<any>({ totalCommission: 0, activePolicies: [] });
-    customerClaims = signal<any[]>([]);
-    myCustomers = signal<any[]>([]);
-    myChats = signal<any[]>([]);
-    unifiedPayments = signal<any[]>([]);
+    analytics = signal<any>(null); // analytics data from backend
+    policyRequests = signal<any[]>([]); // pending policy applications to review
+    commissionData = signal<any>({ totalCommission: 0, activePolicies: [] }); // commission earnings
+    customerClaims = signal<any[]>([]); // claims from agent's customers
+    myCustomers = signal<any[]>([]); // list of assigned customers
+    myChats = signal<any[]>([]); // chat rooms with customers
+    unifiedPayments = signal<any[]>([]); // payment records
 
-    // UI State for Modal
+    // modal state for viewing details
     showDetailModal = signal(false);
     showClaimModal = signal(false);
     showUnifiedDetail = signal(false);
@@ -77,13 +88,15 @@ export class AgentDashboardPage implements OnInit {
     showInvoiceModal = signal(false);
     isProcessing = signal(false);
 
-    // Chart instances
+    // chartjs instances for analytics
     private charts: Chart[] = [];
 
+    // load all agent data on page init
     ngOnInit() {
         this.loadData();
     }
 
+    // fetch all data from backend via services
     loadData() {
         this.loadPolicyRequests();
         this.loadCommissionStats();
@@ -94,6 +107,7 @@ export class AgentDashboardPage implements OnInit {
         this.loadUnifiedPayments();
     }
 
+    // load analytics data from backend for charts
     loadAnalytics() {
         this.agentService.getAnalytics().subscribe({
             next: (data) => {

@@ -144,8 +144,13 @@
 
             <!-- Incident Location Section -->
             <app-google-places-input [label]="'Incident Location'" [placeholder]="'Where did it happen?'"
-                [types]="['geocode', 'establishment']" (valueSelected)="onLocationSelected($event)">
+                [types]="['geocode', 'establishment']" (valueSelected)="onLocationSelected($event)"
+                (locationSelected)="onLocationSelected($event)">
             </app-google-places-input>
+
+            <app-location-map [lat]="selectedLocationCoords()?.lat ?? null"
+                [lng]="selectedLocationCoords()?.lng ?? null">
+            </app-location-map>
 
             <div class="form-group">
                 <label>Description of Incident</label>

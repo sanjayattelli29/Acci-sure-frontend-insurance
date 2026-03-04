@@ -12,19 +12,22 @@ import { UserOptions } from 'jspdf-autotable';
 import { NotificationPanelComponent } from '../../components/notification-panel/notification-panel.component';
 import { HttpClient } from '@angular/common/http';
 
-// n8n webhook URL
+// n8n webhook for ai claim insights
 const N8N_WEBHOOK_URL = 'https://nextglidesol.app.n8n.cloud/webhook/claim-ai-insights';
 
-// AI Insights response shape expected back from n8n
+// ai insights response from n8n webhook
 interface AIInsightsResponse {
-    summaryPoints: string[];   // exactly 5 bullet points
-    riskScore: number;         // 0–100
+    summaryPoints: string[];   // 5 bullet points
+    riskScore: number;         // 0-100 risk assessment
     suggestedAmountMin: number;
     suggestedAmountMax: number;
 }
 
+// register chartjs for claim stats graphs
 Chart.register(...registerables);
 
+// claims officer dashboard for reviewing claims
+// includes ai assistance for claim assessment
 @Component({
     selector: 'app-claims-officer-dashboard',
     standalone: true,
@@ -32,25 +35,28 @@ Chart.register(...registerables);
     templateUrl: './claims-officer-dashboard.page.html'
 })
 export class ClaimsOfficerDashboardPage implements OnInit {
+    // inject services for claim operations
     private authService = inject(AuthService);
     private claimService = inject(ClaimService);
     private policyService = inject(PolicyService);
     private adminService = inject(AdminService);
-    private http = inject(HttpClient);
+    private http = inject(HttpClient); // for ai webhook call
 
+    // logged in officer user
     user = this.authService.getUser();
+    // claims assigned to officer from backend
     myRequests = signal<any[]>([]);
     isLoading = signal(false);
-    config = signal<any>(null);
+    config = signal<any>(null); // policy config
     activeSection = signal('dashboard');
     sidebarOpen = signal(false);
 
-    // Payments Dashboard signals
+    // payment records signals
     unifiedPayments = signal<any[]>([]);
     selectedPayment = signal<any | null>(null);
     showInvoiceModal = signal(false);
 
-    // Stats
+    // computed stats from claims data
     stats = computed(() => {
         const requests = this.myRequests();
         return {
@@ -61,7 +67,7 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         };
     });
 
-    // Review Modal State
+    // claim review modal state
     selectedClaim = signal<any | null>(null);
     showReviewModal = signal(false);
     reviewForm = {
@@ -70,23 +76,25 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         approvedAmount: 0
     };
 
-    // History Detail State
+    // claim history detail modal
     showHistoryDetailModal = signal(false);
     selectedHistoryClaim = signal<any | null>(null);
 
-    // AI Insights State
+    // ai insights state for claim assessment from n8n
     isAILoading = signal(false);
     aiInsights = signal<AIInsightsResponse | null>(null);
     aiError = signal<string | null>(null);
 
-    // Chart instances
+    // chartjs instances
     private charts: Chart[] = [];
 
+    // load claims on init
     ngOnInit() {
         this.loadRequests();
         this.loadConfig();
     }
 
+    // load policy configuration from backend
     loadConfig() {
         this.policyService.getConfiguration().subscribe({
             next: (data) => this.config.set(data),
@@ -94,6 +102,7 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         });
     }
 
+    // load claims assigned to this officer from backend
     loadRequests() {
         this.isLoading.set(true);
         this.claimService.getOfficerRequests().subscribe({

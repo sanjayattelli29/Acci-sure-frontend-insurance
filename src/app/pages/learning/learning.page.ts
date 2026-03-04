@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+// learning page with insurance info and guides
+// static informational page for users
 @Component({
     selector: 'app-learning',
     standalone: true,
@@ -12,10 +14,11 @@ import { RouterModule } from '@angular/router';
 export class LearningPage {
     constructor() { }
 
-    // Branding and common data can be defined here if needed
+    // brand names for display in template
     public brandNameLong = 'AcciSure Insurance';
     public brandNameShort = 'AcciSure';
 
+    // go back to previous page
     goBack() {
         window.history.back();
     }
