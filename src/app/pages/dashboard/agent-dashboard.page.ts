@@ -529,13 +529,13 @@ export class AgentDashboardPage implements OnInit {
             const payload = {
                 customer: {
                     fullName: policy.fullDetails?.applicant?.fullName || policy.user?.fullName || 'N/A',
-                    age: policy.fullDetails?.applicant?.age || 0,
-                    profession: policy.fullDetails?.applicant?.profession || 'Standard',
-                    annualIncome: policy.fullDetails?.applicant?.annualIncome || 0,
-                    smokingHabit: policy.fullDetails?.applicant?.smokingHabit || 'None',
-                    alcoholHabit: policy.fullDetails?.applicant?.alcoholHabit || 'None',
-                    vehicleType: policy.fullDetails?.applicant?.vehicleType || 'None',
-                    travelKmPerMonth: policy.fullDetails?.applicant?.travelKmPerMonth || 0
+                    age: policy.fullDetails?.applicant?.age || policy.age || policy?.user?.age || 0,
+                    profession: policy.fullDetails?.applicant?.profession || policy.profession || 'Standard',
+                    annualIncome: policy.fullDetails?.applicant?.annualIncome || policy.annualIncome || policy?.user?.annualIncome || 0,
+                    smokingHabit: policy.fullDetails?.applicant?.smokingHabit || policy.smokingHabit || 'None',
+                    alcoholHabit: policy.fullDetails?.applicant?.alcoholHabit || policy.alcoholHabit || 'None',
+                    vehicleType: policy.fullDetails?.applicant?.vehicleType || policy.vehicleType || 'None',
+                    travelKmPerMonth: policy.fullDetails?.applicant?.travelKmPerMonth || policy.travelKmPerMonth || 0
                 },
                 policy: {
                     policyNumber: policy.id || 'N/A',
@@ -1030,8 +1030,12 @@ export class AgentDashboardPage implements OnInit {
                 <div style="margin-top: 25px; padding: 20px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
                     <h4 style="margin: 0 0 15px 0; color: #1e293b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Payment & Policy Breakdown</h4>
                     <div style="margin-bottom: 10px;">
-                        <span style="color: #64748b; font-size: 12px;">Next Payment:</span>
-                        <strong style="display: block; color: #1e293b; font-size: 16px;">₹${cust.nextPaymentAmount || 0}</strong>
+                        <span style="color: #64748b; font-size: 12px;">Premium Amount:</span>
+                        <strong style="display: block; color: #1e293b; font-size: 16px;">₹${cust.calculatedPremium?.toLocaleString() || cust.monthlyPremium?.toLocaleString() || cust.nextPaymentAmount?.toLocaleString() || 0}</strong>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span style="color: #64748b; font-size: 12px;">Payment Mode:</span>
+                        <strong style="display: block; color: #1e293b; font-size: 14px; text-transform: capitalize;">${cust.paymentMode || 'Monthly'}</strong>
                     </div>
                     <div style="margin-bottom: 10px;">
                         <span style="color: #64748b; font-size: 12px;">Due Date:</span>
@@ -1078,12 +1082,12 @@ export class AgentDashboardPage implements OnInit {
             <div class="card">
                 <h4 style="margin: 0 0 20px 0; color: #1e293b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">Policy Highlights</h4>
                 <div class="grid">
-                    <div class="col"><span class="label">Policy Type</span><div class="value">${cust.policyCategory}</div></div>
-                    <div class="col"><span class="label">Tier / Plan</span><div class="value">${cust.tierId}</div></div>
-                    <div class="col"><span class="label">Policy Number</span><div class="value">${cust.policyNumber || 'N/A'}</div></div>
-                    <div class="col"><span class="label">Whole Coverage</span><div class="value">₹${cust.totalCoverageAmount?.toLocaleString() || 0}</div></div>
-                    <div class="col"><span class="label">Current Coverage</span><div class="value">₹${cust.remainingCoverageAmount?.toLocaleString() || (cust.totalCoverageAmount?.toLocaleString() || 0)}</div></div>
-                    <div class="col"><span class="label">Status</span><div class="value" style="color: #10b981;">● ${cust.status}</div></div>
+                    <div class="col"><span class="label">Policy Type</span><div class="value">${cust.policyCategory || 'Standard'}</div></div>
+                    <div class="col"><span class="label">Tier / Plan</span><div class="value">${cust.tierId || 'Basic'}</div></div>
+                    <div class="col"><span class="label">Policy Number</span><div class="value">${cust.policyNumber || (cust.id ? 'PL-' + cust.id.substring(0, 8).toUpperCase() : 'N/A')}</div></div>
+                    <div class="col"><span class="label">Whole Coverage</span><div class="value">₹${cust.totalCoverageAmount?.toLocaleString() || cust.coverageAmount?.toLocaleString() || 0}</div></div>
+                    <div class="col"><span class="label">Current Coverage</span><div class="value">₹${cust.remainingCoverageAmount?.toLocaleString() || (cust.totalCoverageAmount?.toLocaleString() || cust.coverageAmount?.toLocaleString() || 0)}</div></div>
+                    <div class="col"><span class="label">Status</span><div class="value" style="color: #10b981;">● ${cust.status || 'Active'}</div></div>
                 </div>
             </div>
 

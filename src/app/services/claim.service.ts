@@ -28,7 +28,7 @@ export class ClaimService {
     // Admin functions - get claims waiting for officer assignment
     // backend fetches from claims table where status pending
     getPendingClaims(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/admin/pending?t=${Date.now()}`);
+        return this.http.get<any[]>(`${this.apiUrl}/admin/pending`);
     }
 
     // get all claim officers from users table for assignment

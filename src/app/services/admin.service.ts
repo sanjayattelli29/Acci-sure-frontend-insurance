@@ -40,7 +40,7 @@ export class AdminService {
 
     // get pending policy applications waiting for agent assignment
     getPolicyRequests(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/policy-requests?t=${Date.now()}`);
+        return this.http.get<any[]>(`${this.apiUrl}/policy-requests`);
     }
 
     // get agents with their workload count for assignment

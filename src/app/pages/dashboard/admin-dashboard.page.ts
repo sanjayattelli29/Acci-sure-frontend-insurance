@@ -138,6 +138,8 @@ export class AdminDashboardPage implements OnInit {
     loadInitialData() {
         this.loadAdminStats();
         this.loadConfig();
+        this.loadPolicyRequests();
+        this.loadPendingClaims();
         // Load only what is needed immediately. Other tabs will lazy-load via setSection().
         // Chart data will be loaded lazily to respect performance
     }
@@ -188,7 +190,7 @@ export class AdminDashboardPage implements OnInit {
         this.adminService.getAdminStats().subscribe({
             next: (stats) => {
                 this.adminStats.set(stats);
-                this.initCharts();
+                if (this.activeSection() === 'dashboard') this.initCharts();
             },
             error: (err) => console.error('Error loading stats:', err)
         });
@@ -198,7 +200,7 @@ export class AdminDashboardPage implements OnInit {
         this.adminService.getPolicyRequests().subscribe({
             next: (requests) => {
                 this.policyRequests.set(requests);
-                this.initCharts();
+                if (this.activeSection() === 'dashboard') this.initCharts();
             },
             error: (err) => console.error('Error loading policy requests:', err)
         });
@@ -219,7 +221,7 @@ export class AdminDashboardPage implements OnInit {
                 if (this.activeSection() === 'email-automation') {
                     this.allUsers.set(users.filter(u => u.role !== 'Customer'));
                 }
-                this.initCharts();
+                if (this.activeSection() === 'dashboard') this.initCharts();
             },
             error: (err) => console.error('Error loading users:', err)
         });
@@ -229,7 +231,7 @@ export class AdminDashboardPage implements OnInit {
         this.adminService.getAllClaims().subscribe({
             next: (claims) => {
                 this.allClaims.set(claims);
-                this.initCharts();
+                if (this.activeSection() === 'dashboard') this.initCharts();
             },
             error: (err) => console.error('Error loading all claims:', err)
         });
@@ -246,7 +248,7 @@ export class AdminDashboardPage implements OnInit {
         this.adminService.getAgents().subscribe({
             next: (agents) => {
                 this.agents.set(agents);
-                this.initCharts();
+                if (this.activeSection() === 'dashboard') this.initCharts();
             },
             error: (err) => console.error('Error loading agents:', err)
         });
@@ -256,7 +258,7 @@ export class AdminDashboardPage implements OnInit {
         this.adminService.getClaimOfficers().subscribe({
             next: (officers) => {
                 this.officers.set(officers);
-                this.initCharts();
+                if (this.activeSection() === 'dashboard') this.initCharts();
             },
             error: (err) => console.error('Error loading officers:', err)
         });

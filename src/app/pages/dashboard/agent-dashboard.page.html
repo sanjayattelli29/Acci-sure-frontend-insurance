@@ -1452,18 +1452,23 @@
                                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Applicant Age</p>
                                     <p class="text-sm font-semibold text-slate-700">{{
-                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.age || '--' }} Yrs</p>
+                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.age ||
+                                        selectedUnifiedDetail().policy?.age ||
+                                        selectedUnifiedDetail().customer?.age || '--' }} Yrs</p>
                                 </div>
                                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Profession</p>
                                     <p class="text-sm font-semibold text-slate-700 truncate">{{
-                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.profession || 'Standard'
+                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.profession ||
+                                        selectedUnifiedDetail().policy?.profession || 'Standard'
                                         }}</p>
                                 </div>
                                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Annual Income (₹)</p>
                                     <p class="text-sm font-semibold text-slate-700 truncate">₹{{
-                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.annualIncome || '0'
+                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.annualIncome ||
+                                        selectedUnifiedDetail().policy?.annualIncome ||
+                                        selectedUnifiedDetail().customer?.annualIncome || '0'
                                         }}</p>
                                 </div>
                             </div>
@@ -1471,27 +1476,29 @@
                                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Smoking Habit</p>
                                     <span class="text-xs font-bold uppercase px-2 py-1 rounded-md mt-1 inline-block"
-                                        [class]="selectedUnifiedDetail().policy?.fullDetails?.applicant?.smokingHabit === 'NONSMOKER' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'">
-                                        {{ selectedUnifiedDetail().policy?.fullDetails?.applicant?.smokingHabit || 'NOT
-                                        LISTED' }}
+                                        [class]="(selectedUnifiedDetail().policy?.fullDetails?.applicant?.smokingHabit || selectedUnifiedDetail().policy?.smokingHabit) === 'NONSMOKER' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'">
+                                        {{ selectedUnifiedDetail().policy?.fullDetails?.applicant?.smokingHabit ||
+                                        selectedUnifiedDetail().policy?.smokingHabit || 'NOT LISTED' }}
                                     </span>
                                 </div>
                                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Alcohol Habit</p>
                                     <p class="text-sm font-semibold text-slate-700 mt-1 uppercase">{{
-                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.alcoholHabit || 'NOT
-                                        LISTED' }}</p>
+                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.alcoholHabit ||
+                                        selectedUnifiedDetail().policy?.alcoholHabit || 'NOT LISTED' }}</p>
                                 </div>
                                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Vehicle Type</p>
                                     <p class="text-sm font-semibold text-slate-700 uppercase">{{
-                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.vehicleType || 'None'
+                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.vehicleType ||
+                                        selectedUnifiedDetail().policy?.vehicleType || 'None'
                                         }}</p>
                                 </div>
                                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                     <p class="text-[10px] text-slate-400 font-bold uppercase">Avg Travel</p>
                                     <p class="text-sm font-bold text-brand-navy truncate">{{
-                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.travelKmPerMonth || 0 }}
+                                        selectedUnifiedDetail().policy?.fullDetails?.applicant?.travelKmPerMonth ||
+                                        selectedUnifiedDetail().policy?.travelKmPerMonth || 0 }}
                                         KM <span
                                             class="text-[8px] text-slate-400 font-black uppercase tracking-tighter">/
                                             Month</span></p>
@@ -1626,241 +1633,254 @@
 
                     </div>
 
-                    <!-- Claim Incident Map (If it's a claim) -->
-                    @if (selectedUnifiedDetail().claim) {
-                    <div class="mt-12 pt-8 border-t border-slate-100 space-y-6">
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Incident Spatial Forensics
-                        </h4>
-                        <div class="bg-rose-50/10 p-6 rounded-3xl border border-rose-100/50">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                                <div class="space-y-4">
-                                    <div>
-                                        <p class="text-[9px] text-slate-400 font-black uppercase">Reported Address</p>
-                                        <p class="text-sm font-bold text-slate-700">{{
-                                            selectedUnifiedDetail().claim.incidentLocation }}</p>
+                    <!-- Right Column -->
+                    <div class="space-y-8">
+                        <!-- Claim Incident Map (If it's a claim) -->
+                        @if (selectedUnifiedDetail().claim) {
+                        <div class="space-y-6">
+                            <h4
+                                class="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-50 pb-2">
+                                Incident Spatial Forensics
+                            </h4>
+                            <div class="bg-rose-50/10 p-6 rounded-3xl border border-rose-100/50">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-[9px] text-slate-400 font-black uppercase">Reported Address
+                                            </p>
+                                            <p class="text-sm font-bold text-slate-700">{{
+                                                selectedUnifiedDetail().claim.incidentLocation }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[9px] text-slate-400 font-black uppercase">Hospital Facility
+                                            </p>
+                                            <p class="text-sm font-bold text-slate-700">{{
+                                                selectedUnifiedDetail().claim.hospitalName }}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p class="text-[9px] text-slate-400 font-black uppercase">Hospital Facility</p>
-                                        <p class="text-sm font-bold text-slate-700">{{
-                                            selectedUnifiedDetail().claim.hospitalName }}</p>
+                                    <div
+                                        class="h-48 rounded-2xl overflow-hidden border border-rose-200 shadow-lg shadow-rose-100">
+                                        <app-location-map [lat]="selectedUnifiedDetail().claim.latitude"
+                                            [lng]="selectedUnifiedDetail().claim.longitude"
+                                            [address]="selectedUnifiedDetail().claim.incidentLocation">
+                                        </app-location-map>
                                     </div>
-                                </div>
-                                <div
-                                    class="h-48 rounded-2xl overflow-hidden border border-rose-200 shadow-lg shadow-rose-100">
-                                    <app-location-map [lat]="selectedUnifiedDetail().claim.latitude"
-                                        [lng]="selectedUnifiedDetail().claim.longitude"
-                                        [address]="selectedUnifiedDetail().claim.incidentLocation">
-                                    </app-location-map>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    }
+                        }
 
 
-                    <!-- 4. Digital Evidence (Documents) -->
-                    <div class="mt-8 pt-4 border-t border-slate-100 space-y-6">
-                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6">
-                            Verification Vault & Assets
-                        </h4>
+                        <!-- 4. Digital Evidence (Documents) -->
+                        <div class="space-y-6">
+                            <h4
+                                class="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-50 pb-2">
+                                Verification Vault & Assets
+                            </h4>
 
 
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                            @if((selectedUnifiedDetail().policy?.documents?.length || 0) > 0 ||
-                            (selectedUnifiedDetail().claim?.documents?.length || 0) > 0) {
-                            @for (doc of selectedUnifiedDetail().policy?.documents; track doc.id) {
-                            <a [href]="doc.fileUrl" target="_blank"
-                                class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between group hover:border-brand-orange/30 transition-all">
-                                <div class="flex items-center gap-3 overflow-hidden">
-                                    <div
-                                        class="w-10 h-10 bg-brand-orange/5 text-brand-orange rounded-xl flex items-center justify-center shrink-0">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                @if((selectedUnifiedDetail().policy?.documents?.length || 0) > 0 ||
+                                (selectedUnifiedDetail().claim?.documents?.length || 0) > 0) {
+                                @for (doc of selectedUnifiedDetail().policy?.documents; track doc.id) {
+                                <a [href]="doc.fileUrl" target="_blank"
+                                    class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between group hover:border-brand-orange/30 transition-all">
+                                    <div class="flex items-center gap-3 overflow-hidden">
+                                        <div
+                                            class="w-10 h-10 bg-brand-orange/5 text-brand-orange rounded-xl flex items-center justify-center shrink-0">
+                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <p class="text-[10px] font-black text-brand-navy truncate uppercase">{{
+                                                doc.documentType }}</p>
+                                            <p class="text-[8px] text-slate-400 font-bold truncate">{{ doc.fileName }}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="overflow-hidden">
-                                        <p class="text-[10px] font-black text-brand-navy truncate uppercase">{{
-                                            doc.documentType }}</p>
-                                        <p class="text-[8px] text-slate-400 font-bold truncate">{{ doc.fileName }}</p>
-                                    </div>
-                                </div>
-                                <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-orange transition-colors"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                            </a>
-                            }
-                            @for (doc of selectedUnifiedDetail().claim?.documents; track doc.id) {
-                            <a [href]="doc.fileUrl" target="_blank"
-                                class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between group hover:border-brand-orange/30 transition-all">
-                                <div class="flex items-center gap-3 overflow-hidden">
-                                    <div
-                                        class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                    </div>
-                                    <div class="overflow-hidden">
-                                        <p class="text-[10px] font-black text-brand-navy truncate uppercase">{{
-                                            doc.fileName
-                                            }}</p>
-                                        <p class="text-[8px] text-slate-400 font-bold truncate">Claim Evidence</p>
-                                    </div>
-                                </div>
-                                <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-orange transition-colors"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                            </a>
-                            }
-                            } @else {
-                            <div
-                                class="col-span-full p-12 text-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-100">
-                                <p class="text-xs text-slate-400 font-medium italic">No verification documents or
-                                    evidence
-                                    files found.</p>
-                            </div>
-                            }
-                        </div>
-
-                        <!-- 5. AI Intelligence Hub (Relocated & Enhanced) -->
-                        <div class="mt-10 space-y-6">
-                            <div class="flex justify-between items-center border-t border-slate-50 pt-8 mt-4">
-                                <div>
-                                    <h4 class="text-xs font-black text-indigo-400 uppercase tracking-[0.2em]">
-                                        AI Intelligence Hub
-                                    </h4>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Mistral-Large
-                                        Cognitive Risk Assessment</p>
-                                </div>
-                                <button (click)="runAIAnalysis(selectedUnifiedDetail()?.policy)"
-                                    [disabled]="isAILoading()"
-                                    class="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 disabled:opacity-50 transition-all shadow-xl shadow-indigo-100 text-[10px] font-black uppercase tracking-widest active:scale-95">
-                                    <svg class="w-4 h-4" [class.animate-spin]="isAILoading()" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.347.347a3.5 3.5 0 01-4.95 0l-.347-.347z" />
+                                    <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-orange transition-colors"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
-                                    {{ isAILoading() ? 'Processing Dataset...' : 'Run AI Analysis' }}
-                                </button>
+                                </a>
+                                }
+                                @for (doc of selectedUnifiedDetail().claim?.documents; track doc.id) {
+                                <a [href]="doc.fileUrl" target="_blank"
+                                    class="p-4 bg-white border border-slate-100 rounded-2xl flex items-center justify-between group hover:border-brand-orange/30 transition-all">
+                                    <div class="flex items-center gap-3 overflow-hidden">
+                                        <div
+                                            class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <p class="text-[10px] font-black text-brand-navy truncate uppercase">{{
+                                                doc.fileName
+                                                }}</p>
+                                            <p class="text-[8px] text-slate-400 font-bold truncate">Claim Evidence</p>
+                                        </div>
+                                    </div>
+                                    <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-orange transition-colors"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                                }
+                                } @else {
+                                <div
+                                    class="col-span-full p-12 text-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-100">
+                                    <p class="text-xs text-slate-400 font-medium italic">No verification documents or
+                                        evidence
+                                        files found.</p>
+                                </div>
+                                }
                             </div>
 
-                            @if (aiResult()) {
-                            <div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                <!-- Main Trust & Risk Card -->
-                                <div class="bg-indigo-50/40 border border-indigo-100 rounded-[2.5rem] p-8 shadow-sm">
-                                    <div class="flex items-center justify-between mb-8">
-                                        <div class="flex items-center gap-5">
-                                            <div
-                                                class="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-indigo-200 ring-4 ring-white">
-                                                <div class="text-2xl font-black">{{ aiResult().authenticityScore }}
+                            <!-- 5. AI Intelligence Hub (Relocated & Enhanced) -->
+                            <div class="mt-10 space-y-6">
+                                <div class="flex justify-between items-center border-t border-slate-50 pt-8 mt-4">
+                                    <div>
+                                        <h4 class="text-xs font-black text-indigo-400 uppercase tracking-[0.2em]">
+                                            AI Intelligence Hub
+                                        </h4>
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Mistral-Large
+                                            Cognitive Risk Assessment</p>
+                                    </div>
+                                    <button (click)="runAIAnalysis(selectedUnifiedDetail()?.policy)"
+                                        [disabled]="isAILoading()"
+                                        class="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 disabled:opacity-50 transition-all shadow-xl shadow-indigo-100 text-[10px] font-black uppercase tracking-widest active:scale-95">
+                                        <svg class="w-4 h-4" [class.animate-spin]="isAILoading()" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.347.347a3.5 3.5 0 01-4.95 0l-.347-.347z" />
+                                        </svg>
+                                        {{ isAILoading() ? 'Processing Application...' : 'Run AI Analysis' }}
+                                    </button>
+                                </div>
+
+                                @if (aiResult()) {
+                                <div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                    <!-- Main Trust & Risk Card -->
+                                    <div
+                                        class="bg-indigo-50/40 border border-indigo-100 rounded-[2.5rem] p-8 shadow-sm">
+                                        <div class="flex items-center justify-between mb-8">
+                                            <div class="flex items-center gap-5">
+                                                <div
+                                                    class="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-indigo-200 ring-4 ring-white">
+                                                    <div class="text-2xl font-black">{{ aiResult().authenticityScore }}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p
+                                                        class="text-[11px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-1">
+                                                        Authenticity Score</p>
+                                                    <h5 class="text-lg font-black text-indigo-900 tracking-tight">
+                                                        Verified
+                                                        Trust Analysis</h5>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <p
-                                                    class="text-[11px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-1">
-                                                    Authenticity Score</p>
-                                                <h5 class="text-lg font-black text-indigo-900 tracking-tight">Verified
-                                                    Trust Analysis</h5>
-                                            </div>
-                                        </div>
-                                        <div class="px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.1em] shadow-sm flex items-center gap-2"
-                                            [ngClass]="{
+                                            <div class="px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.1em] shadow-sm flex items-center gap-2"
+                                                [ngClass]="{
                                                 'bg-emerald-500 text-white': aiResult().overallRiskLevel === 'LOW',
                                                 'bg-amber-500 text-white': aiResult().overallRiskLevel === 'MEDIUM',
                                                 'bg-orange-600 text-white': aiResult().overallRiskLevel === 'HIGH',
                                                 'bg-rose-600 text-white': aiResult().overallRiskLevel === 'CRITICAL'
                                             }">
-                                            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                                            {{ aiResult().overallRiskLevel }} Risk Profile
+                                                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                                                {{ aiResult().overallRiskLevel }} Risk Profile
+                                            </div>
                                         </div>
+
+                                        <!-- Analysis Panels (Sequential Para Wise) -->
+                                        <div class="flex flex-col gap-6">
+                                            <div class="bg-white/60 p-6 rounded-3xl border border-white shadow-sm">
+                                                <p
+                                                    class="flex items-center gap-2 text-[10px] text-indigo-500 font-black uppercase tracking-widest mb-3">
+                                                    <span class="text-sm">🧠</span> AI Opinion
+                                                </p>
+                                                <p
+                                                    class="text-[12px] font-bold text-slate-600 leading-relaxed text-justify">
+                                                    {{ aiResult().aiOpinion }}</p>
+                                            </div>
+
+                                            <div class="bg-white/60 p-6 rounded-3xl border border-white shadow-sm">
+                                                <p
+                                                    class="flex items-center gap-2 text-[10px] text-amber-500 font-black uppercase tracking-widest mb-3">
+                                                    <span class="text-sm">📄</span> Document Health
+                                                </p>
+                                                <p
+                                                    class="text-[12px] font-bold text-slate-600 leading-relaxed text-justify">
+                                                    {{ aiResult().documentReport }}</p>
+                                            </div>
+
+                                            <div class="bg-white/60 p-6 rounded-3xl border border-white shadow-sm">
+                                                <p
+                                                    class="flex items-center gap-2 text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3">
+                                                    <span class="text-sm">📍</span> Location Analysis
+                                                </p>
+                                                <p
+                                                    class="text-[12px] font-bold text-slate-600 leading-relaxed text-justify">
+                                                    {{ aiResult().locationAnalysis }}</p>
+                                            </div>
+
+                                            <div class="bg-indigo-600 p-6 rounded-3xl shadow-lg shadow-indigo-200">
+                                                <p
+                                                    class="flex items-center gap-2 text-[10px] text-white font-black uppercase tracking-widest mb-4">
+                                                    <span class="text-sm">🎯</span> Strategic Recommendations
+                                                </p>
+                                                <ul class="space-y-4">
+                                                    @for (rec of aiResult().agentRecommendations; track rec) {
+                                                    <li
+                                                        class="flex items-start gap-4 text-[12px] font-bold text-white/90 leading-relaxed text-justify">
+                                                        <span
+                                                            class="shrink-0 w-6 h-6 bg-white/10 rounded-lg flex items-center justify-center text-white shadow-sm">⚡</span>
+                                                        <span>{{ rec }}</span>
+                                                    </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+
                                     </div>
-
-                                    <!-- Analysis Panels (Sequential Para Wise) -->
-                                    <div class="flex flex-col gap-6">
-                                        <div class="bg-white/60 p-6 rounded-3xl border border-white shadow-sm">
-                                            <p
-                                                class="flex items-center gap-2 text-[10px] text-indigo-500 font-black uppercase tracking-widest mb-3">
-                                                <span class="text-sm">🧠</span> AI Opinion
-                                            </p>
-                                            <p
-                                                class="text-[12px] font-bold text-slate-600 leading-relaxed text-justify">
-                                                {{ aiResult().aiOpinion }}</p>
-                                        </div>
-
-                                        <div class="bg-white/60 p-6 rounded-3xl border border-white shadow-sm">
-                                            <p
-                                                class="flex items-center gap-2 text-[10px] text-amber-500 font-black uppercase tracking-widest mb-3">
-                                                <span class="text-sm">📄</span> Document Health
-                                            </p>
-                                            <p
-                                                class="text-[12px] font-bold text-slate-600 leading-relaxed text-justify">
-                                                {{ aiResult().documentReport }}</p>
-                                        </div>
-
-                                        <div class="bg-white/60 p-6 rounded-3xl border border-white shadow-sm">
-                                            <p
-                                                class="flex items-center gap-2 text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3">
-                                                <span class="text-sm">📍</span> Location Analysis
-                                            </p>
-                                            <p
-                                                class="text-[12px] font-bold text-slate-600 leading-relaxed text-justify">
-                                                {{ aiResult().locationAnalysis }}</p>
-                                        </div>
-
-                                        <div class="bg-indigo-600 p-6 rounded-3xl shadow-lg shadow-indigo-200">
-                                            <p
-                                                class="flex items-center gap-2 text-[10px] text-white font-black uppercase tracking-widest mb-4">
-                                                <span class="text-sm">🎯</span> Strategic Recommendations
-                                            </p>
-                                            <ul class="space-y-4">
-                                                @for (rec of aiResult().agentRecommendations; track rec) {
-                                                <li
-                                                    class="flex items-start gap-4 text-[12px] font-bold text-white/90 leading-relaxed text-justify">
-                                                    <span
-                                                        class="shrink-0 w-6 h-6 bg-white/10 rounded-lg flex items-center justify-center text-white shadow-sm">⚡</span>
-                                                    <span>{{ rec }}</span>
-                                                </li>
-                                                }
-                                            </ul>
-                                        </div>
-                                    </div>
-
                                 </div>
-                            </div>
-                            } @else if (!isAILoading()) {
-                            <div
-                                class="p-12 text-center bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-100">
+                                } @else if (!isAILoading()) {
                                 <div
-                                    class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-                                    <svg class="w-8 h-8 text-slate-200" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
+                                    class="p-12 text-center bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-100">
+                                    <div
+                                        class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                        <svg class="w-8 h-8 text-slate-200" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                    </div>
+                                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Ready for
+                                        Analysis
+                                    </p>
+                                    <p class="text-[10px] text-slate-400 mt-1">Run AI to evaluate policy authenticity
+                                        and
+                                        risk metrics.</p>
                                 </div>
-                                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Ready for Analysis
-                                </p>
-                                <p class="text-[10px] text-slate-400 mt-1">Run AI to evaluate policy authenticity and
-                                    risk metrics.</p>
+                                }
                             </div>
-                            }
                         </div>
-                    </div>
+                    </div> <!-- End of Right Column -->
                 </div>
-
                 <!-- Modal Footer -->
                 <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-between items-center shrink-0">
                     <button (click)="showUnifiedDetail.set(false)"
                         class="px-8 py-3 bg-white border border-slate-200 text-slate-500 rounded-xl font-bold uppercase text-[10px] hover:bg-slate-50 transition-all">Close</button>
 
                     <!-- Conditional Action: Approve/Reject for review cases -->
-                    @if (selectedUnifiedDetail().policy?.status === 'Assigned' || selectedUnifiedDetail().policy?.status
+                    @if (selectedUnifiedDetail().policy?.status === 'Assigned' ||
+                    selectedUnifiedDetail().policy?.status
                     ===
                     'PendingReview') {
                     <div class="flex gap-3">
