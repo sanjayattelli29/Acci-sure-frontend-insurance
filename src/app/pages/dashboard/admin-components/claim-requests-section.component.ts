@@ -14,9 +14,9 @@ export class ClaimRequestsSectionComponent {
   // pending claims from backend db
   @Input() pendingClaims: any[] = [];
 
-  // refresh claims from backend api
+  // view details of claim
+  @Output() viewDetails = new EventEmitter<any>();
   @Output() refreshClaims = new EventEmitter<void>();
-  // assign officer to claim via backend
   @Output() assignOfficer = new EventEmitter<string>();
 
   // reload claims from db
@@ -27,5 +27,10 @@ export class ClaimRequestsSectionComponent {
   // assign officer to claim in parent
   assign(id: string) {
     this.assignOfficer.emit(id);
+  }
+
+  // view full details in modal
+  viewData(claim: any) {
+    this.viewDetails.emit(claim);
   }
 }

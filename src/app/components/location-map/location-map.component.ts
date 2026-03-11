@@ -38,70 +38,82 @@ export class LocationMapComponent implements OnChanges, AfterViewInit {
 
     @Input() lat: number | null = null;
     @Input() lng: number | null = null;
+    @Input() address: string | null = null;
     @Input() zoom: number = 15;
 
     private map: any;
     private marker: any;
+    private geocoder: any;
 
     ngAfterViewInit() {
-        if (this.lat && this.lng) {
-            this.initMap();
+        if (typeof google !== 'undefined') {
+            this.geocoder = new google.maps.Geocoder();
         }
+        this.processLocation();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if ((changes['lat'] || changes['lng']) && this.mapContainer) {
-            this.updateMap();
+        if ((changes['lat'] || changes['lng'] || changes['address']) && this.mapContainer) {
+            this.processLocation();
         }
     }
 
-    private initMap() {
-        if (typeof google === 'undefined' || !this.mapContainer) return;
+    private processLocation() {
+        const currentLat = this.lat;
+        const currentLng = this.lng;
 
-        const position = { lat: this.lat, lng: this.lng };
-
-        this.map = new google.maps.Map(this.mapContainer.nativeElement, {
-            center: position,
-            zoom: this.zoom,
-            disableDefaultUI: true,
-            zoomControl: true,
-            styles: [
-                {
-                    "featureType": "all",
-                    "elementType": "labels.text.fill",
-                    "stylers": [{ "color": "#616770" }]
-                },
-                {
-                    "featureType": "administrative",
-                    "elementType": "geometry.fill",
-                    "stylers": [{ "color": "#e9ebed" }]
+        if (currentLat && currentLng) {
+            this.initOrUpdateMap({ lat: currentLat, lng: currentLng });
+        } else if (this.address && this.geocoder) {
+            this.geocoder.geocode({ address: this.address }, (results: any, status: any) => {
+                if (status === 'OK' && results[0]) {
+                    const loc = results[0].geometry.location;
+                    const geocodedLat = loc.lat();
+                    const geocodedLng = loc.lng();
+                    this.lat = geocodedLat;
+                    this.lng = geocodedLng;
+                    this.initOrUpdateMap({ lat: geocodedLat, lng: geocodedLng });
                 }
-                // Add more custom styles if needed to match brand
-            ]
-        });
-
-        this.marker = new google.maps.Marker({
-            position: position,
-            map: this.map,
-            animation: google.maps.Animation.DROP,
-            icon: {
-                path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                scale: 5,
-                fillColor: "#ff6b35",
-                fillOpacity: 1,
-                strokeWeight: 2,
-                strokeColor: "#ffffff"
-            }
-        });
+            });
+        }
     }
 
-    private updateMap() {
-        if (!this.lat || !this.lng || typeof google === 'undefined') return;
-
-        const position = { lat: this.lat, lng: this.lng };
+    private initOrUpdateMap(position: { lat: number, lng: number }) {
+        if (typeof google === 'undefined' || !this.mapContainer) return;
 
         if (!this.map) {
-            this.initMap();
+            this.map = new google.maps.Map(this.mapContainer.nativeElement, {
+                center: position,
+                zoom: this.zoom,
+                disableDefaultUI: true,
+                zoomControl: true,
+                styles: [
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.text.fill",
+                        "stylers": [{ "color": "#616770" }]
+                    },
+                    {
+                        "featureType": "administrative",
+                        "elementType": "geometry.fill",
+                        "stylers": [{ "color": "#e9ebed" }]
+                    }
+                ]
+            });
+
+            this.marker = new google.maps.Marker({
+                position: position,
+                map: this.map,
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                    scale: 5,
+                    fillColor: "#ff6b35",
+                    fillOpacity: 1,
+                    strokeWeight: 2,
+                    strokeColor: "#ffffff"
+                }
+            });
         } else {
             this.map.setCenter(position);
             if (this.marker) {

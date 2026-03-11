@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
+
 export class ClaimService {
     // http service to call backend api endpoints
     private http = inject(HttpClient);
@@ -21,13 +22,13 @@ export class ClaimService {
 
     // get claims created by logged in customer from db
     getMyClaims(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/my-claims`);
+        return this.http.get<any[]>(`${this.apiUrl}/my-claims?t=${Date.now()}`);
     }
 
     // Admin functions - get claims waiting for officer assignment
     // backend fetches from claims table where status pending
     getPendingClaims(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/admin/pending`);
+        return this.http.get<any[]>(`${this.apiUrl}/admin/pending?t=${Date.now()}`);
     }
 
     // get all claim officers from users table for assignment
@@ -43,7 +44,7 @@ export class ClaimService {
     // Claim Officer section - get claims assigned to me
     // backend filters claims by logged in officer id from db
     getOfficerRequests(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/officer/my-requests`);
+        return this.http.get<any[]>(`${this.apiUrl}/officer/my-requests?t=${Date.now()}`);
     }
 
     // officer reviews claim with status remarks and approved amount
@@ -54,7 +55,7 @@ export class ClaimService {
 
     // agent gets claims from their assigned customers
     getAgentClaims(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/agent/customer-claims`);
+        return this.http.get<any[]>(`${this.apiUrl}/agent/customer-claims?t=${Date.now()}`);
     }
 
     // fetch claim details for specific policy from backend db

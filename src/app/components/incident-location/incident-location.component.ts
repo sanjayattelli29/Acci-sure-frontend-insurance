@@ -34,8 +34,18 @@ export class GooglePlacesInputComponent implements AfterViewInit {
 
     // emit selected value to parent
     valueSelected = output<string>();
-    // NEW: emit full location data with coordinates
-    locationSelected = output<{ address: string, lat: number, lng: number }>();
+    // NEW: emit full location data with coordinates and components
+    locationSelected = output<{
+        address: string,
+        lat: number,
+        lng: number,
+        components?: {
+            state?: string,
+            district?: string,
+            area?: string,
+            pincode?: string
+        }
+    }>();
 
     // setup google places autocomplete after view inits
     ngAfterViewInit() {
@@ -51,7 +61,7 @@ export class GooglePlacesInputComponent implements AfterViewInit {
             {
                 types: this.types(), // geocode or establishment
                 componentRestrictions: { country: 'in' }, // restrict to india
-                fields: ['formatted_address', 'geometry', 'name'] // specify required fields
+                fields: ['formatted_address', 'geometry', 'name', 'address_components'] // added address_components
             }
         );
 
@@ -70,13 +80,24 @@ export class GooglePlacesInputComponent implements AfterViewInit {
             const lat = place.geometry.location.lat();
             const lng = place.geometry.location.lng();
 
+            // Extract address components
+            const components: any = {};
+            if (place.address_components) {
+                place.address_components.forEach((c: any) => {
+                    if (c.types.includes('postal_code')) components.pincode = c.short_name;
+                    if (c.types.includes('administrative_area_level_1')) components.state = c.long_name;
+                    if (c.types.includes('administrative_area_level_3') || c.types.includes('locality')) components.district = c.long_name;
+                    if (c.types.includes('sublocality_level_1') || c.types.includes('neighborhood')) components.area = c.long_name;
+                });
+            }
+
             this.searchInput.nativeElement.value = address;
 
             // emit both legacy and new detailed event
             this.valueSelected.emit(address);
-            this.locationSelected.emit({ address, lat, lng });
+            this.locationSelected.emit({ address, lat, lng, components });
 
-            console.log('Location selected via Google Places:', { address, lat, lng });
+            console.log('Location selected via Google Places:', { address, lat, lng, components });
         });
 
         // also emit on manual typing without selection

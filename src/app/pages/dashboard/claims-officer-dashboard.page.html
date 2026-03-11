@@ -15,8 +15,8 @@
                     <span class="text-lg md:text-xl font-black tracking-tight text-white">Insurance<span
                             class="text-brand-orange">Platform</span></span>
                     <span
-                        class="bg-brand-orange/10 text-brand-orange px-2 py-0.5 rounded text-[8px] md:text-[10px] uppercase font-bold tracking-widest border border-brand-orange/20 w-fit">Assessment
-                        Engine</span>
+                        class="bg-brand-orange/10 text-brand-orange px-2 py-0.5 rounded text-[8px] md:text-[10px] uppercase font-bold tracking-widest border border-brand-orange/20 w-fit">Claims
+                        Officer Portal</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 md:gap-6">
@@ -24,8 +24,8 @@
                 <app-notification-panel portalRole="ClaimOfficer"></app-notification-panel>
 
                 <div class="hidden md:flex flex-col items-end">
-                    <p class="text-[10px] font-black text-white/90 uppercase tracking-widest">{{ user.email }}</p>
-                    <p class="text-[8px] font-bold text-brand-orange uppercase tracking-tighter">Claims Officer</p>
+                    <p class="text-[15px] font-black text-white/90 uppercase tracking-widest">{{ user.email }}</p>
+                    <p class="text-[10px] font-bold text-brand-orange uppercase tracking-tighter">Claims Officer</p>
                 </div>
 
                 <button (click)="logout()" class="p-2 hover:bg-white/10 rounded-full transition-colors text-white">
@@ -77,7 +77,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                    Assessment Queue
+                    Claims Requests
                 </button>
                 <button (click)="setSection('history'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
@@ -91,12 +91,9 @@
                 <button (click)="setSection('payments'); sidebarOpen.set(false)"
                     [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-all ' + 
                     (activeSection() === 'payments' ? 'bg-brand-orange text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white')">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 17c-1.12 0-2.1-.425-2.69-1.03M12 7V5m0 14v-2" />
-                    </svg>
-                    Payments
+                    <strong> ₹</strong> Customer Payments
                 </button>
+
             </nav>
         </aside>
 
@@ -108,9 +105,9 @@
                 @if (activeSection() === 'dashboard') {
                 <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div>
-                        <h1 class="text-3xl font-black text-brand-navy">Assessor Intelligence</h1>
+                        <h1 class="text-3xl font-black text-brand-navy">Analytics</h1>
                         <p class="text-slate-500 text-sm italic font-medium">Monitoring claim integrity and settlement
-                            velocity.</p>
+                            Analytics.</p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -149,7 +146,7 @@
                             <div class="flex items-center justify-between mb-8">
                                 <div>
                                     <h3 class="font-black text-brand-navy uppercase tracking-tight italic">Settlement
-                                        Velocity</h3>
+                                        Analytics</h3>
                                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total
                                         approved payout trends</p>
                                 </div>
@@ -217,11 +214,11 @@
                 </div>
                 }
 
-                <!-- Assessment Queue Section -->
+                <!-- Claims Requests Section -->
                 @if (activeSection() === 'pending') {
                 <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div>
-                        <h1 class="text-3xl font-black text-brand-navy">Active Queue</h1>
+                        <h1 class="text-3xl font-black text-brand-navy">Claims Requests</h1>
                         <p class="text-slate-500 text-sm">Review applications and verify incident evidence.</p>
                     </div>
 
@@ -260,11 +257,11 @@
                                             claim.requestedAmount | number }}</td>
                                         <td class="px-8 py-6 text-right">
                                             <button (click)="openReviewModal(claim)"
-                                                class="bg-brand-navy text-white px-6 py-2.5 rounded-xl text-[9px] font-black uppercase shadow-lg shadow-navy-100 hover:bg-slate-800 transition-all active:scale-95">Verify
-                                                Claim</button>
+                                                class="bg-brand-navy text-white px-6 py-2.5 rounded-xl text-[9px] font-black uppercase shadow-lg shadow-navy-100 hover:bg-slate-800 transition-all active:scale-95">
+                                                Verify Claim</button>
                                         </td>
-                                    </tr>
-                                    }
+                                    </tr>}
+
                                     } @empty {
                                     <tr>
                                         <td colspan="5"
@@ -283,7 +280,7 @@
                 @if (activeSection() === 'history') {
                 <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div>
-                        <h1 class="text-3xl font-black text-brand-navy">Adjudication Ledger</h1>
+                        <h1 class="text-3xl font-black text-brand-navy">Adjudication History</h1>
                         <p class="text-slate-500 text-sm">Historical record of all processed claims and settlements.</p>
                     </div>
 
@@ -346,14 +343,15 @@
                 @if (activeSection() === 'payments') {
                 <div class="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
                     <div>
-                        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Enterprise Payments</h1>
+                        <h1 class="text-4xl font-black text-brand-navy tracking-tight italic">Customer Payments</h1>
                         <p class="text-slate-400 font-bold mt-2 uppercase tracking-widest text-[10px]">Consolidated
                             premium collection and financial settlement audit.</p>
                     </div>
 
                     <div class="card p-0 overflow-hidden border-none shadow-2xl shadow-slate-200/50">
                         <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-white">
-                            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">Premium Ledger</h3>
+                            <h3 class="font-black text-xs uppercase tracking-[0.2em] text-slate-500">Premium History
+                            </h3>
                             <button (click)="loadUnifiedPayments()"
                                 class="text-brand-orange hover:underline font-black text-[10px] uppercase tracking-widest">Refresh
                                 Payments</button>
@@ -452,14 +450,14 @@
 
             <!-- Modal Content (Scrollable) -->
             <div class="grow overflow-y-auto p-8">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     <!-- Left: Details -->
-                    <div class="space-y-10">
+                    <div class="lg:col-span-8 space-y-10">
                         <!-- 1. Customer & Policy Identity -->
                         <section class="space-y-4">
                             <h4 class="text-[10px] font-black text-brand-orange uppercase tracking-widest">Customer &
                                 Policy Overview</h4>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="bg-brand-gray rounded-2xl p-5 border border-slate-100">
                                     <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Customer Contact</p>
                                     <p class="text-xs font-black text-brand-navy">{{ selectedClaim()?.user?.email }}</p>
@@ -474,6 +472,21 @@
                                     <p class="text-[10px] text-emerald-600 font-bold mt-1">Remaining: ₹{{
                                         selectedClaim()?.remainingCoverage | number:'1.0-0' }}</p>
                                 </div>
+                                <!-- Policy Registered Location -->
+                                @if (selectedClaim()?.fullDetails?.location?.address) {
+                                <div class="md:col-span-2 bg-brand-gray rounded-2xl p-5 border border-slate-100">
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-2">Policy Primary Address
+                                    </p>
+                                    <p class="text-xs font-black text-brand-navy mb-4 italic italic">
+                                        {{ selectedClaim()?.fullDetails?.location?.address }}
+                                    </p>
+                                    <div class="rounded-xl overflow-hidden shadow-sm h-40">
+                                        <app-location-map [lat]="selectedClaim()?.fullDetails?.location?.latitude"
+                                            [lng]="selectedClaim()?.fullDetails?.location?.longitude">
+                                        </app-location-map>
+                                    </div>
+                                </div>
+                                }
                             </div>
                         </section>
 
@@ -530,9 +543,9 @@
                                 <div class="flex justify-between items-start mb-4">
                                     <div>
                                         <p class="text-sm font-black text-brand-navy">{{
-                                            selectedClaim()?.fullDetails?.nominee?.nomineeName }}</p>
+                                            selectedClaim()?.fullDetails?.nominee?.name }}</p>
                                         <p class="text-[10px] text-slate-400">{{
-                                            selectedClaim()?.fullDetails?.nominee?.nomineeEmail }}</p>
+                                            selectedClaim()?.fullDetails?.nominee?.email }}</p>
                                     </div>
                                     <span
                                         class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[8px] font-black uppercase">Primary
@@ -542,12 +555,12 @@
                                     <div>
                                         <p class="text-[8px] font-bold text-slate-400 uppercase">Phone</p>
                                         <p class="text-[10px] font-bold text-brand-navy">{{
-                                            selectedClaim()?.fullDetails?.nominee?.nomineePhone }}</p>
+                                            selectedClaim()?.fullDetails?.nominee?.phone }}</p>
                                     </div>
                                     <div>
                                         <p class="text-[8px] font-bold text-slate-400 uppercase">Bank A/C</p>
                                         <p class="text-[10px] font-bold text-brand-navy">{{
-                                            selectedClaim()?.fullDetails?.nominee?.nomineeBankAccountNumber }}</p>
+                                            selectedClaim()?.fullDetails?.nominee?.bankAccount }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -560,24 +573,76 @@
                             <div class="bg-brand-gray rounded-2xl p-6 space-y-4 border border-slate-100">
                                 <div class="grid grid-cols-2 gap-4">
                                     <p class="text-[9px] font-bold text-slate-400 uppercase">Incident Data</p>
-                                    <p class="text-sm font-bold text-brand-navy">{{ selectedClaim()?.incidentType }}</p>
+                                    <p class="text-sm font-bold text-brand-navy">{{ selectedClaim()?.incidentType }} -
+                                        {{ selectedClaim()?.accidentCause || 'N/A' }}</p>
                                     <p class="text-[10px] text-slate-500 font-medium">{{ selectedClaim()?.incidentDate |
-                                        date:'longDate' }}</p>
+                                        date:'longDate' }} {{ selectedClaim()?.incidentTime || '' }}</p>
                                     <div>
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase">Hospitalization</p>
-                                        <p class="text-sm font-bold text-brand-navy">{{
-                                            selectedClaim()?.hospitalizationRequired ? 'Required' : 'Not Required' }}
-                                        </p>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase">Medical Support</p>
+                                        <p class="text-xs font-bold text-brand-navy">{{ selectedClaim()?.injuryType ||
+                                            'N/A' }} ({{ selectedClaim()?.bodyPartInjured || 'N/A' }})</p>
+                                        <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">Admission: {{
+                                            selectedClaim()?.hospitalizationRequired ? 'Yes' : 'No' }}</p>
+                                        @if (selectedClaim()?.hospitalizationRequired) {
+                                        <p class="text-[10px] text-slate-400">{{ selectedClaim()?.admissionDate |
+                                            date:'shortDate' }} -> {{ selectedClaim()?.dischargeDate | date:'shortDate'
+                                            }}</p>
+                                        }
+                                    </div>
+                                </div>
+                                @if (selectedClaim()?.policeCaseFiled) {
+                                <div
+                                    class="bg-white p-3 border-l-2 border-rose-500 text-rose-700 rounded-r-xl rounded-l-sm bg-rose-50/20">
+                                    <p class="text-[10px] font-black uppercase tracking-widest">Police FIR Registered
+                                    </p>
+                                    <p class="text-xs font-bold font-mono">{{ selectedClaim()?.firNumber || 'Pending
+                                        Input' }}</p>
+                                </div>
+                                }
+                                <hr class="border-slate-100">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Incident Location</p>
+                                    <p class="text-sm font-bold text-brand-navy">{{ selectedClaim()?.incidentLocation }}
+                                    </p>
+
+                                    <!-- Incident Visual Confirmation Map -->
+                                    <div
+                                        class="mt-2 rounded-2xl overflow-hidden border border-slate-100 shadow-sm h-32 relative z-0">
+                                        <app-location-map [lat]="selectedClaim()?.latitude ?? null"
+                                            [lng]="selectedClaim()?.longitude ?? null"
+                                            [address]="selectedClaim()?.incidentLocation ?? null">
+                                        </app-location-map>
+                                    </div>
+                                </div>
+                                <hr class="border-slate-100 my-4">
+                                <div>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Hospital Location</p>
+                                    <p class="text-sm text-brand-navy font-bold">{{ selectedClaim()?.hospitalName }}</p>
+
+                                    <!-- Hospital Visual Confirmation Map -->
+                                    <div
+                                        class="mt-2 rounded-2xl overflow-hidden border border-slate-100 shadow-sm h-32 relative z-0">
+                                        <app-location-map [address]="selectedClaim()?.hospitalName ?? null">
+                                        </app-location-map>
                                     </div>
                                 </div>
                                 <hr class="border-slate-100">
                                 <div>
-                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Requested Amount</p>
-                                    <p class="text-xl font-black text-brand-orange italic">₹{{
-                                        selectedClaim()?.requestedAmount | number:'1.0-0' }}</p>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Financial Request Data</p>
+                                    <div class="flex justify-between items-center mt-1">
+                                        <p class="text-2xl font-black text-brand-orange italic">₹{{
+                                            selectedClaim()?.requestedAmount | number:'1.0-0' }}</p>
+                                        <div class="text-right text-[10px] font-bold text-slate-500">
+                                            <p>Bill: ₹{{ selectedClaim()?.hospitalBill | number }}</p>
+                                            <p>Med: ₹{{ selectedClaim()?.medicines | number }}</p>
+                                            <p>Other: ₹{{ selectedClaim()?.otherExpenses | number }}</p>
+                                            <p class="text-xs text-brand-navy mt-1">Est. Total: ₹{{
+                                                selectedClaim()?.estimatedMedicalCost | number }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                                 <hr class="border-slate-100">
-                                <div class="p-4 bg-orange-50 rounded-xl border border-orange-100">
+                                <div class="p-4 bg-orange-50 rounded-xl border border-orange-100 relative z-50">
                                     <p class="text-[9px] font-black text-brand-orange uppercase mb-2">Decision: Approved
                                         Amount</p>
                                     <div class="relative mt-2">
@@ -590,12 +655,7 @@
                                         selectedClaim()?.policy?.remainingCoverageAmount | number }}</p>
                                 </div>
                                 <hr class="border-slate-100">
-                                <div>
-                                    <p class="text-[9px] font-bold text-slate-400 uppercase">Location & Hospital</p>
-                                    <p class="text-sm font-bold text-brand-navy">{{ selectedClaim()?.incidentLocation }}
-                                    </p>
-                                    <p class="text-xs text-slate-500 italic">{{ selectedClaim()?.hospitalName }}</p>
-                                </div>
+
                                 <hr class="border-slate-100">
                                 <div>
                                     <p class="text-[9px] font-bold text-slate-400 uppercase">Statement of Incident</p>
@@ -810,7 +870,8 @@
                     </div>
 
                     <!-- Right: Review Action -->
-                    <div class="bg-slate-50/80 rounded-3xl p-8 space-y-8 border border-slate-100 h-fit sticky top-0">
+                    <div
+                        class="lg:col-span-4 bg-slate-50/80 rounded-3xl p-8 space-y-8 border border-slate-100 h-fit sticky top-0">
                         <div>
                             <h4 class="text-[10px] font-black text-brand-navy uppercase tracking-widest mb-6">Final
                                 Recommendation</h4>
@@ -837,30 +898,55 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Section for claim officer final decision actions -->
                         <div class="pt-6 border-t border-slate-200 space-y-4">
-                            @if (selectedClaim()?.status === 'PendingAssessment' || selectedClaim()?.status ===
-                            'Assigned' || selectedClaim()?.status === 'Pending') {
+
+                            <!-- Check claim status: only allow review if claim is still under processing -->
+                            @if (selectedClaim()?.status === 'PendingAssessment' ||
+                            selectedClaim()?.status === 'Assigned' ||
+                            selectedClaim()?.status === 'Pending') {
+
+                            <!-- button to approve claim and trigger final payout process -->
+                            <!-- Calls submitReview('Approved') method in component .ts -->
                             <button (click)="submitReview('Approved')" [disabled]="isLoading()"
                                 class="btn-primary w-full py-5 text-sm shadow-xl shadow-orange-200">
                                 Submit Final Payout Approval
                             </button>
+
+                            <!-- Button to reject and terminate the claim & Calls submitReview('Rejected') to update claim status -->
                             <button (click)="submitReview('Rejected')" [disabled]="isLoading()"
                                 class="w-full py-4 bg-rose-50 text-rose-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-rose-100 transition-all border border-rose-100">
                                 Reject & Terminate Claim
                             </button>
+
                             } @else {
-                            <div
-                                [class]="'p-6 rounded-2xl text-center border ' + (selectedClaim()?.status === 'Approved' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-rose-50 border-rose-100 text-rose-600')">
-                                <p class="text-xs font-black uppercase tracking-widest">Assessment Finalized</p>
-                                <p class="text-sm font-bold mt-1">Claim {{ selectedClaim()?.status }} on {{
-                                    selectedClaim()?.processedAt | date }}</p>
+
+                            <!-- Display final claim decision if claim already processed -->
+                            <div [class]="'p-6 rounded-2xl text-center border ' + 
+                            (selectedClaim()?.status === 'Approved' 
+                            ? 'approved-style' 
+                            : 'rejected-style')">
+
+                                <p class="text-xs font-black uppercase tracking-widest">
+                                    Assessment Finalized
+                                </p>
+
+                                <p class="text-sm font-bold mt-1">
+                                    Claim {{ selectedClaim()?.status }} on {{ selectedClaim()?.processedAt | date }}
+                                </p>
                             </div>
+
                             }
+
+                            <!-- Informational message about financial impact after final decision -->
                             <p class="text-[9px] text-center text-slate-400 mt-4 leading-relaxed italic">
                                 Final adjudication triggers immediate financial impact on sum insured and policy status.
                             </p>
+
                         </div>
+
+
+
                     </div>
                 </div>
             </div>
@@ -962,7 +1048,7 @@
                             <div
                                 class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full group-hover:scale-110 transition-transform">
                             </div>
-                            <div class="relative z-10 flex justify-between items-start">
+                            <div class="relative z-10 flex justify-between items-start mb-6">
                                 <div>
                                     <h4
                                         class="text-[10px] font-black text-brand-orange uppercase tracking-[0.3em] mb-4">
@@ -980,6 +1066,22 @@
                                         selectedHistoryClaim()?.totalCoverage | number }}</p>
                                 </div>
                             </div>
+
+                            <!-- Integrated Policy Location Map -->
+                            @if (selectedHistoryClaim()?.fullDetails?.location?.address) {
+                            <div
+                                class="relative z-10 bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Policy
+                                    Primary Address</p>
+                                <p class="text-[10px] font-bold text-white/80 mb-3 truncate">{{
+                                    selectedHistoryClaim()?.fullDetails?.location?.address }}</p>
+                                <div class="h-32 rounded-xl overflow-hidden shadow-2xl">
+                                    <app-location-map [lat]="selectedHistoryClaim()?.fullDetails?.location?.latitude"
+                                        [lng]="selectedHistoryClaim()?.fullDetails?.location?.longitude">
+                                    </app-location-map>
+                                </div>
+                            </div>
+                            }
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -1018,9 +1120,17 @@
                                         <p class="font-black text-indigo-600 uppercase tracking-tight">{{
                                             selectedHistoryClaim()?.incidentType }}</p>
                                         <p class="text-[10px] text-slate-500 italic">{{
-                                            selectedHistoryClaim()?.incidentDate | date:'longDate' }}</p>
+                                            selectedHistoryClaim()?.incidentDate | date:'dd MMM yyyy' }}</p>
                                         <p class="text-[10px] text-slate-500 font-bold mt-2">{{
                                             selectedHistoryClaim()?.hospitalName }}</p>
+
+                                        <!-- Incident Map Visual -->
+                                        <div class="mt-4 h-32 rounded-xl overflow-hidden border border-slate-200">
+                                            <app-location-map [lat]="selectedHistoryClaim()?.latitude ?? null"
+                                                [lng]="selectedHistoryClaim()?.longitude ?? null"
+                                                [address]="selectedHistoryClaim()?.incidentLocation ?? null">
+                                            </app-location-map>
+                                        </div>
                                     </div>
                                     <div class="pt-4 border-t border-slate-200/50">
                                         <p class="font-bold text-slate-400 uppercase mb-1">Reported Rationale</p>
@@ -1099,7 +1209,7 @@
                         <span
                             class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-black">Verified</span>
                     </h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Transaction Ledger
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Transaction History
                         Record</p>
                 </div>
                 <button (click)="showInvoiceModal.set(false)"

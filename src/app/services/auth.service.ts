@@ -107,4 +107,9 @@ export class AuthService {
   setCurrentRole(role: string) {
     localStorage.setItem('auth_role', role);
   }
+
+  // update backend KYC status
+  completeKyc(userId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Auth/complete-kyc/${userId}`, {});
+  }
 }

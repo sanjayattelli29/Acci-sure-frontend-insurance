@@ -40,12 +40,12 @@ export class AdminService {
 
     // get pending policy applications waiting for agent assignment
     getPolicyRequests(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/policy-requests`);
+        return this.http.get<any[]>(`${this.apiUrl}/policy-requests?t=${Date.now()}`);
     }
 
     // get agents with their workload count for assignment
     getAgentsWithLoad(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/agents-with-load`);
+        return this.http.get<any[]>(`${this.apiUrl}/agents-with-load?t=${Date.now()}`);
     }
 
     // assign agent to policy application in db
@@ -55,22 +55,22 @@ export class AdminService {
 
     // get all users from backend for admin analytics
     getAllUsers(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/all-users`);
+        return this.http.get<any[]>(`${this.apiUrl}/all-users?t=${Date.now()}`);
     }
 
     // get all claims for admin dashboard stats
     getAllClaims(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/all-claims`);
+        return this.http.get<any[]>(`${this.apiUrl}/all-claims?t=${Date.now()}`);
     }
 
     // get dashboard statistics from backend calculated data
     getAdminStats(): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/admin-stats`);
+        return this.http.get<any>(`${this.apiUrl}/admin-stats?t=${Date.now()}`);
     }
 
     // get payment records from report controller
     getUnifiedPayments(): Observable<any[]> {
-        return this.http.get<any[]>(`https://localhost:7140/api/Report/unified-payments`);
+        return this.http.get<any[]>(`https://localhost:7140/api/Report/unified-payments?t=${Date.now()}`);
     }
 
     // send email via n8n webhook external service not backend db

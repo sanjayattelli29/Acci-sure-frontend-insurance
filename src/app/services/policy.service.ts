@@ -43,6 +43,17 @@ export class PolicyService {
         return this.http.post(`https://localhost:7140/api/Payment/process`, { applicationId, amount });
     }
 
+    // submit-documents for policy application
+    submitDocuments(applicationId: string, documents: { type: string, file: File }[]): Observable<any> {
+        const formData = new FormData();
+        formData.append('PolicyApplicationId', applicationId);
+        documents.forEach((doc, index) => {
+            formData.append(`Documents[${index}].DocumentType`, doc.type);
+            formData.append(`Documents[${index}].File`, doc.file);
+        });
+        return this.http.post(`${this.apiUrl}/submit-documents`, formData);
+    }
+
     // agent gets list of customers assigned to them from backend db
     getAgentCustomers(): Observable<any[]> {
         return this.http.get<any[]>(`https://localhost:7140/api/Agent/my-customers`);

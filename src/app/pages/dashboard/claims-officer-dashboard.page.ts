@@ -11,6 +11,7 @@ import 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
 import { NotificationPanelComponent } from '../../components/notification-panel/notification-panel.component';
 import { HttpClient } from '@angular/common/http';
+import { LocationMapComponent } from '../../components/location-map/location-map.component';
 
 // n8n webhook for ai claim insights
 const N8N_WEBHOOK_URL = 'https://nextglidesol.app.n8n.cloud/webhook/claim-ai-insights';
@@ -31,7 +32,7 @@ Chart.register(...registerables);
 @Component({
     selector: 'app-claims-officer-dashboard',
     standalone: true,
-    imports: [CommonModule, FormsModule, NotificationPanelComponent],
+    imports: [CommonModule, FormsModule, NotificationPanelComponent, LocationMapComponent],
     templateUrl: './claims-officer-dashboard.page.html'
 })
 export class ClaimsOfficerDashboardPage implements OnInit {
@@ -246,7 +247,9 @@ export class ClaimsOfficerDashboardPage implements OnInit {
             this.initCharts();
         } else if (section === 'payments') {
             this.destroyCharts();
-            this.loadUnifiedPayments();
+            if (this.unifiedPayments().length === 0) {
+                this.loadUnifiedPayments();
+            }
         } else {
             this.destroyCharts();
         }
@@ -470,15 +473,28 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         this.showHistoryDetailModal.set(true);
     }
 
+    // function used by claim officer to submit final review decision (Approved / Rejected)
     submitReview(status: string) {
+        // Get selected claim ID from selectedClaim signal/state If no claim selected, stop execution
         const claimId = this.selectedClaim()?.id;
-        if (!claimId) return;
 
+        if (!claimId) return;
+        // Enable loading state while API request is processing Call service method to send review decision to backend API
         this.isLoading.set(true);
-        this.claimService.reviewClaim(claimId, status, this.reviewForm.remarks, this.reviewForm.approvedAmount).subscribe({
+
+        this.claimService.reviewClaim(
+            claimId,
+            status,
+            this.reviewForm.remarks,
+            this.reviewForm.approvedAmount
+        ).subscribe({
+            // Runs when API request succeeds
             next: () => {
+                // Disable loading indicator
                 this.isLoading.set(false);
+                // Close review modal after submission
                 this.showReviewModal.set(false);
+                // Reload claim requests list to reflect updated status
                 this.loadRequests();
             },
             error: (err) => {
@@ -488,10 +504,7 @@ export class ClaimsOfficerDashboardPage implements OnInit {
         });
     }
 
-    /**
-     * Fetches text from all documents in the claim,
-     * sends raw extracted text to n8n, and receives back AI analysis.
-     */
+    // Fetches text from all documents in the claim,sends raw extracted text to n8n, and receives back AI analysis.
     async getAIInsights(claim: any): Promise<void> {
         if (!claim?.documents?.length) return;
 
@@ -542,6 +555,23 @@ export class ClaimsOfficerDashboardPage implements OnInit {
             const payload = {
                 claimId: claim.id ?? '',
                 incidentType: claim.incidentType ?? '',
+                incidentDate: claim.incidentDate ?? '',
+                incidentTime: claim.incidentTime ?? '',
+                accidentCause: claim.accidentCause ?? '',
+                incidentLocation: claim.incidentLocation ?? '',
+                policeCaseFiled: claim.policeCaseFiled ?? false,
+                firNumber: claim.firNumber ?? '',
+                description: claim.description ?? '',
+                hospitalName: claim.hospitalName ?? '',
+                hospitalizationRequired: claim.hospitalizationRequired ?? false,
+                admissionDate: claim.admissionDate ?? '',
+                dischargeDate: claim.dischargeDate ?? '',
+                injuryType: claim.injuryType ?? '',
+                bodyPartInjured: claim.bodyPartInjured ?? '',
+                estimatedMedicalCost: claim.estimatedMedicalCost ?? 0,
+                hospitalBill: claim.hospitalBill ?? 0,
+                medicines: claim.medicines ?? 0,
+                otherExpenses: claim.otherExpenses ?? 0,
                 requestedAmount: claim.requestedAmount ?? 0,
                 remainingCoverage: claim.policy?.remainingCoverageAmount ?? 0,
                 totalCoverage: claim.policy?.totalCoverageAmount ?? 0,

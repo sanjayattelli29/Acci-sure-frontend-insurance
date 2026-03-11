@@ -39,4 +39,10 @@ export class AgentService {
         const webhookUrl = "https://nextglidesol.app.n8n.cloud/webhook/agent-send-email";
         return this.http.post(webhookUrl, payload);
     }
+
+    // send policy data to ai analyser via n8n webhook
+    sendToAIAnalyser(payload: any): Observable<any> {
+        const webhookUrl = "https://nextglidesol.app.n8n.cloud/webhook/agent-ai-insights";
+        return this.http.post(webhookUrl, payload);
+    }
 }

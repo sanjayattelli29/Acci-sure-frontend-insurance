@@ -14,7 +14,7 @@ interface ChatResponse {
     answer: string;
 }
 
-// chatbot component for ai insurance assistant
+// chatbot component for ai AcciSure Assistant
 // uses n8n webhook for ai responses not backend db
 @Component({
     selector: 'app-chatbot',

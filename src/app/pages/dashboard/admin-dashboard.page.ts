@@ -9,6 +9,7 @@ import { NotificationPanelComponent } from '../../components/notification-panel/
 import { Chart, registerables } from 'chart.js';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { LocationMapComponent } from '../../components/location-map/location-map.component';
 
 // register chartjs for analytics graphs
 Chart.register(...registerables);
@@ -44,7 +45,8 @@ import { EmailAutomationSectionComponent } from './admin-components/email-automa
         AnalysisPoliciesSectionComponent,
         AnalysisCommandsSectionComponent,
         AnalysisPaymentsSectionComponent,
-        EmailAutomationSectionComponent
+        EmailAutomationSectionComponent,
+        LocationMapComponent
     ],
     templateUrl: './admin-dashboard.page.html'
 })
@@ -135,13 +137,9 @@ export class AdminDashboardPage implements OnInit {
     // load all required data from backend via services
     loadInitialData() {
         this.loadAdminStats();
-        this.loadPolicyRequests();
-        this.loadAgents();
-        this.loadOfficers();
         this.loadConfig();
-        this.loadAllClaims();
-        this.loadAllUsers();
-        this.loadUnifiedPayments();
+        // Load only what is needed immediately. Other tabs will lazy-load via setSection().
+        // Chart data will be loaded lazily to respect performance
     }
 
     // load policy configuration from backend
@@ -159,21 +157,30 @@ export class AdminDashboardPage implements OnInit {
 
         // init charts when viewing dashboard section
         if (section === 'dashboard') {
-            this.initCharts();
+            // Lazy load required inputs for dashboard charts if empty
+            if (this.policyRequests().length === 0) this.loadPolicyRequests();
+            if (this.allUsers().length === 0) this.loadAllUsers();
+            if (this.agents().length === 0) this.loadAgents();
+            if (this.officers().length === 0) this.loadOfficers();
+            if (this.allClaims().length === 0) this.loadAllClaims();
+
+            setTimeout(() => this.initCharts(), 500); // give data a moment to populate
         } else {
             this.destroyCharts();
         }
 
-        if (section === 'policyRequests') this.loadPolicyRequests();
-        if (section === 'claimRequests') this.loadPendingClaims();
-        if (section === 'analysis-users') this.loadAllUsers();
-        if (section === 'analysis-commands') this.loadAllClaims();
-        if (section === 'analysis-payments') this.loadUnifiedPayments();
+        if (section === 'policyRequests' && this.policyRequests().length === 0) this.loadPolicyRequests();
+        if (section === 'claimRequests' && this.pendingClaims().length === 0) this.loadPendingClaims();
+        if (section === 'analysis-users' && this.allUsers().length === 0) this.loadAllUsers();
+        if (section === 'analysis-commands' && this.allClaims().length === 0) this.loadAllClaims();
+        if (section === 'analysis-payments' && this.unifiedPayments().length === 0) this.loadUnifiedPayments();
         if (section === 'email-automation') {
-            this.adminService.getAllUsers().subscribe({
-                next: (users) => this.allUsers.set(users.filter(u => u.role !== 'Customer')),
-                error: (err) => console.error('Error loading automation users:', err)
-            });
+            if (this.allUsers().length === 0) {
+                this.adminService.getAllUsers().subscribe({
+                    next: (users) => this.allUsers.set(users.filter(u => u.role !== 'Customer')),
+                    error: (err) => console.error('Error loading automation users:', err)
+                });
+            }
         }
     }
 
@@ -458,32 +465,62 @@ export class AdminDashboardPage implements OnInit {
         });
     }
 
+    // Function to open the modal for assigning a claim officer
     openAssignOfficerModal(id: string) {
+
+        // Store the selected claim ID in a signal/state variable
         this.selectedClaimId.set(id);
+
+        // Set loading state true while fetching officers
         this.isLoading.set(true);
+
+        // Call service method to fetch available claim officers
         this.claimService.getClaimOfficers().subscribe({
+
+            // Runs when API request succeeds
             next: (officers) => {
+
+                // Store officers list with their workload
                 this.claimOfficersWithWorkload.set(officers);
+
+                // Open the assign officer modal in UI
                 this.showAssignOfficerModal.set(true);
+
+                // Stop loading indicator
                 this.isLoading.set(false);
             },
+
+            // Runs when API request fails
             error: (err) => {
+
+                // Log error in console for debugging
                 console.error('Error loading officers:', err);
+
+                // Stop loading indicator
                 this.isLoading.set(false);
             }
         });
     }
 
+
+    // Function to assign selected officer to the claim and Get stored claim ID from signal/state
     assignOfficer(officerId: string) {
+
         const claimId = this.selectedClaimId();
+        // If no claim selected, stop execution Show assigning loader
         if (!claimId) return;
 
         this.isAssigning.set(true);
+        // Call backend API to assign officer
         this.claimService.assignOfficer(claimId, officerId).subscribe({
+
             next: () => {
+                // Stop assigning loader
                 this.isAssigning.set(false);
+                // Close the assign officer modal
                 this.showAssignOfficerModal.set(false);
                 this.message.set({ text: 'Claim Officer assigned successfully!', type: 'success' });
+                // Reload pending claims list
                 this.loadPendingClaims();
                 setTimeout(() => this.message.set({ text: '', type: '' }), 3000);
             },
@@ -518,7 +555,8 @@ export class AdminDashboardPage implements OnInit {
                 remainingCoverage: policy?.remainingCoverageAmount || 0
             } : null,
             claimOfficer: claim?.assignedOfficer,
-            payments: policy?.payments || []
+            payments: policy?.payments || [],
+            type
         };
         if (policy?.applicationDataJson) {
             try {
@@ -538,27 +576,60 @@ export class AdminDashboardPage implements OnInit {
 
                 const fullDetails = normalize(raw) || {};
 
-                let applicant = normalize(fullDetails.applicant || fullDetails.primaryApplicant || raw.Applicant || raw.PrimaryApplicant);
-                if (!applicant || !applicant.fullName) {
-                    applicant = {
-                        ...applicant,
-                        fullName: policy.user?.fullName || policy.user?.userName || 'N/A'
-                    };
-                }
+                let applicant = normalize(fullDetails.applicant || fullDetails.primaryApplicant || raw.Applicant || raw.PrimaryApplicant) || {};
+                applicant.fullName = applicant.fullName || policy.user?.fullName || policy.user?.userName || 'N/A';
+                applicant.age = applicant.age || raw.Age || policy.age || '--';
+                applicant.profession = applicant.profession || raw.Profession || policy.profession || 'Standard';
+                applicant.annualIncome = applicant.annualIncome || raw.AnnualIncome || policy.annualIncome || 0;
+                applicant.alcoholHabit = applicant.alcoholHabit || raw.AlcoholHabit || policy.alcoholHabit || 'None';
+                applicant.smokingHabit = applicant.smokingHabit || raw.SmokingHabit || policy.smokingHabit || 'None';
+                applicant.vehicleType = applicant.vehicleType || raw.VehicleType || policy.vehicleType || 'None';
+                applicant.travelKmPerMonth = applicant.travelKmPerMonth || raw.TravelKmPerMonth || policy.travelKmPerMonth || 0;
 
                 fullDetails.applicant = applicant;
-                fullDetails.nominee = normalize(fullDetails.nominee || raw.Nominee) || { nomineeName: '', nomineeEmail: '', nomineePhone: '' };
+                const n = normalize(fullDetails.nominee || raw.Nominee) || {};
+                fullDetails.nominee = {
+                    name: n.name || n.nomineeName || 'N/A',
+                    relationship: n.relationship || n.nomineeRelationship || '--',
+                    email: n.email || n.nomineeEmail || '--',
+                    phone: n.phone || n.nomineePhone || '--',
+                    bankAccount: n.bankAccount || n.nomineeBankAccountNumber || n.bankAccountNumber || '--',
+                    ifsc: n.ifsc || n.nomineeIfsc || '--'
+                };
+
+                const loc = normalize(fullDetails.location || raw.Location || raw.location || {});
+                fullDetails.location = {
+                    address: loc.address || policy.address || 'No address provided',
+                    latitude: loc.latitude || policy.latitude || null,
+                    longitude: loc.longitude || policy.longitude || null,
+                    state: loc.state || policy.state || '',
+                    district: loc.district || policy.district || '',
+                    pincode: loc.pincode || policy.pincode || ''
+                };
+
+                // Ensure sub-components are present
+                if (fullDetails.location) {
+                    fullDetails.location.state = fullDetails.location.state || '';
+                    fullDetails.location.district = fullDetails.location.district || '';
+                    fullDetails.location.area = fullDetails.location.area || '';
+                    fullDetails.location.pincode = fullDetails.location.pincode || '';
+                }
+
                 fullDetails.medicalProfile = normalize(fullDetails.medicalProfile || raw.MedicalProfile);
-                fullDetails.lifestyle = normalize(fullDetails.lifestyle || raw.Lifestyle);
-                fullDetails.incident = normalize(fullDetails.incident || fullDetails.incidentVerification || raw.Incident || raw.IncidentVerification);
 
                 details.policy.fullDetails = fullDetails;
 
                 if (this.config()) {
                     const cat = this.config().policyCategories?.find((c: any) => c.categoryId === policy.policyCategory);
                     const tier = cat?.tiers?.find((t: any) => t.tierId === policy.tierId);
-                    details.policy.coverageAmount = tier?.baseCoverageAmount || (policy.sumInsured || 0);
+                    details.policy.coverageAmount = tier?.baseCoverageAmount || (policy.totalCoverageAmount || policy.sumInsured || 0);
+                    details.policy.policyName = tier?.tierName || policy.tierId; // Fallback to tierId if name not found
+                    details.policy.basePremiumAmount = tier?.basePremiumAmount || 0;
                 }
+
+                // Add monthly premium calculation
+                details.policy.monthlyPremium = (policy.calculatedPremium || 0) / 12;
+
             } catch (e) {
                 console.error('Failed to parse policy data', e);
             }

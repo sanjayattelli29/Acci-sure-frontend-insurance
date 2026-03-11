@@ -13,6 +13,7 @@ import { NotificationPanelComponent } from '../../components/notification-panel/
 import { Chart, registerables } from 'chart.js';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { LocationMapComponent } from '../../components/location-map/location-map.component';
 
 // register chartjs for commission analytics
 Chart.register(...registerables);
@@ -22,7 +23,7 @@ Chart.register(...registerables);
 @Component({
     selector: 'app-agent-dashboard',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, NotificationPanelComponent],
+    imports: [CommonModule, FormsModule, RouterModule, NotificationPanelComponent, LocationMapComponent],
     templateUrl: './agent-dashboard.page.html'
 })
 export class AgentDashboardPage implements OnInit {
@@ -87,6 +88,11 @@ export class AgentDashboardPage implements OnInit {
     selectedPayment = signal<any>(null);
     showInvoiceModal = signal(false);
     isProcessing = signal(false);
+
+    // AI Analysis State
+    isAILoading = signal(false);
+    showAIModal = signal(false);
+    aiResult = signal<any>(null);
 
     // chartjs instances for analytics
     private charts: Chart[] = [];
@@ -381,8 +387,8 @@ export class AgentDashboardPage implements OnInit {
         this.agentService.getMyRequests().subscribe({
             next: (data) => {
                 this.policyRequests.set(data);
-                // Fix: Pending review count should only be for 'Assigned' status
-                const pending = data.filter(r => r.status === 'Assigned').length;
+                // Pending review count for both Assigned and PendingReview status
+                const pending = data.filter(r => r.status === 'Assigned' || r.status === 'PendingReview').length;
                 this.stats.pendingReview = pending;
             },
             error: (err) => console.error('Failed to load my requests', err)
@@ -403,17 +409,14 @@ export class AgentDashboardPage implements OnInit {
     viewDetails(application: any) {
         if (!application) return;
 
-        // Parse the JSON data stored in ApplicationDataJson
+        // Parse JSON data robustly
         let raw: any = {};
         try {
             raw = typeof application.applicationDataJson === 'string'
                 ? JSON.parse(application.applicationDataJson)
                 : (application.applicationDataJson || {});
-        } catch (e) {
-            console.error('Failed to parse applicationDataJson', e);
-        }
+        } catch (e) { }
 
-        // Normalize keys helper
         const normalize = (obj: any) => {
             if (!obj) return null;
             const normalized: any = {};
@@ -426,24 +429,182 @@ export class AgentDashboardPage implements OnInit {
 
         const details = normalize(raw) || {};
 
-        // Ensure applicant/primaryApplicant is extracted and normalized
-        let applicant = normalize(details.applicant || details.primaryApplicant || raw.Applicant || raw.PrimaryApplicant);
+        // Map nominee
+        const n = normalize(details.nominee || raw.Nominee) || {};
+        details.nominee = {
+            name: n.name || n.nomineeName || 'N/A',
+            relationship: n.relationship || n.nomineeRelationship || '--',
+            email: n.email || n.nomineeEmail || '--',
+            phone: n.phone || n.nomineePhone || '--',
+            bankAccount: n.bankAccount || n.nomineeBankAccountNumber || n.bankAccountNumber || '--',
+            ifsc: n.ifsc || n.nomineeIfsc || '--'
+        };
 
-        // Fallback to User object if applicant details are missing
-        if (!applicant || !applicant.fullName) {
-            applicant = {
-                ...applicant,
-                fullName: application.user?.fullName || application.user?.userName || 'N/A',
-                age: applicant?.age || '--',
-                profession: applicant?.profession || 'Standard Employment'
-            };
+        // Applicant details
+        let applicant = normalize(details.applicant || raw.Applicant) || {};
+        details.applicant = {
+            fullName: application.user?.fullName || application.user?.userName || applicant.fullName || 'N/A',
+            age: application.age || application.Age || raw.Age || applicant.age || raw.age || '--',
+            profession: application.profession || application.Profession || raw.Profession || applicant.profession || 'Standard',
+            alcoholHabit: application.alcoholHabit || application.AlcoholHabit || raw.AlcoholHabit || applicant.alcoholHabit || 'None',
+            smokingHabit: application.smokingHabit || application.SmokingHabit || raw.SmokingHabit || applicant.smokingHabit || 'None',
+            annualIncome: application.annualIncome || application.AnnualIncome || raw.AnnualIncome || applicant.annualIncome || 0,
+            vehicleType: application.vehicleType || application.VehicleType || raw.VehicleType || applicant.vehicleType || raw.vehicleType || 'None',
+            travelKmPerMonth: application.travelKmPerMonth || application.TravelKmPerMonth || raw.TravelKmPerMonth || applicant.travelKmPerMonth || raw.travelKmPerMonth || 0
+        };
+
+        // Location
+        const loc = normalize(details.location || raw.location || raw.Location || {});
+        details.location = {
+            address: loc.address || application.address || 'No address provided',
+            latitude: loc.latitude || application.latitude || null,
+            longitude: loc.longitude || application.longitude || null,
+            state: loc.state || application.state || '',
+            district: loc.district || application.district || '',
+            pincode: loc.pincode || application.pincode || ''
+        };
+
+        // Ensure sub-components are present if the location object was found but they were missing
+        if (details.location) {
+            details.location.state = details.location.state || '';
+            details.location.district = details.location.district || '';
+            details.location.area = details.location.area || '';
+            details.location.pincode = details.location.pincode || '';
         }
-
-        details.applicant = applicant;
-        details.nominee = normalize(details.nominee || raw.Nominee) || { nomineeName: '', nomineeEmail: '', nomineePhone: '' };
 
         this.selectedApplication.set({ ...application, fullDetails: details });
         this.showDetailModal.set(true);
+    }
+
+    // run ai analysis via n8n webhook
+    async runAIAnalysis(policy: any) {
+        if (!policy || this.isAILoading()) return;
+
+        this.isAILoading.set(true);
+        this.aiResult.set(null); // Clear previous result
+
+        try {
+            // Document Extraction Logic (Robust)
+            let rawDocumentText = '';
+            const dividers = '\n\n' + '='.repeat(30) + '\n\n';
+
+            // Collect all possible documents
+            const documents = [
+                ...(policy.fullDetails?.documents || []),
+                ...(policy.documents || [])
+            ];
+
+            for (const doc of documents) {
+                const fileUrl: string = doc.fileUrl ?? '';
+                if (!fileUrl) continue;
+
+                try {
+                    const resp = await fetch(fileUrl);
+                    if (!resp.ok) throw new Error('Fetch failed');
+
+                    const contentType = resp.headers.get('content-type') ?? '';
+                    let content = '';
+
+                    const fileName = doc.fileName || doc.documentType || 'Document';
+
+                    if (contentType.includes('application/pdf') || fileName.toLowerCase().endsWith('.pdf')) {
+                        const buffer = await resp.arrayBuffer();
+                        content = btoa(new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+                        content = `[PDF DOCUMENT: ${fileName}]\nBASE64_DATA: ${content}`;
+                    } else if (contentType.includes('text') || fileName.toLowerCase().match(/\.(txt|json|xml)$/)) {
+                        content = await resp.text();
+                        content = `[TEXT DOCUMENT: ${fileName}]\nCONTENT:\n${content}`;
+                    } else {
+                        content = `[FILE REFERENCE: ${fileName}]\nURL: ${fileUrl}`;
+                    }
+                    rawDocumentText += (rawDocumentText ? dividers : '') + content;
+                } catch (fetchErr) {
+                    console.warn(`Could not fetch document ${doc.fileName}:`, fetchErr);
+                }
+            }
+
+            const claims = (this.customerClaims() || []).filter(c => c.policyApplicationId === policy.id);
+            const payments = (this.unifiedPayments() || []).filter(p => p.applicationId === policy.id);
+
+            const payload = {
+                customer: {
+                    fullName: policy.fullDetails?.applicant?.fullName || policy.user?.fullName || 'N/A',
+                    age: policy.fullDetails?.applicant?.age || 0,
+                    profession: policy.fullDetails?.applicant?.profession || 'Standard',
+                    annualIncome: policy.fullDetails?.applicant?.annualIncome || 0,
+                    smokingHabit: policy.fullDetails?.applicant?.smokingHabit || 'None',
+                    alcoholHabit: policy.fullDetails?.applicant?.alcoholHabit || 'None',
+                    vehicleType: policy.fullDetails?.applicant?.vehicleType || 'None',
+                    travelKmPerMonth: policy.fullDetails?.applicant?.travelKmPerMonth || 0
+                },
+                policy: {
+                    policyNumber: policy.id || 'N/A',
+                    policyCategory: policy.policyCategory || '',
+                    tierId: policy.tierId || '',
+                    status: policy.status || '',
+                    totalCoverageAmount: policy.totalCoverageAmount || 0,
+                    remainingCoverageAmount: policy.remainingCoverageAmount || 0,
+                    calculatedPremium: policy.calculatedPremium || 0,
+                    paymentMode: policy.fullDetails?.paymentMode || 'N/A',
+                    startDate: policy.startDate || 'N/A',
+                    endDate: policy.expiryDate || 'N/A'
+                },
+                nominee: policy.fullDetails?.nominee || {},
+                location: {
+                    address: policy.fullDetails?.location?.address || 'N/A',
+                    area: policy.fullDetails?.location?.area || '',
+                    state: policy.fullDetails?.location?.state || 'N/A',
+                    district: policy.fullDetails?.location?.district || 'N/A',
+                    pincode: policy.fullDetails?.location?.pincode || 'N/A',
+                    latitude: policy.fullDetails?.location?.latitude || null,
+                    longitude: policy.fullDetails?.location?.longitude || null
+                },
+                claimsSummary: claims.length
+                    ? claims.map(c => `${c.incidentType || 'Claim'} | Rs.${c.requestedAmount} | ${c.status} | ${c.submissionDate}`).join('\n')
+                    : 'No claims filed',
+                paymentsSummary: payments.length
+                    ? payments.map(p => `Rs.${p.paidAmount} | ${p.paymentMode} | ${p.status} | ${p.lastPaymentDate || p.createdAt}`).join('\n')
+                    : 'No payment records',
+                documentsSummary: documents.map(d => d.documentType || d.fileName).join(', '),
+                rawDocumentText: rawDocumentText || 'No document content extracted'
+            };
+
+            this.agentService.sendToAIAnalyser(payload).subscribe({
+                next: (res) => {
+                    this.aiResult.set(res);
+                    this.isAILoading.set(false);
+                },
+                error: (err) => {
+                    console.error('AI Analysis failed:', err);
+                    this.isAILoading.set(false);
+                    alert('AI Analysis failed to load. Please try again later.');
+                }
+            });
+        } catch (err) {
+            console.error('Document preparation failed:', err);
+            this.isAILoading.set(false);
+        }
+    }
+
+    generatePolicyTimeline(policy: any): any[] {
+        if (!policy) return [];
+        const slots = [];
+        const monthlyAmount = (policy.calculatedPremium || 0) / (policy.paymentMode === 'monthly' ? 12 : policy.paymentMode === 'halfYearly' ? 2 : 1);
+        const startDate = new Date(policy.createdAt || new Date());
+        for (let i = 0; i < 12; i++) {
+            const date = new Date(startDate);
+            date.setMonth(date.getMonth() + i);
+            const isPaymentMonth = policy.paymentMode === 'monthly' ? true : policy.paymentMode === 'halfYearly' ? i % 6 === 0 : i === 0;
+            const amount = isPaymentMonth ? monthlyAmount : 0;
+            slots.push({
+                monthIndex: i + 1,
+                date: date.toISOString(),
+                amount: isPaymentMonth ? monthlyAmount : 0,
+                status: isPaymentMonth ? 'Scheduled' : 'Active',
+                isPaymentMonth
+            });
+        }
+        return slots;
     }
 
     reviewApplication(status: 'Approved' | 'Rejected') {
@@ -455,6 +616,7 @@ export class AgentDashboardPage implements OnInit {
             next: (res) => {
                 this.isProcessing.set(false);
                 this.showDetailModal.set(false);
+                this.showUnifiedDetail.set(false); // Also close unified modal
                 this.message.set({ type: 'success', text: `Policy ${status} successfully!` });
                 this.loadPolicyRequests();
                 setTimeout(() => this.message.set({ type: '', text: '' }), 3000);
@@ -509,6 +671,7 @@ export class AgentDashboardPage implements OnInit {
 
         if (type === 'policy') {
             policy = item;
+            this.selectedApplication.set(policy);
             claim = this.customerClaims().find(c => c.policyId === policy.id || c.policyApplicationId === policy.id);
         } else {
             claim = item;
@@ -552,54 +715,83 @@ export class AgentDashboardPage implements OnInit {
             });
         }
 
-        // Parse ApplicationDataJson if present (Mirroring Claims Officer depth)
-        if (policy?.applicationDataJson) {
-            try {
-                const raw = typeof policy.applicationDataJson === 'string'
-                    ? JSON.parse(policy.applicationDataJson)
-                    : policy.applicationDataJson;
+        let raw: any = {};
+        try {
+            raw = typeof policy?.applicationDataJson === 'string'
+                ? JSON.parse(policy.applicationDataJson)
+                : (policy?.applicationDataJson || {});
+        } catch (e) { }
 
-                const normalize = (obj: any) => {
-                    if (!obj) return null;
-                    const normalized: any = {};
-                    Object.keys(obj).forEach(key => {
-                        const normalizedKey = key.charAt(0).toLowerCase() + key.slice(1);
-                        normalized[normalizedKey] = obj[key];
-                    });
-                    return normalized;
-                };
+        const normalize = (obj: any) => {
+            if (!obj) return null;
+            const normalized: any = {};
+            Object.keys(obj).forEach(key => {
+                const normalizedKey = key.charAt(0).toLowerCase() + key.slice(1);
+                normalized[normalizedKey] = obj[key];
+            });
+            return normalized;
+        };
 
-                const fullDetails = normalize(raw) || {};
+        const fullDetails = normalize(raw) || {};
 
-                // Extract applicant with fallback to user object
-                let applicant = normalize(fullDetails.applicant || fullDetails.primaryApplicant || raw.Applicant || raw.PrimaryApplicant);
-                if (!applicant || !applicant.fullName) {
-                    applicant = {
-                        ...applicant,
-                        fullName: policy.user?.fullName || policy.user?.userName || 'N/A'
-                    };
-                }
+        // Match the robust nominee mapping used in Admin
+        const n = normalize(fullDetails.nominee || raw.Nominee) || {};
+        fullDetails.nominee = {
+            name: n.name || n.nomineeName || 'N/A',
+            relationship: n.relationship || n.nomineeRelationship || '--',
+            email: n.email || n.nomineeEmail || '--',
+            phone: n.phone || n.nomineePhone || '--',
+            bankAccount: n.bankAccount || n.nomineeBankAccountNumber || n.bankAccountNumber || '--',
+            ifsc: n.ifsc || n.nomineeIfsc || '--'
+        };
 
-                fullDetails.applicant = applicant;
-                fullDetails.nominee = normalize(fullDetails.nominee || raw.Nominee) || { nomineeName: '', nomineeEmail: '', nomineePhone: '' };
-                fullDetails.medicalProfile = normalize(fullDetails.medicalProfile || raw.MedicalProfile);
-                fullDetails.lifestyle = normalize(fullDetails.lifestyle || raw.Lifestyle);
-                fullDetails.incident = normalize(fullDetails.incident || fullDetails.incidentVerification || raw.Incident || raw.IncidentVerification);
+        // Enrich applicant details
+        let applicant = normalize(fullDetails.applicant || raw.Applicant) || {};
+        details.applicant = {
+            ...applicant,
+            fullName: applicant.fullName || policy?.user?.fullName || policy?.user?.userName || 'N/A',
+            vehicleType: applicant.vehicleType || policy?.vehicleType || 'None',
+            travelKmPerMonth: applicant.travelKmPerMonth || policy?.travelKmPerMonth || 0
+        };
 
-                details.policy.fullDetails = fullDetails;
+        fullDetails.applicant = details.applicant;
+        fullDetails.location = normalize(fullDetails.location || raw.Location || raw.location) || {
+            address: 'No address provided',
+            latitude: null,
+            longitude: null,
+            state: '',
+            district: '',
+            area: '',
+            pincode: ''
+        };
 
-                // Sync sum insured from config if available
-                this.policyService.getConfiguration().subscribe(config => {
-                    if (config) {
-                        const cat = config.policyCategories?.find((c: any) => c.categoryId === policy.policyCategory);
-                        const tier = cat?.tiers?.find((t: any) => t.tierId === policy.tierId);
-                        details.policy.coverageAmount = tier?.baseCoverageAmount || (policy.sumInsured || 0);
-                    }
-                });
-            } catch (e) {
-                console.error('Failed to parse policy data', e);
-            }
+        // Ensure sub-components are present
+        if (fullDetails.location) {
+            fullDetails.location.state = fullDetails.location.state || '';
+            fullDetails.location.district = fullDetails.location.district || '';
+            fullDetails.location.area = fullDetails.location.area || '';
+            fullDetails.location.pincode = fullDetails.location.pincode || '';
         }
+
+        details.policy.fullDetails = fullDetails;
+
+        // Sync sum insured and premium metrics from config if available
+        this.policyService.getConfiguration().subscribe(config => {
+            if (config) {
+                const cat = config.policyCategories?.find((c: any) => c.categoryId === policy.policyCategory);
+                const tier = cat?.tiers?.find((t: any) => t.tierId === policy.tierId);
+                details.policy.coverageAmount = tier?.baseCoverageAmount || (policy.totalCoverageAmount || policy.sumInsured || 0);
+                details.policy.policyName = tier?.tierName || policy.tierId;
+                details.policy.basePremiumAmount = tier?.basePremiumAmount || 0;
+
+                // Recalculate monthly split if calculatedPremium changed
+                details.policy.monthlyPremium = (policy.calculatedPremium || 0) / 12;
+                this.selectedUnifiedDetail.set({ ...details });
+            }
+        });
+
+        // Add monthly premium calculation initially
+        details.policy.monthlyPremium = (policy.calculatedPremium || 0) / 12;
 
         this.selectedUnifiedDetail.set(details);
         this.showUnifiedDetail.set(true);
